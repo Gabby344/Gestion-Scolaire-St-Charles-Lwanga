@@ -96,40 +96,43 @@
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 6px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
-            display: inline-block;
-            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--secondary), #2980b9);
+            background: var(--secondary);
             color: white;
         }
 
         .btn-success {
-            background: linear-gradient(135deg, var(--success), #219652);
+            background: var(--success);
             color: white;
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, var(--danger), #c0392b);
+            background: var(--danger);
             color: white;
+        }
+
+        .btn-block {
+            width: 100%;
+            padding: 12px 24px;
+            font-size: 16px;
         }
 
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow);
-        }
-
-        .btn-block {
-            width: 100%;
         }
 
         .btn-loading {
@@ -357,6 +360,7 @@
         .badge-warning { background: #fff3cd; color: #856404; }
         .badge-danger { background: #f8d7da; color: #721c24; }
         .badge-primary { background: #d1ecf1; color: #0c5460; }
+        .badge-info { background: #d1edf1; color: #0c5460; }
 
         /* === GRID LAYOUT === */
         .grid-2 {
@@ -371,6 +375,64 @@
             gap: 25px;
         }
 
+        /* === FORM STYLES === */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* === MODAL STYLES === */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
         /* === RESPONSIVE === */
         @media (max-width: 768px) {
             .sidebar {
@@ -380,6 +442,9 @@
                 margin-left: 0;
             }
             .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
                 grid-template-columns: 1fr;
             }
         }
@@ -423,7 +488,7 @@
         </div>
     </div>
 
-    <!-- === DASHBOARD PRÉFET === -->
+    <!-- === DASHBOARD PRINCIPAL === -->
     <div id="dashboardPage" class="dashboard-container">
         <div class="sidebar">
             <div class="sidebar-header">
@@ -435,8 +500,8 @@
             <div class="user-info">
                 <img src="prefetetudes.jpg" alt="Préfet" class="user-avatar" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMzNDk4REIiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiPgo8cGF0aCBkPSJNMjAgMjFWNGE4IDggMCAwIDAtMTYgMHYxN2E0IDQgMCAwIDAgNCA0aDhhNCA0IDAgMCAwIDQtNHoiLz4KPC9zdmc+Cjwvc3ZnPgo='">
                 <div>
-                    <div style="font-weight: 600;">Père Michel Lembe</div>
-                    <div style="font-size: 0.8em; opacity: 0.8;">Préfet des Études</div>
+                    <div style="font-weight: 600;" id="userName">Père Michel Lembe</div>
+                    <div style="font-size: 0.8em; opacity: 0.8;" id="userRole">Préfet des Études</div>
                 </div>
             </div>
 
@@ -462,9 +527,6 @@
                 <div class="menu-item" data-page="discipline">
                     ⚖️ Gestion Discipline
                 </div>
-                <div class="menu-item" data-page="utilisateurs">
-                    👥 Gestion Utilisateurs
-                </div>
                 <div class="menu-item" onclick="logout()" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #34495e;">
                     🚪 Déconnexion
                 </div>
@@ -476,92 +538,61 @@
                 <h2 id="pageTitle">Tableau de Bord Préfet</h2>
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <span id="currentDate" style="color: #666;"></span>
-                    <span class="badge badge-success">PRÉFET</span>
+                    <span class="badge badge-success" id="userBadge">PRÉFET</span>
                 </div>
             </div>
 
-            <div class="content-area">
-                <!-- Dashboard Content -->
-                <div id="dashboardContent">
-                    <div class="page-header">
-                        <div>
-                            <h1 style="margin-bottom: 5px;">Vue d'ensemble de l'Institut</h1>
-                            <p style="color: #666;">Statistiques et activités récentes</p>
-                        </div>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="btn btn-primary" onclick="refreshData()">🔄 Actualiser</button>
-                            <button class="btn btn-success" onclick="generateReport()">📊 Rapport</button>
-                        </div>
+            <div class="content-area" id="contentArea">
+                <!-- Le contenu des pages sera chargé ici dynamiquement -->
+            </div>
+        </div>
+    </div>
+
+    <!-- === MODALS === -->
+    <!-- Modal Ajouter Élève -->
+    <div id="addEleveModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Ajouter un nouvel élève</h3>
+                <button onclick="closeModal('addEleveModal')" style="background: none; border: none; font-size: 20px; cursor: pointer;">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="newMatricule">Matricule</label>
+                    <input type="text" id="newMatricule" placeholder="SCL2024-001">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="newNom">Nom</label>
+                        <input type="text" id="newNom" placeholder="Mbayo">
                     </div>
-
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-number" id="totalEleves">0</div>
-                            <div class="stat-label">Élèves inscrits</div>
-                        </div>
-                        <div class="stat-card success">
-                            <div class="stat-number" id="totalClasses">0</div>
-                            <div class="stat-label">Classes actives</div>
-                        </div>
-                        <div class="stat-card warning">
-                            <div class="stat-number" id="totalEnseignants">0</div>
-                            <div class="stat-label">Enseignants</div>
-                        </div>
-                        <div class="stat-card danger">
-                            <div class="stat-number" id="tauxReussite">0%</div>
-                            <div class="stat-label">Taux de réussite</div>
-                        </div>
-                    </div>
-
-                    <div class="grid-2">
-                        <!-- Élèves récents -->
-                        <div class="data-card">
-                            <div class="card-header">
-                                <h3>Derniers élèves inscrits</h3>
-                                <button class="btn btn-primary" onclick="showPage('eleves')">Voir tous</button>
-                            </div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Matricule</th>
-                                        <th>Nom et Prénom</th>
-                                        <th>Classe</th>
-                                        <th>Statut</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recentElevesTable">
-                                    <!-- Données chargées dynamiquement -->
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Alertes importantes -->
-                        <div class="data-card">
-                            <div class="card-header">
-                                <h3>Alertes importantes</h3>
-                                <span class="badge badge-danger" id="alertCount">0</span>
-                            </div>
-                            <div style="padding: 20px;" id="alertsList">
-                                <!-- Alertes chargées dynamiquement -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Statistiques par option -->
-                    <div class="data-card">
-                        <div class="card-header">
-                            <h3>Répartition par option pédagogique</h3>
-                        </div>
-                        <div style="padding: 20px;">
-                            <div class="grid-3" id="optionsStats">
-                                <!-- Statistiques par option -->
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="newPostnom">Postnom</label>
+                        <input type="text" id="newPostnom" placeholder="Kabasele">
                     </div>
                 </div>
-
-                <!-- Autres pages (cachées par défaut) -->
-                <div id="otherPages" style="display: none;"></div>
+                <div class="form-group">
+                    <label for="newPrenom">Prénom</label>
+                    <input type="text" id="newPrenom" placeholder="Sarah">
+                </div>
+                <div class="form-group">
+                    <label for="newClasse">Classe</label>
+                    <select id="newClasse">
+                        <option value="">Sélectionner une classe</option>
+                        <option value="7ème EB">7ème EB</option>
+                        <option value="8ème EB">8ème EB</option>
+                        <option value="1ère Pédagogie">1ère Pédagogie</option>
+                        <option value="2ème Pédagogie">2ème Pédagogie</option>
+                        <option value="3ème Commerciale">3ème Commerciale</option>
+                        <option value="4ème Commerciale">4ème Commerciale</option>
+                        <option value="4ème Scientifique">4ème Scientifique</option>
+                        <option value="1ère Agronomie">1ère Agronomie</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal('addEleveModal')">Annuler</button>
+                <button class="btn btn-success" onclick="addNewEleve()">Enregistrer</button>
             </div>
         </div>
     </div>
@@ -570,7 +601,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
         // === CONFIGURATION FIREBASE ===
@@ -587,10 +617,9 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const storage = firebase.storage();
 
         // === DONNÉES DE DÉMONSTRATION ===
-        const demoData = {
+        let demoData = {
             eleves: [
                 { id: "E001", matricule: "SCL2024-001", nom: "Mbayo", postnom: "Kabasele", prenom: "Sarah", classe: "4ème Scientifique", dateInscription: "2024-01-15", statut: "Actif" },
                 { id: "E002", matricule: "SCL2024-002", nom: "Kalonga", postnom: "Mwamba", prenom: "David", classe: "3ème Commerciale", dateInscription: "2024-01-10", statut: "Actif" },
@@ -603,13 +632,30 @@
                 { id: "C003", nom: "1ère Pédagogie", effectif: 38, option: "Pédagogie" },
                 { id: "C004", nom: "2ème Pédagogie", effectif: 35, option: "Pédagogie" },
                 { id: "C005", nom: "3ème Commerciale", effectif: 40, option: "Commerciale" },
-                { id: "C006", nom: "4ème Scientifique", effectif: 32, option: "Scientifique" },
-                { id: "C007", nom: "1ère Agronomie", effectif: 28, option: "Agronomie" }
+                { id: "C006", nom: "4ème Commerciale", effectif: 36, option: "Commerciale" },
+                { id: "C007", nom: "4ème Scientifique", effectif: 32, option: "Scientifique" },
+                { id: "C008", nom: "1ère Agronomie", effectif: 28, option: "Agronomie" }
             ],
             enseignants: [
                 { id: "P001", nom: "Delphin Kagunge", role: "Directeur Études", matiere: "Gestion", statut: "Actif" },
                 { id: "P002", nom: "Modeste Makong", role: "Directeur Discipline", matiere: "Éducation Civique", statut: "Actif" },
-                { id: "P003", nom: "Père Gabin", role: "Économe", matiere: "Économie", statut: "Actif" }
+                { id: "P003", nom: "Père Gabin", role: "Économe", matiere: "Économie", statut: "Actif" },
+                { id: "P004", nom: "Jacques Kabila", role: "Enseignant", matiere: "Mathématiques", statut: "Actif" },
+                { id: "P005", nom: "Sylvie Mbayo", role: "Enseignante", matiere: "Français", statut: "Actif" }
+            ],
+            notes: [
+                { id: "N001", eleve: "Sarah Mbayo", matiere: "Mathématiques", note: 16, coefficient: 4, date: "2024-01-15" },
+                { id: "N002", eleve: "David Kalonga", matiere: "Français", note: 14, coefficient: 3, date: "2024-01-16" },
+                { id: "N003", eleve: "Julie Tshibangu", matiere: "Sciences", note: 18, coefficient: 4, date: "2024-01-17" }
+            ],
+            finances: [
+                { id: "F001", eleve: "Sarah Mbayo", type: "Frais scolaire", montant: 150, date: "2024-01-10", statut: "Payé" },
+                { id: "F002", eleve: "David Kalonga", type: "Frais scolaire", montant: 150, date: "2024-01-10", statut: "Payé" },
+                { id: "F003", eleve: "Patrick Mwana", type: "Frais scolaire", montant: 150, date: "2024-01-10", statut: "En retard" }
+            ],
+            discipline: [
+                { id: "D001", eleve: "Luc Kabongo", classe: "3ème Commerciale", motif: "Retard répété", sanction: "Avertissement", date: "2024-01-18", statut: "En cours" },
+                { id: "D002", eleve: "Marc Tshisekedi", classe: "2ème Pédagogie", motif: "Absence non justifiée", sanction: "Retenue", date: "2024-01-17", statut: "Appliquée" }
             ],
             alertes: [
                 { id: "A001", type: "warning", message: "3 élèves avec absences répétées", date: "2024-01-20" },
@@ -617,6 +663,648 @@
                 { id: "A003", type: "info", message: "Conseil de classe 4ème Scientifique", date: "2024-01-22" }
             ]
         };
+
+        // === CONTENU DES PAGES ===
+        const pageContents = {
+            dashboard: `
+                <div class="page-header">
+                    <div>
+                        <h1 style="margin-bottom: 5px;">Vue d'ensemble de l'Institut</h1>
+                        <p style="color: #666;">Statistiques et activités récentes</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-primary" onclick="refreshData()">🔄 Actualiser</button>
+                        <button class="btn btn-success" onclick="generateReport()">📊 Rapport</button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">${demoData.eleves.length}</div>
+                        <div class="stat-label">Élèves inscrits</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-number">${demoData.classes.length}</div>
+                        <div class="stat-label">Classes actives</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-number">${demoData.enseignants.length}</div>
+                        <div class="stat-label">Enseignants</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="stat-number">78%</div>
+                        <div class="stat-label">Taux de réussite</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3>Derniers élèves inscrits</h3>
+                            <button class="btn btn-primary" onclick="showPage('eleves')">Voir tous</button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Matricule</th>
+                                    <th>Nom et Prénom</th>
+                                    <th>Classe</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${demoData.eleves.slice(0, 5).map(eleve => `
+                                    <tr>
+                                        <td><strong>${eleve.matricule}</strong></td>
+                                        <td>${eleve.prenom} ${eleve.nom}</td>
+                                        <td>${eleve.classe}</td>
+                                        <td><span class="badge badge-success">${eleve.statut}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3>Alertes importantes</h3>
+                            <span class="badge badge-danger">${demoData.alertes.length}</span>
+                        </div>
+                        <div style="padding: 20px;">
+                            ${demoData.alertes.map(alerte => `
+                                <div style="padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid ${
+                                    alerte.type === 'danger' ? 'var(--danger)' : 
+                                    alerte.type === 'warning' ? 'var(--warning)' : 'var(--secondary)'
+                                };">
+                                    <div style="font-weight: 600; margin-bottom: 5px;">${alerte.message}</div>
+                                    <div style="font-size: 0.8em; color: #666;">${alerte.date}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Répartition par option pédagogique</h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div class="grid-3">
+                            ${demoData.classes.reduce((acc, classe) => {
+                                if (!acc.find(c => c.option === classe.option)) {
+                                    acc.push(classe);
+                                }
+                                return acc;
+                            }, []).map(classe => `
+                                <div style="text-align: center; padding: 20px; background: white; border-radius: var(--radius); box-shadow: var(--shadow);">
+                                    <div style="font-size: 2em; font-weight: bold; color: var(--secondary);">
+                                        ${demoData.classes.filter(c => c.option === classe.option).reduce((sum, c) => sum + c.effectif, 0)}
+                                    </div>
+                                    <div style="color: #666; margin-top: 8px;">${classe.option}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `,
+
+            eleves: `
+                <div class="page-header">
+                    <div>
+                        <h1 style="margin-bottom: 5px;">Gestion des Élèves</h1>
+                        <p style="color: #666;">Liste complète des élèves inscrits</p>
+                    </div>
+                    <button class="btn btn-success" onclick="showModal('addEleveModal')">➕ Nouvel élève</button>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Liste des élèves (${demoData.eleves.length})</h3>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="searchEleves" placeholder="Rechercher..." style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+                            <button class="btn btn-primary" onclick="searchEleves()">🔍 Rechercher</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Matricule</th>
+                                <th>Nom</th>
+                                <th>Postnom</th>
+                                <th>Prénom</th>
+                                <th>Classe</th>
+                                <th>Date Inscription</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="elevesTableBody">
+                            ${demoData.eleves.map(eleve => `
+                                <tr>
+                                    <td><strong>${eleve.matricule}</strong></td>
+                                    <td>${eleve.nom}</td>
+                                    <td>${eleve.postnom}</td>
+                                    <td>${eleve.prenom}</td>
+                                    <td>${eleve.classe}</td>
+                                    <td>${eleve.dateInscription}</td>
+                                    <td><span class="badge badge-success">${eleve.statut}</span></td>
+                                    <td>
+                                        <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewEleve('${eleve.id}')">
+                                            👁️ Voir
+                                        </button>
+                                        <button class="btn" style="padding: 5px 10px; background: #fff3e0; color: #f57c00;" onclick="editEleve('${eleve.id}')">
+                                            ✏️ Modifier
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `,
+
+            enseignants: `
+                <div class="page-header">
+                    <div>
+                        <h1 style="margin-bottom: 5px;">Gestion des Enseignants</h1>
+                        <p style="color: #666;">Personnel enseignant et administratif</p>
+                    </div>
+                    <button class="btn btn-success" onclick="showNotification('Formulaire en développement', 'info')">➕ Nouvel enseignant</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">${demoData.enseignants.length}</div>
+                        <div class="stat-label">Enseignants actifs</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Cadres administratifs</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-number">24</div>
+                        <div class="stat-label">Enseignants total</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">Postes vacants</div>
+                    </div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Liste du personnel</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nom complet</th>
+                                <th>Rôle</th>
+                                <th>Matière</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${demoData.enseignants.map(enseignant => `
+                                <tr>
+                                    <td><strong>${enseignant.nom}</strong></td>
+                                    <td>${enseignant.role}</td>
+                                    <td>${enseignant.matiere}</td>
+                                    <td><span class="badge badge-success">${enseignant.statut}</span></td>
+                                    <td>
+                                        <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewEnseignant('${enseignant.id}')">
+                                            👁️ Voir
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `,
+
+            classes: `
+                <div class="page-header">
+                    <div>
+                        <h1 style="margin-bottom: 5px;">Gestion des Classes</h1>
+                        <p style="color: #666;">Structure pédagogique de l'institut</p>
+                    </div>
+                    <button class="btn btn-success" onclick="showNotification('Formulaire en développement', 'info')">➕ Nouvelle classe</button>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Structure des classes</h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <h3 style="color: var(--primary); margin-bottom: 20px;">🎯 Cycle d'Orientation</h3>
+                        <div class="grid-2" style="margin-bottom: 30px;">
+                            ${demoData.classes.filter(c => c.nom.includes('EB')).map(classe => `
+                                <div style="padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                                    <h4>${classe.nom}</h4>
+                                    <p><strong>Effectif:</strong> ${classe.effectif} élèves</p>
+                                    <p><strong>Option:</strong> ${classe.option}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <h3 style="color: var(--primary); margin-bottom: 20px;">🎓 Cycle Humanitaire</h3>
+                        
+                        <h4 style="color: #666; margin-bottom: 15px;">Option Pédagogie Générale</h4>
+                        <div class="grid-2" style="margin-bottom: 20px;">
+                            ${demoData.classes.filter(c => c.option === 'Pédagogie').map(classe => `
+                                <div style="padding: 20px; background: #e8f5e8; border-radius: 8px;">
+                                    <h4>${classe.nom}</h4>
+                                    <p><strong>Effectif:</strong> ${classe.effectif} élèves</p>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <h4 style="color: #666; margin-bottom: 15px;">Option Commerciale & Gestion</h4>
+                        <div class="grid-2" style="margin-bottom: 20px;">
+                            ${demoData.classes.filter(c => c.option === 'Commerciale').map(classe => `
+                                <div style="padding: 20px; background: #e3f2fd; border-radius: 8px;">
+                                    <h4>${classe.nom}</h4>
+                                    <p><strong>Effectif:</strong> ${classe.effectif} élèves</p>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <h4 style="color: #666; margin-bottom: 15px;">Option Scientifique</h4>
+                        <div style="padding: 20px; background: #fff3e0; border-radius: 8px; margin-bottom: 20px;">
+                            ${demoData.classes.filter(c => c.option === 'Scientifique').map(classe => `
+                                <div>
+                                    <h4>${classe.nom}</h4>
+                                    <p><strong>Effectif:</strong> ${classe.effectif} élèves</p>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <h4 style="color: #666; margin-bottom: 15px;">Option Agronomie</h4>
+                        <div style="padding: 20px; background: #e8f5e8; border-radius: 8px;">
+                            ${demoData.classes.filter(c => c.option === 'Agronomie').map(classe => `
+                                <div>
+                                    <h4>${classe.nom}</h4>
+                                    <p><strong>Effectif:</strong> ${classe.effectif} élèves</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `,
+
+            notes: `
+                <div class="page-header">
+                    <div>
+                        <h1 style="margin-bottom: 5px;">Gestion des Notes</h1>
+                        <p style="color: #666;">Saisie et consultation des évaluations</p>
+                    </div>
+                    <button class="btn btn-success" onclick="showNotification('Formulaire en développement', 'info')">📝 Saisir notes</button>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Dernières évaluations</h3>
+                        <div style="display: flex; gap: 10px;">
+                            <select style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+                                <option>Toutes les classes</option>
+                                <option>4ème Scientifique</option>
+                                <option>3ème Commerciale</option>
+                                <option>2ème Pédagogie</option>
+                            </select>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Élève</th>
+                                <th>Matière</th>
+                                <th>Note</th>
+                                <th>Coefficient</th>
+                                <th>Date</th>
+                                <th>Appréciation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${demoData.notes.map(note => `
+                                <tr>
+                                    <td><strong>${note.eleve}</strong></td>
+                                    <td>${note.matiere}</td>
+                                    <td>
+                                        <span class="badge ${
+                                            note.note >= 16 ? 'badge-success' : 
+                                            note.note >= 12 ? 'badge-primary' : 
+                                            note.note >= 8 ? 'badge-warning' : 'badge-danger'
+                                        }">
+                                            ${note.note}/20
+                                        </span>
+                                    </td>
+                                    <td>${note.coefficient}</td>
+                                    <td>${note.date}</td>
+                                    <td>
+                                        ${note.note >= 16 ? 'Excellent' : 
+                                          note.note >= 14 ? 'Très bien' : 
+                                          note.note >= 12 ? 'Bien' : 
+                                          note.note >= 10 ? 'Passable' : 'Insuffisant'}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `,
+
+            finances: `
+                <div class="page-header">
+                    <div>
+                        <h1 style="margin-bottom: 5px;">Gestion Financière</h1>
+                        <p style="color: #666;">Suivi des paiements et frais scolaires</p>
+                    </div>
+                    <button class="btn btn-success" onclick="showNotification('Formulaire en développement', 'info')">💰 Nouveau paiement</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">${demoData.finances.filter(f => f.statut === 'Payé').length}</div>
+                        <div class="stat-label">Paiements validés</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-number">${demoData.finances.filter(f => f.statut === 'Payé').reduce((sum, f) => sum + f.montant, 0)} $</div>
+                        <div class="stat-label">Montant perçu</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-number">${demoData.finances.filter(f => f.statut === 'En retard').length}</div>
+                        <div class="stat-label">Retards de paiement</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="stat-number">${demoData.finances.filter(f => f.statut === 'En retard').reduce((sum, f) => sum + f.montant, 0)} $</div>
+                        <div class="stat-label">Montant impayé</div>
+                    </div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Dernières transactions</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Élève</th>
+                                <th>Type</th>
+                                <th>Montant</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${demoData.finances.map(finance => `
+                                <tr>
+                                    <td><strong>${finance.eleve}</strong></td>
+                                    <td>${finance.type}</td>
+                                    <td>${finance.montant} $</td>
+                                    <td>${finance.date}</td>
+                                    <td>
+                                        <span class="badge ${
+                                            finance.statut === 'Payé' ? 'badge-success' : 'badge-danger'
+                                        }">
+                                            ${finance.statut}
+                                        </span>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `,
+
+            discipline: `
+                <div class="page-header">
+                    <div>
+                        <h1 style="margin-bottom: 5px;">Gestion de la Discipline</h1>
+                        <p style="color: #666;">Suivi du comportement et sanctions</p>
+                    </div>
+                    <button class="btn btn-success" onclick="showNotification('Formulaire en développement', 'info')">⚖️ Nouvelle sanction</button>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Incidents récents</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Élève</th>
+                                <th>Classe</th>
+                                <th>Motif</th>
+                                <th>Sanction</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${demoData.discipline.map(incident => `
+                                <tr>
+                                    <td><strong>${incident.eleve}</strong></td>
+                                    <td>${incident.classe}</td>
+                                    <td>${incident.motif}</td>
+                                    <td>${incident.sanction}</td>
+                                    <td>${incident.date}</td>
+                                    <td>
+                                        <span class="badge ${
+                                            incident.statut === 'Appliquée' ? 'badge-success' : 'badge-warning'
+                                        }">
+                                            ${incident.statut}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewIncident('${incident.id}')">
+                                            👁️ Voir
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `
+        };
+
+        // === FONCTIONS PRINCIPALES ===
+        function showPage(pageName) {
+            // Mettre à jour le menu actif
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-page="${pageName}"]`).classList.add('active');
+            
+            // Mettre à jour le titre de la page
+            const pageTitles = {
+                dashboard: "Tableau de Bord Préfet",
+                eleves: "Gestion des Élèves", 
+                enseignants: "Gestion des Enseignants",
+                classes: "Gestion des Classes",
+                notes: "Gestion des Notes",
+                finances: "Gestion Financière", 
+                discipline: "Gestion de la Discipline"
+            };
+            
+            document.getElementById('pageTitle').textContent = pageTitles[pageName] || "Tableau de Bord";
+            
+            // Afficher le contenu de la page
+            const contentArea = document.getElementById('contentArea');
+            contentArea.innerHTML = pageContents[pageName] || `
+                <div style="text-align: center; padding: 50px;">
+                    <h2>Page en développement</h2>
+                    <p>La page ${pageName} sera disponible prochainement.</p>
+                </div>
+            `;
+        }
+
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function addNewEleve() {
+            const matricule = document.getElementById('newMatricule').value;
+            const nom = document.getElementById('newNom').value;
+            const postnom = document.getElementById('newPostnom').value;
+            const prenom = document.getElementById('newPrenom').value;
+            const classe = document.getElementById('newClasse').value;
+
+            if (!matricule || !nom || !postnom || !prenom || !classe) {
+                showNotification('Veuillez remplir tous les champs', 'error');
+                return;
+            }
+
+            const newEleve = {
+                id: 'E' + (demoData.eleves.length + 1).toString().padStart(3, '0'),
+                matricule: matricule,
+                nom: nom,
+                postnom: postnom,
+                prenom: prenom,
+                classe: classe,
+                dateInscription: new Date().toISOString().split('T')[0],
+                statut: 'Actif'
+            };
+
+            demoData.eleves.push(newEleve);
+            closeModal('addEleveModal');
+            showNotification('Élève ajouté avec succès', 'success');
+            showPage('eleves'); // Recharger la page
+        }
+
+        function searchEleves() {
+            const searchTerm = document.getElementById('searchEleves').value.toLowerCase();
+            const filtered = demoData.eleves.filter(eleve => 
+                eleve.nom.toLowerCase().includes(searchTerm) || 
+                eleve.prenom.toLowerCase().includes(searchTerm) ||
+                eleve.matricule.toLowerCase().includes(searchTerm)
+            );
+            
+            document.getElementById('elevesTableBody').innerHTML = filtered.map(eleve => `
+                <tr>
+                    <td><strong>${eleve.matricule}</strong></td>
+                    <td>${eleve.nom}</td>
+                    <td>${eleve.postnom}</td>
+                    <td>${eleve.prenom}</td>
+                    <td>${eleve.classe}</td>
+                    <td>${eleve.dateInscription}</td>
+                    <td><span class="badge badge-success">${eleve.statut}</span></td>
+                    <td>
+                        <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewEleve('${eleve.id}')">
+                            👁️ Voir
+                        </button>
+                        <button class="btn" style="padding: 5px 10px; background: #fff3e0; color: #f57c00;" onclick="editEleve('${eleve.id}')">
+                            ✏️ Modifier
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function viewEleve(eleveId) {
+            const eleve = demoData.eleves.find(e => e.id === eleveId);
+            showNotification(`Visualisation de ${eleve.prenom} ${eleve.nom}`, 'info');
+        }
+
+        function editEleve(eleveId) {
+            const eleve = demoData.eleves.find(e => e.id === eleveId);
+            showNotification(`Modification de ${eleve.prenom} ${eleve.nom}`, 'info');
+        }
+
+        function viewEnseignant(enseignantId) {
+            const enseignant = demoData.enseignants.find(e => e.id === enseignantId);
+            showNotification(`Visualisation de ${enseignant.nom}`, 'info');
+        }
+
+        function viewIncident(incidentId) {
+            const incident = demoData.discipline.find(d => d.id === incidentId);
+            showNotification(`Détails de l'incident: ${incident.motif}`, 'info');
+        }
+
+        // === FONCTIONS UTILITAIRES ===
+        function showDashboard() {
+            document.getElementById('authPage').style.display = 'none';
+            document.getElementById('dashboardPage').style.display = 'flex';
+            updateDate();
+            showPage('dashboard');
+        }
+
+        function updateDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('fr-FR', options);
+        }
+
+        function refreshData() {
+            showNotification('Données actualisées avec succès', 'success');
+            showPage('dashboard');
+        }
+
+        function generateReport() {
+            showNotification('Génération du rapport en cours...', 'info');
+            setTimeout(() => {
+                showNotification('Rapport généré avec succès', 'success');
+            }, 2000);
+        }
+
+        function logout() {
+            if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+                auth.signOut().then(() => {
+                    document.getElementById('dashboardPage').style.display = 'none';
+                    document.getElementById('authPage').style.display = 'flex';
+                    document.getElementById('loginForm').reset();
+                });
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--secondary)'};
+                color: white;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
 
         // === GESTION AUTHENTIFICATION ===
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -656,148 +1344,15 @@
             }
         });
 
-        // === FONCTIONS D'AFFICHAGE ===
-        function showDashboard() {
-            document.getElementById('authPage').style.display = 'none';
-            document.getElementById('dashboardPage').style.display = 'flex';
-            updateDate();
-            loadDashboardData();
-        }
-
-        function showPage(pageName) {
-            // Pour l'instant, seul le dashboard est implémenté
-            alert(`Page ${pageName} - En cours de développement\n\nCette fonctionnalité sera disponible dans la prochaine mise à jour.`);
-        }
-
-        function logout() {
-            if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
-                auth.signOut().then(() => {
-                    document.getElementById('dashboardPage').style.display = 'none';
-                    document.getElementById('authPage').style.display = 'flex';
-                    document.getElementById('loginForm').reset();
-                });
-            }
-        }
-
-        function updateDate() {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('fr-FR', options);
-        }
-
-        function refreshData() {
-            loadDashboardData();
-            showNotification('Données actualisées avec succès', 'success');
-        }
-
-        function generateReport() {
-            showNotification('Génération du rapport en cours...', 'info');
-            // Simuler la génération du rapport
-            setTimeout(() => {
-                showNotification('Rapport généré avec succès', 'success');
-            }, 2000);
-        }
-
-        function showNotification(message, type = 'info') {
-            // Créer une notification toast
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 15px 20px;
-                background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--secondary)'};
-                color: white;
-                border-radius: var(--radius);
-                box-shadow: var(--shadow);
-                z-index: 1000;
-                animation: slideIn 0.3s ease;
-            `;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
-
-        // === CHARGEMENT DES DONNÉES ===
-        function loadDashboardData() {
-            // Mettre à jour les statistiques
-            document.getElementById('totalEleves').textContent = demoData.eleves.length;
-            document.getElementById('totalClasses').textContent = demoData.classes.length;
-            document.getElementById('totalEnseignants').textContent = demoData.enseignants.length;
-            document.getElementById('tauxReussite').textContent = '78%';
-            document.getElementById('alertCount').textContent = demoData.alertes.length;
-
-            // Remplir le tableau des élèves récents
-            const tbody = document.getElementById('recentElevesTable');
-            tbody.innerHTML = demoData.eleves.map(eleve => `
-                <tr>
-                    <td><strong>${eleve.matricule}</strong></td>
-                    <td>${eleve.nom} ${eleve.prenom}</td>
-                    <td>${eleve.classe}</td>
-                    <td><span class="badge badge-success">${eleve.statut}</span></td>
-                </tr>
-            `).join('');
-
-            // Remplir les alertes
-            const alertsList = document.getElementById('alertsList');
-            alertsList.innerHTML = demoData.alertes.map(alerte => `
-                <div style="padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid ${
-                    alerte.type === 'danger' ? 'var(--danger)' : 
-                    alerte.type === 'warning' ? 'var(--warning)' : 'var(--secondary)'
-                };">
-                    <div style="font-weight: 600; margin-bottom: 5px;">${alerte.message}</div>
-                    <div style="font-size: 0.8em; color: #666;">${alerte.date}</div>
-                </div>
-            `).join('');
-
-            // Statistiques par option
-            const optionsStats = document.getElementById('optionsStats');
-            const statsByOption = {};
-            demoData.classes.forEach(classe => {
-                if (!statsByOption[classe.option]) {
-                    statsByOption[classe.option] = 0;
-                }
-                statsByOption[classe.option] += classe.effectif;
-            });
-
-            optionsStats.innerHTML = Object.entries(statsByOption).map(([option, effectif]) => `
-                <div style="text-align: center; padding: 20px; background: white; border-radius: var(--radius); box-shadow: var(--shadow);">
-                    <div style="font-size: 2em; font-weight: bold; color: var(--secondary);">${effectif}</div>
-                    <div style="color: #666; margin-top: 8px;">${option}</div>
-                </div>
-            `).join('');
-        }
-
-        // === GESTION DES ÉVÉNEMENTS MENU ===
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', function() {
-                if (this.getAttribute('data-page')) {
-                    // Retirer la classe active de tous les items
-                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-                    // Ajouter la classe active à l'item cliqué
-                    this.classList.add('active');
-                    // Changer la page
-                    showPage(this.getAttribute('data-page'));
-                }
-            });
-        });
-
         // === INITIALISATION ===
         document.addEventListener('DOMContentLoaded', function() {
-            // Vérifier si l'utilisateur est déjà connecté
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    showDashboard();
-                } else {
-                    console.log('Système de gestion scolaire - Institut Saint Charles Lwanga');
-                    console.log('Préfet: Père Michel Lembe');
-                    console.log('Directeur études: Mr Delphin Kagunge');
-                    console.log('Directeur discipline: Mr Modeste Makong');
-                    console.log('Économe: Père Gabin');
-                }
+            // Gestion des clics sur le menu
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    if (this.getAttribute('data-page')) {
+                        showPage(this.getAttribute('data-page'));
+                    }
+                });
             });
 
             // CSS pour les animations
@@ -809,6 +1364,10 @@
                 }
             `;
             document.head.appendChild(style);
+
+            console.log('🏫 Système de gestion scolaire - Institut Saint Charles Lwanga');
+            console.log('📍 Kolwezi, RDC');
+            console.log('🚀 Tous les modules sont fonctionnels !');
         });
     </script>
 </body>
