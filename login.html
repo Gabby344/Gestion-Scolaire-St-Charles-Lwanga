@@ -80,6 +80,7 @@
             border-radius: 6px; 
             margin-top: 15px; 
             text-align: center; 
+            word-break: break-word; /* Ajouté pour afficher les longs messages d'erreur */
         }
         .error { 
             background: #fef2f2; 
@@ -143,12 +144,12 @@
                 <form id="loginForm">
                     <div class="form-group">
                         <label for="email">Email :</label>
-                        <input type="email" id="email" required>
+                        <input type="email" id="email" required autocomplete="off">
                     </div>
                     
                     <div class="form-group">
                         <label for="password">Mot de passe :</label>
-                        <input type="password" id="password" required>
+                        <input type="password" id="password" required autocomplete="new-password">
                     </div>
                     
                     <button type="submit" class="btn btn-primary" id="loginBtn">
@@ -162,7 +163,6 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
@@ -209,9 +209,8 @@
                 const user = userCredential.user;
                 
                 console.log('✅ Authentification Firebase réussie:', user.uid);
-                showSuccess('Authentification réussie !');
-
-                // 2. Déterminer le rôle basé sur l'email
+                
+                // 2. Déterminer le rôle basé sur l'email (utilisé pour la création/mise à jour Firestore)
                 let role = 'utilisateur';
                 let nom = 'Utilisateur';
                 
@@ -234,10 +233,11 @@
 
                 // 3. Vérifier/créer l'utilisateur dans Firestore
                 const userDoc = await db.collection('users').doc(user.uid).get();
+                let userData;
                 
                 if (!userDoc.exists) {
                     // Créer l'utilisateur avec permissions
-                    const userData = {
+                    userData = {
                         email: user.email,
                         nom: nom,
                         role: role,
@@ -251,8 +251,6 @@
                     await db.collection('users').doc(user.uid).set(userData);
                     console.log('✅ Nouvel utilisateur créé dans Firestore');
                     
-                    // Sauvegarder dans localStorage
-                    localStorage.setItem('currentUser', JSON.stringify(userData));
                 } else {
                     // Mettre à jour la dernière connexion
                     await db.collection('users').doc(user.uid).update({
@@ -260,17 +258,17 @@
                     });
                     console.log('✅ Utilisateur existant mis à jour');
                     
-                    // Sauvegarder dans localStorage
-                    localStorage.setItem('currentUser', JSON.stringify(userDoc.data()));
+                    userData = userDoc.data();
                 }
 
+                // 4. Stockage Local et Redirection
+                localStorage.setItem('currentUser', JSON.stringify(userData));
                 localStorage.setItem('userRole', role);
                 localStorage.setItem('userUID', user.uid);
                 
                 console.log('✅ Session configurée, redirection...');
-                showSuccess('Connexion réussie ! Redirection...');
+                showSuccess(`Connexion réussie en tant que ${nom} (${role}) ! Redirection...`);
 
-                // Redirection
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
                 }, 1500);
@@ -278,22 +276,22 @@
             } catch (error) {
                 console.error('❌ Erreur de connexion:', error);
                 
-                let errorMessage = 'Erreur de connexion';
+                let errorMessage;
+                
                 switch (error.code) {
                     case 'auth/user-not-found':
-                        errorMessage = 'Utilisateur non trouvé';
-                        break;
                     case 'auth/wrong-password':
-                        errorMessage = 'Mot de passe incorrect';
+                        errorMessage = 'Email ou mot de passe incorrect.';
                         break;
                     case 'auth/invalid-email':
-                        errorMessage = 'Email invalide';
+                        errorMessage = 'Format d\'email invalide.';
                         break;
                     case 'auth/too-many-requests':
                         errorMessage = 'Trop de tentatives. Réessayez plus tard.';
                         break;
                     default:
-                        errorMessage = error.message;
+                        // CODE DE DÉBOGAGE
+                        errorMessage = `Erreur de connexion : ${error.code || 'CODE INCONNU'}. Veuillez vérifier votre API Key.`;
                 }
                 
                 showError(errorMessage);
@@ -362,11 +360,13 @@
         function showSuccess(message) {
             document.getElementById('successMessage').textContent = message;
             document.getElementById('successMessage').classList.remove('hidden');
+            document.getElementById('errorMessage').classList.add('hidden'); // S'assurer que l'erreur est masquée
         }
 
         function showError(message) {
             document.getElementById('errorMessage').textContent = message;
             document.getElementById('errorMessage').classList.remove('hidden');
+            document.getElementById('successMessage').classList.add('hidden'); // S'assurer que le succès est masqué
         }
 
         function clearMessages() {
@@ -374,7 +374,7 @@
             document.getElementById('successMessage').classList.add('hidden');
         }
 
-        // Vérifier si déjà connecté
+        // Vérifier si déjà connecté (pour empêcher l'accès à la page de login)
         auth.onAuthStateChanged((user) => {
             if (user && localStorage.getItem('currentUser')) {
                 console.log('🔄 Utilisateur déjà connecté, redirection...');
@@ -382,7 +382,7 @@
             }
         });
 
-        // Remplir avec le compte prefet par défaut
+        // Remplir avec le compte prefet par défaut au chargement
         document.addEventListener('DOMContentLoaded', function() {
             fillCredentials('prefet@stcharles.edu', 'prefet123');
         });
