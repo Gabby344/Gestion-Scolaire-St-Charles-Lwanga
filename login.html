@@ -381,6 +381,117 @@
             }
         }
 
+        // === MATRICE DES PERMISSIONS PAR RÔLE ===
+        function getRolePermissions(role) {
+            const permissions = {
+                // 👑 PRÉFET DES ÉTUDES - Accès complet
+                'prefet': {
+                    dashboard: { read: true, write: true, delete: true },
+                    eleves: { read: true, write: true, delete: true },
+                    enseignants: { read: true, write: true, delete: true },
+                    classes: { read: true, write: true, delete: true },
+                    notes: { read: true, write: true, delete: true },
+                    finances: { read: true, write: true, delete: true },
+                    discipline: { read: true, write: true, delete: true },
+                    emploi_temps: { read: true, write: true, delete: true },
+                    rapports: { read: true, write: true, delete: true }
+                },
+                
+                // 🎓 DIRECTEUR DES ÉTUDES - Pédagogie complète
+                'directeur_etudes': {
+                    dashboard: { read: true, write: true },
+                    eleves: { read: true, write: true, delete: false },
+                    enseignants: { read: true, write: true, delete: false },
+                    classes: { read: true, write: true, delete: true },
+                    notes: { read: true, write: true, delete: true },
+                    finances: { read: false, write: false, delete: false },
+                    discipline: { read: true, write: false, delete: false },
+                    emploi_temps: { read: true, write: true, delete: true },
+                    rapports: { read: true, write: true, delete: false }
+                },
+                
+                // ⚖️ DIRECTEUR DE DISCIPLINE - Vie scolaire
+                'directeur_discipline': {
+                    dashboard: { read: true, write: false },
+                    eleves: { read: true, write: false, delete: false },
+                    enseignants: { read: false, write: false, delete: false },
+                    classes: { read: true, write: false, delete: false },
+                    notes: { read: false, write: false, delete: false },
+                    finances: { read: false, write: false, delete: false },
+                    discipline: { read: true, write: true, delete: true },
+                    emploi_temps: { read: true, write: false, delete: false },
+                    rapports: { read: true, write: false, delete: false }
+                },
+                
+                // 💰 ECONOME - Finances uniquement
+                'econome': {
+                    dashboard: { read: true, write: false },
+                    eleves: { read: true, write: false, delete: false },
+                    enseignants: { read: false, write: false, delete: false },
+                    classes: { read: false, write: false, delete: false },
+                    notes: { read: false, write: false, delete: false },
+                    finances: { read: true, write: true, delete: true },
+                    discipline: { read: false, write: false, delete: false },
+                    emploi_temps: { read: false, write: false, delete: false },
+                    rapports: { read: true, write: false, delete: false }
+                },
+                
+                // 📋 SECRÉTAIRE - Administration
+                'secretaire': {
+                    dashboard: { read: true, write: false },
+                    eleves: { read: true, write: true, delete: false },
+                    enseignants: { read: true, write: true, delete: false },
+                    classes: { read: true, write: false, delete: false },
+                    notes: { read: true, write: false, delete: false },
+                    finances: { read: true, write: false, delete: false },
+                    discipline: { read: true, write: false, delete: false },
+                    emploi_temps: { read: true, write: false, delete: false },
+                    rapports: { read: true, write: false, delete: false }
+                },
+                
+                // 👨‍🏫 ENSEIGNANT - Limitée à ses classes
+                'enseignant': {
+                    dashboard: { read: true, write: false },
+                    eleves: { read: true, write: false, delete: false },
+                    enseignants: { read: false, write: false, delete: false },
+                    classes: { read: true, write: false, delete: false },
+                    notes: { read: true, write: true, delete: false },
+                    finances: { read: false, write: false, delete: false },
+                    discipline: { read: true, write: true, delete: false },
+                    emploi_temps: { read: true, write: false, delete: false },
+                    rapports: { read: true, write: false, delete: false }
+                },
+                
+                // 🎒 ÉLÈVE - Consultation seulement
+                'eleve': {
+                    dashboard: { read: true, write: false },
+                    eleves: { read: false, write: false, delete: false },
+                    enseignants: { read: false, write: false, delete: false },
+                    classes: { read: false, write: false, delete: false },
+                    notes: { read: true, write: false, delete: false },
+                    finances: { read: false, write: false, delete: false },
+                    discipline: { read: false, write: false, delete: false },
+                    emploi_temps: { read: true, write: false, delete: false },
+                    rapports: { read: false, write: false, delete: false }
+                }
+            };
+            
+            return permissions[role] || permissions['eleve'];
+        }
+
+        // === FONCTION DE REDIRECTION PAR RÔLE ===
+        function redirectByRole(userData) {
+            const role = userData.role;
+            const permissions = getRolePermissions(role);
+            
+            // Stocker les permissions dans localStorage
+            localStorage.setItem('userPermissions', JSON.stringify(permissions));
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            
+            // Redirection vers le dashboard
+            window.location.href = 'dashboard.html';
+        }
+
         // === GESTION AUTHENTIFICATION ===
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -400,45 +511,29 @@
                 const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 console.log('✅ Connexion Firebase réussie:', userCredential.user);
                 
+                // Récupérer les données utilisateur supplémentaires
+                const userDoc = await db.collection('users').doc(userCredential.user.uid).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    redirectByRole(userData);
+                }
+                
             } catch (firebaseError) {
                 console.log('Firebase error:', firebaseError);
                 
                 // Fallback: Vérifier les utilisateurs par défaut
                 if (defaultUsers[email] && defaultUsers[email].password === password) {
                     console.log('✅ Connexion avec utilisateur par défaut');
-                    
-                    // Simuler une connexion réussie
-                    const userData = defaultUsers[email];
-                    localStorage.setItem('currentUser', JSON.stringify({
-                        email: email,
-                        role: userData.role,
-                        nom: userData.nom,
-                        photo: userData.photo,
-                        matiere: userData.matiere,
-                        matricule: userData.matricule,
-                        classe: userData.classe
-                    }));
-                    
+                    redirectByRole(defaultUsers[email]);
                 } else {
-                    throw new Error('Email ou mot de passe incorrect');
+                    errorDiv.textContent = 'Email ou mot de passe incorrect';
+                    errorDiv.classList.remove('hidden');
                 }
+            } finally {
+                // Cacher loading
+                loginBtn.querySelector('.btn-text').classList.remove('hidden');
+                loginBtn.querySelector('.btn-loading').classList.add('hidden');
             }
-
-            // Redirection vers le dashboard
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1000);
-
-        });
-
-        // === GESTION DES ERREURS ===
-        .catch((error) => {
-            errorDiv.textContent = error.message;
-            errorDiv.classList.remove('hidden');
-        }).finally(() => {
-            // Cacher loading
-            loginBtn.querySelector('.btn-text').classList.remove('hidden');
-            loginBtn.querySelector('.btn-loading').classList.add('hidden');
         });
 
         // === INITIALISATION AU DÉMARRAGE ===
