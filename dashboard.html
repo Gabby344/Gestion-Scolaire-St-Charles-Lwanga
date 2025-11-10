@@ -364,6 +364,18 @@
             gap: 10px;
         }
 
+        .permission-denied {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .permission-denied i {
+            font-size: 3em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
         /* === RESPONSIVE === */
         @media (max-width: 768px) {
             .sidebar {
@@ -417,7 +429,7 @@
                 <div class="menu-item" data-page="notes">
                     📝 Notes & Bulletins
                 </div>
-                <div class="menu-item" data-page="emploi-temps">
+                <div class="menu-item" data-page="emploi_temps">
                     🕐 Emploi du Temps
                 </div>
 
@@ -451,7 +463,7 @@
         </div>
     </div>
 
-    <!-- MODAL POUR AJOUTER UN ÉLÈVE -->
+    <!-- MODALS -->
     <div id="addEleveModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -471,15 +483,15 @@
                     <label for="newClasse">Classe</label>
                     <select id="newClasse">
                         <option value="">Sélectionner une classe</option>
-                        <option value="4ème Scientifique">4ème Scientifique</option>
-                        <option value="3ème Commerciale">3ème Commerciale</option>
+                        <option value="7ème EB">7ème EB</option>
+                        <option value="8ème EB">8ème EB</option>
+                        <option value="1ère Pédagogie">1ère Pédagogie</option>
                         <option value="2ème Pédagogie">2ème Pédagogie</option>
+                        <option value="3ème Commerciale">3ème Commerciale</option>
+                        <option value="4ème Commerciale">4ème Commerciale</option>
+                        <option value="4ème Scientifique">4ème Scientifique</option>
                         <option value="1ère Agronomie">1ère Agronomie</option>
                     </select>
-                </div>
-                <div class="form-group">
-                    <label for="newDateNaissance">Date de naissance</label>
-                    <input type="date" id="newDateNaissance">
                 </div>
             </div>
             <div class="modal-footer">
@@ -528,6 +540,7 @@
                 { nom: "1ère Pédagogie", effectif: 38, option: "Pédagogie", professeurPrincipal: "Mr Paul Tshibangu" },
                 { nom: "2ème Pédagogie", effectif: 35, option: "Pédagogie", professeurPrincipal: "Mme Sylvie Mbayo" },
                 { nom: "3ème Commerciale", effectif: 40, option: "Commerciale", professeurPrincipal: "Mr Jacques Kabila" },
+                { nom: "4ème Commerciale", effectif: 36, option: "Commerciale", professeurPrincipal: "Mme Alice Tshibangu" },
                 { nom: "4ème Scientifique", effectif: 32, option: "Scientifique", professeurPrincipal: "Mr Patrick Mutombo" },
                 { nom: "1ère Agronomie", effectif: 28, option: "Agronomie", professeurPrincipal: "Mr David Mbayo" }
             ],
@@ -551,6 +564,39 @@
                 { type: "info", message: "Conseil de classe 4ème Scientifique", date: "2024-01-22" }
             ]
         };
+
+        // === SYSTÈME DE PERMISSIONS ===
+        function checkPermission(module, action) {
+            const permissions = JSON.parse(localStorage.getItem('userPermissions') || '{}');
+            return permissions[module] && permissions[module][action] === true;
+        }
+
+        function setupPermissions() {
+            const permissions = JSON.parse(localStorage.getItem('userPermissions') || '{}');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            // Masquer les éléments selon les permissions
+            document.querySelectorAll('.menu-item').forEach(item => {
+                const page = item.getAttribute('data-page');
+                if (page && page !== 'dashboard' && !checkPermission(page, 'read')) {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function showPermissionDenied() {
+            return `
+                <div class="permission-denied">
+                    <div>🚫</div>
+                    <h3>Accès Refusé</h3>
+                    <p>Vous n'avez pas les permissions nécessaires pour accéder à cette section.</p>
+                    <p><small>Contactez l'administration pour obtenir les droits d'accès.</small></p>
+                    <button class="btn btn-primary" onclick="navigateTo('dashboard')" style="margin-top: 20px;">
+                        Retour au Tableau de Bord
+                    </button>
+                </div>
+            `;
+        }
 
         // === GESTION UTILISATEUR ===
         function loadUserInfo() {
@@ -617,9 +663,11 @@
                         <button class="btn btn-primary" onclick="refreshData()">
                             🔄 Actualiser
                         </button>
-                        <button class="btn btn-success" onclick="generateReport()">
-                            📊 Rapport
-                        </button>
+                        ${checkPermission('rapports', 'write') ? `
+                            <button class="btn btn-success" onclick="generateReport()">
+                                📊 Rapport
+                            </button>
+                        ` : ''}
                     </div>
                 </div>
 
@@ -646,9 +694,11 @@
                     <div class="data-card">
                         <div class="card-header">
                             <div class="card-title">Derniers élèves inscrits</div>
-                            <button class="btn btn-primary" onclick="navigateTo('eleves')">
-                                Voir tous
-                            </button>
+                            ${checkPermission('eleves', 'read') ? `
+                                <button class="btn btn-primary" onclick="navigateTo('eleves')">
+                                    Voir tous
+                                </button>
+                            ` : ''}
                         </div>
                         <table>
                             <thead>
@@ -693,387 +743,530 @@
             `,
 
             eleves: `
-                <div class="page-header">
-                    <div>
-                        <h1 style="margin-bottom: 5px;">Gestion des Élèves</h1>
-                        <p style="color: #666;">Liste et gestion des élèves inscrits</p>
-                    </div>
-                    <button class="btn btn-success" onclick="showModal('addEleveModal')">
-                        ➕ Nouvel élève
-                    </button>
-                </div>
-
-                <div class="data-card">
-                    <div class="card-header">
-                        <div class="card-title">Liste des élèves (${demoData.eleves.length})</div>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="text" id="searchEleves" placeholder="Rechercher un élève..." style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
-                            <button class="btn btn-primary" onclick="filterEleves()">
-                                🔍 Rechercher
-                            </button>
+                ${!checkPermission('eleves', 'read') ? showPermissionDenied() : `
+                    <div class="page-header">
+                        <div>
+                            <h1 style="margin-bottom: 5px;">Gestion des Élèves</h1>
+                            <p style="color: #666;">Liste et gestion des élèves inscrits</p>
                         </div>
+                        ${checkPermission('eleves', 'write') ? `
+                            <button class="btn btn-success" onclick="showModal('addEleveModal')">
+                                ➕ Nouvel élève
+                            </button>
+                        ` : ''}
                     </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Matricule</th>
-                                <th>Nom complet</th>
-                                <th>Classe</th>
-                                <th>Date inscription</th>
-                                <th>Statut</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="elevesTable">
-                            ${demoData.eleves.map(eleve => `
+
+                    <div class="data-card">
+                        <div class="card-header">
+                            <div class="card-title">Liste des élèves (${demoData.eleves.length})</div>
+                            ${checkPermission('eleves', 'read') ? `
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="text" id="searchEleves" placeholder="Rechercher un élève..." style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+                                    <button class="btn btn-primary" onclick="filterEleves()">
+                                        🔍 Rechercher
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td><strong>${eleve.matricule}</strong></td>
-                                    <td>${eleve.nom}</td>
-                                    <td>${eleve.classe}</td>
-                                    <td>${eleve.dateInscription}</td>
-                                    <td><span class="badge badge-success">${eleve.statut}</span></td>
-                                    <td>
-                                        <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewEleve('${eleve.matricule}')">
-                                            👁️ Voir
-                                        </button>
-                                        <button class="btn" style="padding: 5px 10px; background: #fff3e0; color: #f57c00;" onclick="editEleve('${eleve.matricule}')">
-                                            ✏️ Modifier
-                                        </button>
-                                    </td>
+                                    <th>Matricule</th>
+                                    <th>Nom complet</th>
+                                    <th>Classe</th>
+                                    <th>Date inscription</th>
+                                    <th>Statut</th>
+                                    ${checkPermission('eleves', 'write') ? '<th>Actions</th>' : ''}
                                 </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody id="elevesTable">
+                                ${demoData.eleves.map(eleve => `
+                                    <tr>
+                                        <td><strong>${eleve.matricule}</strong></td>
+                                        <td>${eleve.nom}</td>
+                                        <td>${eleve.classe}</td>
+                                        <td>${eleve.dateInscription}</td>
+                                        <td><span class="badge badge-success">${eleve.statut}</span></td>
+                                        ${checkPermission('eleves', 'write') ? `
+                                            <td>
+                                                <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewEleve('${eleve.matricule}')">
+                                                    👁️ Voir
+                                                </button>
+                                                <button class="btn" style="padding: 5px 10px; background: #fff3e0; color: #f57c00;" onclick="editEleve('${eleve.matricule}')">
+                                                    ✏️ Modifier
+                                                </button>
+                                            </td>
+                                        ` : ''}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `}
             `,
 
             enseignants: `
-                <div class="page-header">
-                    <div>
-                        <h1 style="margin-bottom: 5px;">Gestion des Enseignants</h1>
-                        <p style="color: #666;">Liste et gestion du personnel enseignant</p>
-                    </div>
-                    <button class="btn btn-success" onclick="showNotification('Fonctionnalité en développement', 'info')">
-                        ➕ Nouvel enseignant
-                    </button>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">${demoData.enseignants.length}</div>
-                        <div class="stat-label">Enseignants actifs</div>
-                    </div>
-                    <div class="stat-card success">
-                        <div class="stat-number">${demoData.enseignants.filter(e => e.statut === 'Titulaire').length}</div>
-                        <div class="stat-label">Titulaires</div>
-                    </div>
-                    <div class="stat-card warning">
-                        <div class="stat-number">${demoData.enseignants.filter(e => e.statut === 'Vacataire').length}</div>
-                        <div class="stat-label">Vacataires</div>
-                    </div>
-                    <div class="stat-card danger">
-                        <div class="stat-number">2</div>
-                        <div class="stat-label">Postes vacants</div>
-                    </div>
-                </div>
-
-                <div class="data-card">
-                    <div class="card-header">
-                        <div class="card-title">Liste des enseignants</div>
-                        <div style="display: flex; gap: 10px;">
-                            <select id="filterMatiere" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
-                                <option value="">Toutes les matières</option>
-                                <option value="Mathématiques">Mathématiques</option>
-                                <option value="Français">Français</option>
-                                <option value="Sciences">Sciences</option>
-                            </select>
-                            <button class="btn btn-primary" onclick="filterEnseignants()">
-                                🔍 Filtrer
+                ${!checkPermission('enseignants', 'read') ? showPermissionDenied() : `
+                    <div class="page-header">
+                        <div>
+                            <h1 style="margin-bottom: 5px;">Gestion des Enseignants</h1>
+                            <p style="color: #666;">Liste et gestion du personnel enseignant</p>
+                        </div>
+                        ${checkPermission('enseignants', 'write') ? `
+                            <button class="btn btn-success" onclick="showNotification('Fonctionnalité en développement', 'info')">
+                                ➕ Nouvel enseignant
                             </button>
+                        ` : ''}
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">${demoData.enseignants.length}</div>
+                            <div class="stat-label">Enseignants actifs</div>
+                        </div>
+                        <div class="stat-card success">
+                            <div class="stat-number">${demoData.enseignants.filter(e => e.statut === 'Titulaire').length}</div>
+                            <div class="stat-label">Titulaires</div>
+                        </div>
+                        <div class="stat-card warning">
+                            <div class="stat-number">${demoData.enseignants.filter(e => e.statut === 'Vacataire').length}</div>
+                            <div class="stat-label">Vacataires</div>
+                        </div>
+                        <div class="stat-card danger">
+                            <div class="stat-number">2</div>
+                            <div class="stat-label">Postes vacants</div>
                         </div>
                     </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Matière</th>
-                                <th>Classes</th>
-                                <th>Statut</th>
-                                <th>Téléphone</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${demoData.enseignants.map(enseignant => `
+
+                    <div class="data-card">
+                        <div class="card-header">
+                            <div class="card-title">Liste des enseignants</div>
+                            ${checkPermission('enseignants', 'read') ? `
+                                <div style="display: flex; gap: 10px;">
+                                    <select id="filterMatiere" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+                                        <option value="">Toutes les matières</option>
+                                        <option value="Mathématiques">Mathématiques</option>
+                                        <option value="Français">Français</option>
+                                        <option value="Sciences">Sciences</option>
+                                    </select>
+                                    <button class="btn btn-primary" onclick="filterEnseignants()">
+                                        🔍 Filtrer
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td><strong>${enseignant.nom}</strong></td>
-                                    <td>${enseignant.matiere}</td>
-                                    <td>${enseignant.classes}</td>
-                                    <td><span class="badge badge-success">${enseignant.statut}</span></td>
-                                    <td>${enseignant.telephone}</td>
-                                    <td>
-                                        <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewEnseignant('${enseignant.nom}')">
-                                            👁️ Voir
-                                        </button>
-                                    </td>
+                                    <th>Nom</th>
+                                    <th>Matière</th>
+                                    <th>Classes</th>
+                                    <th>Statut</th>
+                                    <th>Téléphone</th>
+                                    ${checkPermission('enseignants', 'write') ? '<th>Actions</th>' : ''}
                                 </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                ${demoData.enseignants.map(enseignant => `
+                                    <tr>
+                                        <td><strong>${enseignant.nom}</strong></td>
+                                        <td>${enseignant.matiere}</td>
+                                        <td>${enseignant.classes}</td>
+                                        <td><span class="badge badge-success">${enseignant.statut}</span></td>
+                                        <td>${enseignant.telephone}</td>
+                                        ${checkPermission('enseignants', 'write') ? `
+                                            <td>
+                                                <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewEnseignant('${enseignant.nom}')">
+                                                    👁️ Voir
+                                                </button>
+                                            </td>
+                                        ` : ''}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `}
             `,
 
             classes: `
-                <div class="page-header">
-                    <div>
-                        <h1 style="margin-bottom: 5px;">Gestion des Classes</h1>
-                        <p style="color: #666;">Organisation des classes et effectifs</p>
+                ${!checkPermission('classes', 'read') ? showPermissionDenied() : `
+                    <div class="page-header">
+                        <div>
+                            <h1 style="margin-bottom: 5px;">Gestion des Classes</h1>
+                            <p style="color: #666;">Organisation des classes selon le système congolais</p>
+                        </div>
+                        ${checkPermission('classes', 'write') ? `
+                            <button class="btn btn-success" onclick="showNotification('Fonctionnalité en développement', 'info')">
+                                🏫 Nouvelle classe
+                            </button>
+                        ` : ''}
                     </div>
-                    <button class="btn btn-success" onclick="showNotification('Fonctionnalité en développement', 'info')">
-                        ➕ Nouvelle classe
-                    </button>
-                </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">${demoData.classes.length}</div>
-                        <div class="stat-label">Classes actives</div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">${demoData.classes.length}</div>
+                            <div class="stat-label">Classes actives</div>
+                        </div>
+                        <div class="stat-card success">
+                            <div class="stat-number">${demoData.classes.reduce((sum, classe) => sum + classe.effectif, 0)}</div>
+                            <div class="stat-label">Élèves total</div>
+                        </div>
+                        <div class="stat-card warning">
+                            <div class="stat-number">${Math.round(demoData.classes.reduce((sum, classe) => sum + classe.effectif, 0) / demoData.classes.length)}</div>
+                            <div class="stat-label">Moyenne par classe</div>
+                        </div>
+                        <div class="stat-card danger">
+                            <div class="stat-number">4</div>
+                            <div class="stat-label">Options pédagogiques</div>
+                        </div>
                     </div>
-                    <div class="stat-card success">
-                        <div class="stat-number">${demoData.classes.reduce((sum, classe) => sum + classe.effectif, 0)}</div>
-                        <div class="stat-label">Élèves total</div>
-                    </div>
-                    <div class="stat-card warning">
-                        <div class="stat-number">${Math.round(demoData.classes.reduce((sum, classe) => sum + classe.effectif, 0) / demoData.classes.length)}</div>
-                        <div class="stat-label">Moyenne par classe</div>
-                    </div>
-                    <div class="stat-card danger">
-                        <div class="stat-number">7</div>
-                        <div class="stat-label">Options pédagogiques</div>
-                    </div>
-                </div>
 
-                <div class="data-card">
-                    <div class="card-header">
-                        <div class="card-title">Liste des classes</div>
+                    <div class="data-card">
+                        <div class="card-header">
+                            <div class="card-title">Structure des Classes - Institut Saint Charles Lwanga</div>
+                        </div>
+                        <div style="padding: 20px;">
+                            <h3 style="margin-bottom: 15px; color: var(--primary);">🔹 Cycle d'Orientation (7ème & 8ème EB)</h3>
+                            <div class="grid-2" style="margin-bottom: 25px;">
+                                <div style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                    <h4>7ème EB</h4>
+                                    <p><strong>Effectif:</strong> 45 élèves</p>
+                                    <p><strong>Prof. Principal:</strong> Mr Jean Kabasele</p>
+                                </div>
+                                <div style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                    <h4>8ème EB</h4>
+                                    <p><strong>Effectif:</strong> 42 élèves</p>
+                                    <p><strong>Prof. Principal:</strong> Mme Marie Lukunku</p>
+                                </div>
+                            </div>
+
+                            <h3 style="margin-bottom: 15px; color: var(--primary);">🔹 Cycle Humanitaire (1ère à 4ème)</h3>
+                            
+                            <h4 style="margin: 15px 0 10px 0;">🎯 Option Pédagogie Générale</h4>
+                            <div class="grid-2" style="margin-bottom: 20px;">
+                                <div style="padding: 15px; background: #e8f5e8; border-radius: 8px;">
+                                    <h4>1ère Pédagogie Générale</h4>
+                                    <p><strong>Effectif:</strong> 38 élèves</p>
+                                    <p><strong>Prof. Principal:</strong> Mr Paul Tshibangu</p>
+                                </div>
+                                <div style="padding: 15px; background: #e8f5e8; border-radius: 8px;">
+                                    <h4>2ème Pédagogie Générale</h4>
+                                    <p><strong>Effectif:</strong> 35 élèves</p>
+                                    <p><strong>Prof. Principal:</strong> Mme Sylvie Mbayo</p>
+                                </div>
+                            </div>
+
+                            <h4 style="margin: 15px 0 10px 0;">💼 Option Commerciale & Gestion</h4>
+                            <div class="grid-2" style="margin-bottom: 20px;">
+                                <div style="padding: 15px; background: #e3f2fd; border-radius: 8px;">
+                                    <h4>3ème Commerciale & Gestion</h4>
+                                    <p><strong>Effectif:</strong> 40 élèves</p>
+                                    <p><strong>Prof. Principal:</strong> Mr Jacques Kabila</p>
+                                </div>
+                                <div style="padding: 15px; background: #e3f2fd; border-radius: 8px;">
+                                    <h4>4ème Commerciale & Gestion</h4>
+                                    <p><strong>Effectif:</strong> 36 élèves</p>
+                                    <p><strong>Prof. Principal:</strong> Mme Alice Tshibangu</p>
+                                </div>
+                            </div>
+
+                            <h4 style="margin: 15px 0 10px 0;">🔬 Option Scientifique</h4>
+                            <div style="padding: 15px; background: #fff3e0; border-radius: 8px; margin-bottom: 20px;">
+                                <h4>4ème Scientifique</h4>
+                                <p><strong>Effectif:</strong> 32 élèves</p>
+                                <p><strong>Prof. Principal:</strong> Mr Patrick Mutombo</p>
+                                <p><strong>Spécialités:</strong> Math-Physique, Bio-Chimie</p>
+                            </div>
+
+                            <h4 style="margin: 15px 0 10px 0;">🌱 Option Agronomie</h4>
+                            <div style="padding: 15px; background: #e8f5e8; border-radius: 8px;">
+                                <h4>1ère Agronomie</h4>
+                                <p><strong>Effectif:</strong> 28 élèves</p>
+                                <p><strong>Prof. Principal:</strong> Mr David Mbayo</p>
+                                <p><strong>Spécialités:</strong> Agronomie, Élevage</p>
+                            </div>
+                        </div>
                     </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Classe</th>
-                                <th>Option</th>
-                                <th>Effectif</th>
-                                <th>Professeur Principal</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${demoData.classes.map(classe => `
-                                <tr>
-                                    <td><strong>${classe.nom}</strong></td>
-                                    <td>${classe.option}</td>
-                                    <td>${classe.effectif} élèves</td>
-                                    <td>${classe.professeurPrincipal}</td>
-                                    <td>
-                                        <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewClasse('${classe.nom}')">
-                                            👁️ Voir
-                                        </button>
-                                        <button class="btn" style="padding: 5px 10px; background: #fff3e0; color: #f57c00;" onclick="editClasse('${classe.nom}')">
-                                            ✏️ Modifier
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
+                `}
             `,
 
             notes: `
-                <div class="page-header">
-                    <div>
-                        <h1 style="margin-bottom: 5px;">Gestion des Notes</h1>
-                        <p style="color: #666;">Saisie et consultation des notes</p>
-                    </div>
-                    <button class="btn btn-success" onclick="showNotification('Fonctionnalité en développement', 'info')">
-                        📝 Saisir notes
-                    </button>
-                </div>
-
-                <div class="data-card">
-                    <div class="card-header">
-                        <div class="card-title">Dernières notes saisies</div>
-                        <div style="display: flex; gap: 10px;">
-                            <select style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
-                                <option>Toutes les classes</option>
-                                <option>4ème Scientifique</option>
-                                <option>3ème Commerciale</option>
-                            </select>
+                ${!checkPermission('notes', 'read') ? showPermissionDenied() : `
+                    <div class="page-header">
+                        <div>
+                            <h1 style="margin-bottom: 5px;">Gestion des Notes</h1>
+                            <p style="color: #666;">Saisie et consultation des notes</p>
                         </div>
+                        ${checkPermission('notes', 'write') ? `
+                            <button class="btn btn-success" onclick="showNotification('Fonctionnalité en développement', 'info')">
+                                📝 Saisir notes
+                            </button>
+                        ` : ''}
                     </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Élève</th>
-                                <th>Matière</th>
-                                <th>Note</th>
-                                <th>Coefficient</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${demoData.notes.map(note => `
+
+                    <div class="data-card">
+                        <div class="card-header">
+                            <div class="card-title">Dernières notes saisies</div>
+                            ${checkPermission('notes', 'read') ? `
+                                <div style="display: flex; gap: 10px;">
+                                    <select style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+                                        <option>Toutes les classes</option>
+                                        <option>4ème Scientifique</option>
+                                        <option>3ème Commerciale</option>
+                                    </select>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td><strong>${note.eleve}</strong></td>
-                                    <td>${note.matiere}</td>
-                                    <td>
-                                        <span class="badge ${
-                                            note.note >= 16 ? 'badge-success' : 
-                                            note.note >= 12 ? 'badge-primary' : 
-                                            note.note >= 8 ? 'badge-warning' : 'badge-danger'
-                                        }">
-                                            ${note.note}/20
-                                        </span>
-                                    </td>
-                                    <td>${note.coefficient}</td>
-                                    <td>${note.date}</td>
-                                    <td>
-                                        <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;">
-                                            👁️ Voir
-                                        </button>
-                                    </td>
+                                    <th>Élève</th>
+                                    <th>Matière</th>
+                                    <th>Note</th>
+                                    <th>Coefficient</th>
+                                    <th>Date</th>
+                                    ${checkPermission('notes', 'write') ? '<th>Actions</th>' : ''}
                                 </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                ${demoData.notes.map(note => `
+                                    <tr>
+                                        <td><strong>${note.eleve}</strong></td>
+                                        <td>${note.matiere}</td>
+                                        <td>
+                                            <span class="badge ${
+                                                note.note >= 16 ? 'badge-success' : 
+                                                note.note >= 12 ? 'badge-primary' : 
+                                                note.note >= 8 ? 'badge-warning' : 'badge-danger'
+                                            }">
+                                                ${note.note}/20
+                                            </span>
+                                        </td>
+                                        <td>${note.coefficient}</td>
+                                        <td>${note.date}</td>
+                                        ${checkPermission('notes', 'write') ? `
+                                            <td>
+                                                <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;">
+                                                    👁️ Voir
+                                                </button>
+                                            </td>
+                                        ` : ''}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `}
             `,
 
             finances: `
-                <div class="page-header">
-                    <div>
-                        <h1 style="margin-bottom: 5px;">Gestion Financière</h1>
-                        <p style="color: #666;">Suivi des paiements et frais scolaires</p>
+                ${!checkPermission('finances', 'read') ? showPermissionDenied() : `
+                    <div class="page-header">
+                        <div>
+                            <h1 style="margin-bottom: 5px;">Gestion Financière</h1>
+                            <p style="color: #666;">Suivi des paiements et frais scolaires</p>
+                        </div>
+                        ${checkPermission('finances', 'write') ? `
+                            <button class="btn btn-success" onclick="showNotification('Fonctionnalité en développement', 'info')">
+                                💰 Nouveau paiement
+                            </button>
+                        ` : ''}
                     </div>
-                    <button class="btn btn-success" onclick="showNotification('Fonctionnalité en développement', 'info')">
-                        💰 Nouveau paiement
-                    </button>
-                </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">${demoData.finances.filter(f => f.statut === 'Payé').length}</div>
-                        <div class="stat-label">Paiements validés</div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">${demoData.finances.filter(f => f.statut === 'Payé').length}</div>
+                            <div class="stat-label">Paiements validés</div>
+                        </div>
+                        <div class="stat-card success">
+                            <div class="stat-number">${demoData.finances.reduce((sum, f) => f.statut === 'Payé' ? sum + f.montant : sum, 0)} $</div>
+                            <div class="stat-label">Montant perçu</div>
+                        </div>
+                        <div class="stat-card warning">
+                            <div class="stat-number">${demoData.finances.filter(f => f.statut === 'En retard').length}</div>
+                            <div class="stat-label">Retards de paiement</div>
+                        </div>
+                        <div class="stat-card danger">
+                            <div class="stat-number">${demoData.finances.reduce((sum, f) => f.statut === 'En retard' ? sum + f.montant : sum, 0)} $</div>
+                            <div class="stat-label">Montant en retard</div>
+                        </div>
                     </div>
-                    <div class="stat-card success">
-                        <div class="stat-number">${demoData.finances.reduce((sum, f) => f.statut === 'Payé' ? sum + f.montant : sum, 0)} $</div>
-                        <div class="stat-label">Montant perçu</div>
-                    </div>
-                    <div class="stat-card warning">
-                        <div class="stat-number">${demoData.finances.filter(f => f.statut === 'En retard').length}</div>
-                        <div class="stat-label">Retards de paiement</div>
-                    </div>
-                    <div class="stat-card danger">
-                        <div class="stat-number">${demoData.finances.reduce((sum, f) => f.statut === 'En retard' ? sum + f.montant : sum, 0)} $</div>
-                        <div class="stat-label">Montant en retard</div>
-                    </div>
-                </div>
 
-                <div class="data-card">
-                    <div class="card-header">
-                        <div class="card-title">Dernières transactions</div>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Élève</th>
-                                <th>Type</th>
-                                <th>Montant</th>
-                                <th>Date</th>
-                                <th>Statut</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${demoData.finances.map(finance => `
+                    <div class="data-card">
+                        <div class="card-header">
+                            <div class="card-title">Dernières transactions</div>
+                        </div>
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td><strong>${finance.eleve}</strong></td>
-                                    <td>${finance.type}</td>
-                                    <td>${finance.montant} $</td>
-                                    <td>${finance.date}</td>
-                                    <td>
-                                        <span class="badge ${
-                                            finance.statut === 'Payé' ? 'badge-success' : 'badge-danger'
-                                        }">
-                                            ${finance.statut}
-                                        </span>
-                                    </td>
+                                    <th>Élève</th>
+                                    <th>Type</th>
+                                    <th>Montant</th>
+                                    <th>Date</th>
+                                    <th>Statut</th>
                                 </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                ${demoData.finances.map(finance => `
+                                    <tr>
+                                        <td><strong>${finance.eleve}</strong></td>
+                                        <td>${finance.type}</td>
+                                        <td>${finance.montant} $</td>
+                                        <td>${finance.date}</td>
+                                        <td>
+                                            <span class="badge ${
+                                                finance.statut === 'Payé' ? 'badge-success' : 'badge-danger'
+                                            }">
+                                                ${finance.statut}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `}
             `,
 
             discipline: `
-                <div class="page-header">
-                    <div>
-                        <h1 style="margin-bottom: 5px;">Gestion de la Discipline</h1>
-                        <p style="color: #666;">Suivi des sanctions et comportements</p>
+                ${!checkPermission('discipline', 'read') ? showPermissionDenied() : `
+                    <div class="page-header">
+                        <div>
+                            <h1 style="margin-bottom: 5px;">Gestion de la Discipline</h1>
+                            <p style="color: #666;">Suivi des sanctions et comportements</p>
+                        </div>
+                        ${checkPermission('discipline', 'write') ? `
+                            <button class="btn btn-success" onclick="showNotification('Fonctionnalité en développement', 'info')">
+                                ⚖️ Nouvelle sanction
+                            </button>
+                        ` : ''}
                     </div>
-                    <button class="btn btn-success" onclick="showNotification('Fonctionnalité en développement', 'info')">
-                        ⚖️ Nouvelle sanction
-                    </button>
-                </div>
 
-                <div class="data-card">
-                    <div class="card-header">
-                        <div class="card-title">Incidents récents</div>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Élève</th>
-                                <th>Motif</th>
-                                <th>Sanction</th>
-                                <th>Date</th>
-                                <th>Statut</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${demoData.discipline.map(incident => `
+                    <div class="data-card">
+                        <div class="card-header">
+                            <div class="card-title">Incidents récents</div>
+                        </div>
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td><strong>${incident.eleve}</strong></td>
-                                    <td>${incident.motif}</td>
-                                    <td>${incident.sanction}</td>
-                                    <td>${incident.date}</td>
-                                    <td>
-                                        <span class="badge ${
-                                            incident.statut === 'Appliquée' ? 'badge-success' : 'badge-warning'
-                                        }">
-                                            ${incident.statut}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;">
-                                            👁️ Voir
-                                        </button>
-                                    </td>
+                                    <th>Élève</th>
+                                    <th>Motif</th>
+                                    <th>Sanction</th>
+                                    <th>Date</th>
+                                    <th>Statut</th>
+                                    ${checkPermission('discipline', 'write') ? '<th>Actions</th>' : ''}
                                 </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                ${demoData.discipline.map(incident => `
+                                    <tr>
+                                        <td><strong>${incident.eleve}</strong></td>
+                                        <td>${incident.motif}</td>
+                                        <td>${incident.sanction}</td>
+                                        <td>${incident.date}</td>
+                                        <td>
+                                            <span class="badge ${
+                                                incident.statut === 'Appliquée' ? 'badge-success' : 'badge-warning'
+                                            }">
+                                                ${incident.statut}
+                                            </span>
+                                        </td>
+                                        ${checkPermission('discipline', 'write') ? `
+                                            <td>
+                                                <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;">
+                                                    👁️ Voir
+                                                </button>
+                                            </td>
+                                        ` : ''}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `}
+            `,
+
+            emploi_temps: `
+                ${!checkPermission('emploi_temps', 'read') ? showPermissionDenied() : `
+                    <div class="page-header">
+                        <div>
+                            <h1 style="margin-bottom: 5px;">Emploi du Temps</h1>
+                            <p style="color: #666;">Gestion des horaires et planning</p>
+                        </div>
+                        ${checkPermission('emploi_temps', 'write') ? `
+                            <button class="btn btn-success" onclick="showNotification('Fonctionnalité en développement', 'info')">
+                                🕐 Ajouter un cours
+                            </button>
+                        ` : ''}
+                    </div>
+
+                    <div class="data-card">
+                        <div class="card-header">
+                            <div class="card-title">Emploi du temps - Semaine du 22 Janvier 2024</div>
+                            <div style="display: flex; gap: 10px;">
+                                <select style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+                                    <option>4ème Scientifique</option>
+                                    <option>3ème Commerciale</option>
+                                    <option>2ème Pédagogie</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="padding: 20px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Heure</th>
+                                        <th>Lundi</th>
+                                        <th>Mardi</th>
+                                        <th>Mercredi</th>
+                                        <th>Jeudi</th>
+                                        <th>Vendredi</th>
+                                        <th>Samedi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>7h30-9h30</strong></td>
+                                        <td>Mathématiques<br><em>Mr Kabila</em></td>
+                                        <td>Français<br><em>Mme Mbayo</em></td>
+                                        <td>Sciences<br><em>Mr Mutombo</em></td>
+                                        <td>Mathématiques<br><em>Mr Kabila</em></td>
+                                        <td>Histoire<br><em>Mme Tshibangu</em></td>
+                                        <td>Sport</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>9h45-11h45</strong></td>
+                                        <td>Français<br><em>Mme Mbayo</em></td>
+                                        <td>Anglais<br><em>Mr Kabasele</em></td>
+                                        <td>Mathématiques<br><em>Mr Kabila</em></td>
+                                        <td>Chimie<br><em>Mr Mutombo</em></td>
+                                        <td>EPS</td>
+                                        <td>Étude dirigée</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `}
             `
         };
 
         // === FONCTIONS PRINCIPALES ===
         function navigateTo(pageName) {
             document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-            document.querySelector(`[data-page="${pageName}"]`).classList.add('active');
+            const menuItem = document.querySelector(`[data-page="${pageName}"]`);
+            if (menuItem) {
+                menuItem.classList.add('active');
+            }
             
             document.getElementById('pageTitle').textContent = getPageTitle(pageName);
+            
+            if (!checkPermission(pageName, 'read')) {
+                document.getElementById('contentArea').innerHTML = showPermissionDenied();
+                return;
+            }
+            
             document.getElementById('contentArea').innerHTML = pageContents[pageName] || `
                 <div style="text-align: center; padding: 50px;">
                     <h2>Page en développement</h2>
@@ -1089,7 +1282,7 @@
                 'enseignants': 'Gestion des Enseignants',
                 'classes': 'Gestion des Classes',
                 'notes': 'Notes & Bulletins',
-                'emploi-temps': 'Emploi du Temps',
+                'emploi_temps': 'Emploi du Temps',
                 'finances': 'Gestion Financière',
                 'discipline': 'Discipline'
             };
@@ -1098,6 +1291,10 @@
 
         // === FONCTIONS POUR LES ÉLÈVES ===
         function showModal(modalId) {
+            if (!checkPermission('eleves', 'write')) {
+                showNotification('Permission refusée', 'error');
+                return;
+            }
             document.getElementById(modalId).style.display = 'flex';
         }
 
@@ -1106,6 +1303,11 @@
         }
 
         function addNewEleve() {
+            if (!checkPermission('eleves', 'write')) {
+                showNotification('Permission refusée', 'error');
+                return;
+            }
+
             const matricule = document.getElementById('newMatricule').value;
             const nom = document.getElementById('newNom').value;
             const classe = document.getElementById('newClasse').value;
@@ -1126,7 +1328,7 @@
             demoData.eleves.push(newEleve);
             closeModal('addEleveModal');
             showNotification('Élève ajouté avec succès', 'success');
-            navigateTo('eleves'); // Recharger la page
+            navigateTo('eleves');
         }
 
         function viewEleve(matricule) {
@@ -1134,6 +1336,10 @@
         }
 
         function editEleve(matricule) {
+            if (!checkPermission('eleves', 'write')) {
+                showNotification('Permission refusée', 'error');
+                return;
+            }
             showNotification(`Modification de l'élève ${matricule}`, 'info');
         }
 
@@ -1151,14 +1357,16 @@
                     <td>${eleve.classe}</td>
                     <td>${eleve.dateInscription}</td>
                     <td><span class="badge badge-success">${eleve.statut}</span></td>
-                    <td>
-                        <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewEleve('${eleve.matricule}')">
-                            👁️ Voir
-                        </button>
-                        <button class="btn" style="padding: 5px 10px; background: #fff3e0; color: #f57c00;" onclick="editEleve('${eleve.matricule}')">
-                            ✏️ Modifier
-                        </button>
-                    </td>
+                    ${checkPermission('eleves', 'write') ? `
+                        <td>
+                            <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewEleve('${eleve.matricule}')">
+                                👁️ Voir
+                            </button>
+                            <button class="btn" style="padding: 5px 10px; background: #fff3e0; color: #f57c00;" onclick="editEleve('${eleve.matricule}')">
+                                ✏️ Modifier
+                            </button>
+                        </td>
+                    ` : ''}
                 </tr>
             `).join('');
         }
@@ -1176,6 +1384,10 @@
         }
 
         function generateReport() {
+            if (!checkPermission('rapports', 'write')) {
+                showNotification('Permission refusée', 'error');
+                return;
+            }
             showNotification('Génération du rapport en cours...', 'info');
             setTimeout(() => {
                 showNotification('Rapport généré avec succès', 'success');
@@ -1185,6 +1397,7 @@
         function logout() {
             if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
                 localStorage.removeItem('currentUser');
+                localStorage.removeItem('userPermissions');
                 auth.signOut();
                 window.location.href = 'login.html';
             }
@@ -1222,6 +1435,7 @@
 
             loadUserInfo();
             updateDate();
+            setupPermissions();
             navigateTo('dashboard');
 
             document.querySelectorAll('.menu-item').forEach(item => {
@@ -1241,7 +1455,7 @@
             `;
             document.head.appendChild(style);
 
-            console.log('🏫 Dashboard COMPLET chargé - Tous les modules sont fonctionnels');
+            console.log('🏫 Dashboard COMPLET avec permissions - Institut Saint Charles Lwanga');
         });
     </script>
 </body>
