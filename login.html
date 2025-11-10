@@ -3,47 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - Solution Ultime</title>
+    <title>Connexion - Institut Saint Charles</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a365d 0%, #2d5aa0 100%);
-            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
             padding: 20px;
         }
-        .container { width: 100%; max-width: 400px; }
-        .card { background: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; }
-        .header { background: #1a365d; color: white; padding: 30px 20px; text-align: center; }
-        .content { padding: 30px; }
-        .btn { padding: 15px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; margin-bottom: 10px; }
-        .btn-primary { background: #2d5aa0; color: white; }
-        .btn-success { background: #2e7d32; color: white; }
-        .btn-danger { background: #d32f2f; color: white; }
-        .hidden { display: none !important; }
-        .message { padding: 12px; border-radius: 6px; margin-top: 15px; text-align: center; }
-        .error { background: #fef2f2; color: #d32f2f; border: 1px solid #fed7d7; }
-        .success { background: #f0fff4; color: #2e7d32; border: 1px solid #c6f6d5; }
-        .debug { background: #e3f2fd; padding: 10px; border-radius: 6px; margin-top: 15px; font-size: 12px; }
+        .container { 
+            width: 100%; 
+            max-width: 400px; 
+        }
+        .card { 
+            background: white; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+        }
+        .header { 
+            background: #1a365d; 
+            color: white; 
+            padding: 30px 20px; 
+            text-align: center; 
+        }
+        .content { 
+            padding: 30px; 
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        input:focus {
+            border-color: #2d5aa0;
+            outline: none;
+        }
+        .btn { 
+            padding: 15px; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            width: 100%; 
+            transition: background 0.3s;
+        }
+        .btn-primary { 
+            background: #2d5aa0; 
+            color: white; 
+        }
+        .btn-primary:hover {
+            background: #1a365d;
+        }
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .message { 
+            padding: 12px; 
+            border-radius: 6px; 
+            margin-top: 15px; 
+            text-align: center; 
+        }
+        .error { 
+            background: #fef2f2; 
+            color: #d32f2f; 
+            border: 1px solid #fed7d7; 
+        }
+        .success { 
+            background: #f0fff4; 
+            color: #2e7d32; 
+            border: 1px solid #c6f6d5; 
+        }
+        .hidden { 
+            display: none !important; 
+        }
+        .user-selection {
+            margin-bottom: 20px;
+        }
+        .user-btn {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f8f9fa;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+        }
+        .user-btn:hover {
+            background: #e9ecef;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
             <div class="header">
-                <h1>🚨 SOLUTION ULTIME</h1>
-                <p>Institut Saint Charles Lwanga</p>
+                <h1>Institut Saint Charles Lwanga</h1>
+                <p>Système de Gestion Scolaire</p>
             </div>
             
             <div class="content">
-                <button class="btn btn-danger" onclick="solutionUltime()" id="mainBtn">
-                    🔥 CLIQUEZ ICI POUR CONNEXION
-                </button>
-                
-                <div class="debug" id="debugInfo">
-                    <strong>Mode diagnostic activé</strong><br>
-                    En attente d'action...
+                <div class="user-selection">
+                    <strong>Comptes disponibles :</strong>
+                    <div class="user-btn" onclick="fillCredentials('prefet@stcharles.edu', 'prefet123')">
+                        👨‍🏫 Préfet des études
+                    </div>
+                    <div class="user-btn" onclick="fillCredentials('directeur@stcharles.edu', 'directeur123')">
+                        🎓 Directeur
+                    </div>
+                    <div class="user-btn" onclick="fillCredentials('discipline@stcharles.edu', 'discipline123')">
+                        ⚖️ Directeur de discipline
+                    </div>
+                    <div class="user-btn" onclick="fillCredentials('econome@stcharles.edu', 'econome123')">
+                        💰 Économe
+                    </div>
+                    <div class="user-btn" onclick="fillCredentials('prof.math@stcharles.edu', 'prof123')">
+                        📚 Professeur de Math
+                    </div>
                 </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email :</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Mot de passe :</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="loginBtn">
+                        Se connecter
+                    </button>
+                </form>
                 
                 <div id="errorMessage" class="message error hidden"></div>
                 <div id="successMessage" class="message success hidden"></div>
@@ -57,7 +168,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // CONFIGURATION FIREBASE UNIFIÉE
+        // Configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDTM4gdOs_Ud3DC49pmammYMlDH3cSSgZs",
             authDomain: "gestion-scolaire-st-charles.firebaseapp.com",
@@ -67,97 +178,180 @@
             appId: "1:1033368821503:web:a4ba1c8d439193c5f336ca"
         };
 
-        // Initialisation Firebase
-        let auth, db;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            auth = firebase.auth();
-            db = firebase.firestore();
-            console.log('✅ Firebase initialisé avec succès');
-            updateDebug('✅ Firebase initialisé');
-        } catch (error) {
-            console.log('ℹ️ Firebase déjà initialisé');
-            auth = firebase.auth();
-            db = firebase.firestore();
-            updateDebug('ℹ️ Firebase instance existante utilisée');
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Remplir automatiquement les identifiants
+        function fillCredentials(email, password) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
         }
 
-        // FONCTION ULTIME
-        async function solutionUltime() {
-            const btn = document.getElementById('mainBtn');
-            btn.disabled = true;
-            btn.innerHTML = '🔄 TRAITEMENT EN COURS...';
+        // Gestion du formulaire de connexion
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Connexion en cours...';
             clearMessages();
-            updateDebug('Début de la procédure ultime...');
-
+            
             try {
-                // ÉTAPE 1: Authentification
-                updateDebug('Étape 1: Authentification Firebase...');
-                const userCredential = await auth.signInWithEmailAndPassword('prefet@stcharles.edu', 'prefet123');
+                console.log('🔄 Tentative de connexion avec:', email);
+                
+                // Tentative de connexion
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 const user = userCredential.user;
-                updateDebug(`✅ Authentifié: ${user.uid}`);
-                console.log('UID utilisateur:', user.uid);
+                
+                console.log('✅ Authentification Firebase réussie:', user.uid);
+                showSuccess('Authentification réussie ! Configuration de la session...');
 
-                // ÉTAPE 2: Données utilisateur
+                // Déterminer le rôle basé sur l'email
+                let role = 'utilisateur';
+                let nom = 'Utilisateur';
+                
+                if (email.includes('prefet@')) {
+                    role = 'prefet';
+                    nom = 'Préfet des études';
+                } else if (email.includes('directeur@')) {
+                    role = 'directeur';
+                    nom = 'Directeur';
+                } else if (email.includes('discipline@')) {
+                    role = 'discipline';
+                    nom = 'Directeur de discipline';
+                } else if (email.includes('econome@')) {
+                    role = 'econome';
+                    nom = 'Économe';
+                } else if (email.includes('prof.')) {
+                    role = 'enseignant';
+                    nom = 'Professeur';
+                }
+
+                // Créer les données utilisateur
                 const userData = {
-                    id: 'U001',
-                    nom: 'Père Michel Lembe',
-                    role: 'prefet',
-                    telephone: '+243 97 001 0001',
-                    statut: 'Actif',
-                    email: 'prefet@stcharles.edu',
+                    id: user.uid,
+                    nom: nom,
+                    role: role,
+                    email: email,
                     authUid: user.uid,
-                    permissions: {
-                        dashboard: { read: true, write: true },
+                    permissions: getPermissionsByRole(role),
+                    dateConnexion: new Date().toISOString()
+                };
+
+                // Vérifier si l'utilisateur existe déjà dans Firestore
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (!userDoc.exists) {
+                    // Créer l'utilisateur dans Firestore
+                    await db.collection('users').doc(user.uid).set({
+                        ...userData,
+                        dateCreation: new Date().toISOString()
+                    });
+                    console.log('✅ Nouvel utilisateur créé dans Firestore');
+                } else {
+                    // Mettre à jour la dernière connexion
+                    await db.collection('users').doc(user.uid).update({
+                        dateConnexion: new Date().toISOString()
+                    });
+                    console.log('✅ Dernière connexion mise à jour');
+                }
+
+                // Sauvegarder dans localStorage
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+                localStorage.setItem('userPermissions', JSON.stringify(userData.permissions));
+                localStorage.setItem('userRole', role);
+                
+                console.log('✅ Session configurée, redirection...');
+                showSuccess('Connexion réussie ! Redirection...');
+
+                // Redirection
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+                
+            } catch (error) {
+                console.error('❌ Erreur de connexion:', error);
+                
+                let errorMessage = 'Erreur de connexion';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = 'Utilisateur non trouvé';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Mot de passe incorrect';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Email invalide';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Trop de tentatives. Réessayez plus tard.';
+                        break;
+                    default:
+                        errorMessage = error.message;
+                }
+                
+                showError(errorMessage);
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Se connecter';
+            }
+        });
+
+        // Définir les permissions par rôle
+        function getPermissionsByRole(role) {
+            const basePermissions = {
+                dashboard: { read: true, write: false }
+            };
+
+            switch (role) {
+                case 'prefet':
+                    return {
+                        ...basePermissions,
+                        eleves: { read: true, write: true },
+                        enseignants: { read: true, write: true },
+                        classes: { read: true, write: true },
+                        notes: { read: true, write: true },
+                        finances: { read: true, write: false },
+                        discipline: { read: true, write: true },
+                        dashboard: { read: true, write: true }
+                    };
+                case 'directeur':
+                    return {
+                        ...basePermissions,
                         eleves: { read: true, write: true },
                         enseignants: { read: true, write: true },
                         classes: { read: true, write: true },
                         notes: { read: true, write: true },
                         finances: { read: true, write: true },
                         discipline: { read: true, write: true },
-                        emploi_temps: { read: true, write: true },
-                        rapports: { read: true, write: true }
-                    },
-                    dateCreation: new Date().toISOString()
-                };
-
-                // ÉTAPE 3: Sauvegarde Firestore
-                updateDebug('Étape 2: Sauvegarde dans Firestore...');
-                await db.collection('users').doc(user.uid).set(userData);
-                updateDebug('✅ Données sauvegardées dans Firestore');
-
-                // ÉTAPE 4: Stockage localStorage
-                updateDebug('Étape 3: Configuration session...');
-                localStorage.setItem('currentUser', JSON.stringify(userData));
-                localStorage.setItem('userPermissions', JSON.stringify(userData.permissions));
-                updateDebug('✅ Session configurée');
-
-                // ÉTAPE 5: Redirection
-                updateDebug('Étape 4: Redirection vers dashboard...');
-                showSuccess('🎉 CONNEXION RÉUSSIE ! Redirection...');
-                
-                btn.innerHTML = '✅ SUCCÈS - Redirection...';
-                
-                // Redirection garantie
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 2000);
-
-            } catch (error) {
-                console.error('❌ Erreur complète:', error);
-                updateDebug(`❌ ERREUR: ${error.message}`);
-                showError(`Échec: ${error.message}`);
-                btn.innerHTML = '❌ ÉCHEC - Cliquez pour réessayer';
-                btn.disabled = false;
+                        dashboard: { read: true, write: true }
+                    };
+                case 'discipline':
+                    return {
+                        ...basePermissions,
+                        eleves: { read: true, write: true },
+                        discipline: { read: true, write: true },
+                        dashboard: { read: true, write: false }
+                    };
+                case 'econome':
+                    return {
+                        ...basePermissions,
+                        finances: { read: true, write: true },
+                        dashboard: { read: true, write: false }
+                    };
+                case 'enseignant':
+                    return {
+                        ...basePermissions,
+                        notes: { read: true, write: true },
+                        eleves: { read: true, write: false },
+                        dashboard: { read: true, write: false }
+                    };
+                default:
+                    return basePermissions;
             }
-        }
-
-        // FONCTIONS UTILITAIRES
-        function updateDebug(message) {
-            const debug = document.getElementById('debugInfo');
-            debug.innerHTML += `<br>${message}`;
-            debug.scrollTop = debug.scrollHeight;
         }
 
         function showSuccess(message) {
@@ -175,23 +369,17 @@
             document.getElementById('successMessage').classList.add('hidden');
         }
 
-        // VÉRIFICATION INITIALE
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Solution ultime chargée');
-            
-            // Vérifier si déjà connecté
-            if (localStorage.getItem('currentUser')) {
-                updateDebug('ℹ️ Utilisateur déjà connecté, redirection...');
+        // Vérifier si déjà connecté
+        auth.onAuthStateChanged((user) => {
+            if (user && localStorage.getItem('currentUser')) {
+                console.log('🔄 Utilisateur déjà connecté, redirection...');
                 window.location.href = 'dashboard.html';
-                return;
             }
+        });
 
-            // Vérifier l'état d'authentification
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    updateDebug(`ℹ️ Utilisateur Firebase connecté: ${user.email}`);
-                }
-            });
+        // Remplir avec le compte prefet par défaut
+        document.addEventListener('DOMContentLoaded', function() {
+            fillCredentials('prefet@stcharles.edu', 'prefet123');
         });
     </script>
 </body>
