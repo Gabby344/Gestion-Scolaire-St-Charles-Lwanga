@@ -5,334 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - Institut Saint Charles Lwanga</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --primary: #1a365d;
-            --secondary: #2d5aa0;
-            --success: #2e7d32;
-            --warning: #ed6c02;
-            --danger: #d32f2f;
-            --light: #f5f7fa;
-            --dark: #1a202c;
-            --shadow: 0 4px 6px rgba(0,0,0,0.1);
-            --radius: 10px;
+            --primary: #1a365d; --secondary: #2d5aa0; --success: #2e7d32; 
+            --warning: #ed6c02; --danger: #d32f2f; --shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a365d 0%, #2d5aa0 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
             padding: 20px;
         }
-
-        .auth-container {
-            width: 100%;
-            max-width: 420px;
-        }
-
-        .auth-card {
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        .logo-section {
-            background: linear-gradient(135deg, var(--primary), #2c5282);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-        }
-
-        .logo {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 15px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid white;
-        }
-
-        .auth-form {
-            padding: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark);
-            font-size: 14px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-            background: #fff;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(45, 90, 160, 0.1);
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: var(--secondary);
-            color: white;
-            width: 100%;
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-warning {
-            background: var(--warning);
-            color: white;
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-        }
-
-        .btn-loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .spinner {
-            width: 16px;
-            height: 16px;
-            border: 2px solid transparent;
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .error-message {
-            background: #fef2f2;
-            color: var(--danger);
-            padding: 12px;
-            border-radius: 6px;
-            margin-top: 15px;
-            text-align: center;
-            border: 1px solid #fed7d7;
-        }
-
-        .success-message {
-            background: #f0fff4;
-            color: var(--success);
-            padding: 12px;
-            border-radius: 6px;
-            margin-top: 15px;
-            text-align: center;
-            border: 1px solid #c6f6d5;
-        }
-
-        .auth-footer {
-            padding: 20px;
-            text-align: center;
-            color: #666;
-            border-top: 1px solid #eee;
-            font-size: 14px;
-        }
-
-        .test-accounts {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px;
-            font-size: 12px;
-        }
-
-        .test-accounts h4 {
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-
-        .account-list {
-            text-align: left;
-        }
-
-        .account-item {
-            margin-bottom: 5px;
-            padding: 8px;
-            background: white;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.3s;
-            border-left: 3px solid transparent;
-        }
-
-        .account-item:hover {
-            background: #ebf5fb;
-            border-left-color: var(--secondary);
-        }
-
-        .urgent-section {
-            background: #fff3cd;
-            padding: 15px;
-            margin: 15px;
-            border-radius: 8px;
-            text-align: center;
-            border: 2px solid var(--warning);
-        }
-
-        .setup-section {
-            background: #d4edda;
-            padding: 15px;
-            margin: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .status-box {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 6px;
-            margin-top: 10px;
-            font-size: 12px;
-            text-align: left;
-            max-height: 150px;
-            overflow-y: auto;
-        }
+        .auth-container { width: 100%; max-width: 400px; }
+        .auth-card { background: white; border-radius: 10px; box-shadow: var(--shadow); overflow: hidden; }
+        .logo-section { background: var(--primary); color: white; padding: 30px 20px; text-align: center; }
+        .auth-form { padding: 30px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .form-group input { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 16px; }
+        .btn { padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; margin-bottom: 10px; }
+        .btn-primary { background: var(--secondary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .hidden { display: none !important; }
+        .error-message { background: #fef2f2; color: var(--danger); padding: 12px; border-radius: 6px; margin-top: 15px; text-align: center; }
+        .success-message { background: #f0fff4; color: var(--success); padding: 12px; border-radius: 6px; margin-top: 15px; text-align: center; }
+        .test-accounts { background: #f8f9fa; padding: 15px; margin: 20px; border-radius: 8px; }
+        .account-item { padding: 8px; background: white; border-radius: 4px; cursor: pointer; margin-bottom: 5px; }
     </style>
 </head>
 <body>
     <div class="auth-container">
         <div class="auth-card">
             <div class="logo-section">
-                <img src="logosaintcharles.JPG" alt="Logo Institut" class="logo" onerror="this.style.display='none'">
                 <h1>Institut Saint Charles Lwanga</h1>
                 <p>Kolwezi - RDC</p>
             </div>
 
-            <!-- Section URGENTE -->
-            <div class="urgent-section">
-                <p><strong>🚨 PREMIÈRE UTILISATION</strong></p>
-                <p style="font-size: 14px; margin-bottom: 10px;">Créez les données manquantes dans Firestore</p>
-                <button class="btn btn-warning" onclick="createFirestoreData()" id="urgentBtn">
-                    🔥 INITIALISER LA BASE DE DONNÉES
+            <div class="auth-form">
+                <!-- BOUTON ULTIME -->
+                <button class="btn btn-danger" onclick="ultimateLogin()" id="ultimateBtn">
+                    🚀 CONNEXION ULTIME (Cliquez ici)
                 </button>
-                <div class="status-box">
-                    <div id="urgentStatus">En attente d'initialisation...</div>
-                </div>
-            </div>
 
-            <form id="loginForm" class="auth-form">
-                <div class="form-group">
-                    <label for="email">Email institutionnel</label>
-                    <input type="email" id="email" required placeholder="prefet@stcharles.edu">
-                </div>
+                <div style="text-align: center; margin: 15px 0; color: #666;">OU</div>
 
-                <div class="form-group">
-                    <label for="password">Mot de passe</label>
-                    <input type="password" id="password" required placeholder="••••••••">
-                </div>
-
-                <button type="submit" class="btn btn-primary" id="loginBtn">
-                    <span class="btn-text">Se connecter</span>
-                    <div class="btn-loading hidden">
-                        <div class="spinner"></div>
-                        Connexion...
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" value="prefet@stcharles.edu">
                     </div>
-                </button>
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" value="prefet123">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Se connecter</button>
+                </form>
 
                 <div id="errorMessage" class="error-message hidden"></div>
                 <div id="successMessage" class="success-message hidden"></div>
-            </form>
-
-            <!-- Section des comptes de test -->
-            <div class="test-accounts">
-                <h4>🧪 COMPTES DE TEST (Cliquez pour remplir) :</h4>
-                <div class="account-list">
-                    <div class="account-item" onclick="fillCredentials('prefet@stcharles.edu', 'prefet123')">
-                        <strong>👑 Préfet des Études:</strong> prefet@stcharles.edu / prefet123
-                    </div>
-                    <div class="account-item" onclick="fillCredentials('directeur@stcharles.edu', 'directeur123')">
-                        <strong>🎓 Directeur des Études:</strong> directeur@stcharles.edu / directeur123
-                    </div>
-                    <div class="account-item" onclick="fillCredentials('discipline@stcharles.edu', 'discipline123')">
-                        <strong>⚖️ Directeur de Discipline:</strong> discipline@stcharles.edu / discipline123
-                    </div>
-                    <div class="account-item" onclick="fillCredentials('econome@stcharles.edu', 'econome123')">
-                        <strong>💰 Économe:</strong> econome@stcharles.edu / econome123
-                    </div>
-                    <div class="account-item" onclick="fillCredentials('prof.math@stcharles.edu', 'prof123')">
-                        <strong>👨‍🏫 Enseignant Math:</strong> prof.math@stcharles.edu / prof123
-                    </div>
-                    <div class="account-item" onclick="fillCredentials('dev@stcharles.edu', 'dev123')">
-                        <strong>🔧 Développeur:</strong> dev@stcharles.edu / dev123
-                    </div>
-                </div>
             </div>
 
-            <div class="auth-footer">
-                <p><strong>Plateforme de gestion scolaire - Version 2.0</strong></p>
-                <p style="font-size: 12px; margin-top: 5px; color: #888;">
-                    Institut Saint Charles Lwanga - Kolwezi, RDC
-                </p>
+            <div class="test-accounts">
+                <h4>Comptes de test :</h4>
+                <div class="account-item" onclick="fillCredentials('prefet@stcharles.edu', 'prefet123')">👑 Préfet</div>
+                <div class="account-item" onclick="fillCredentials('directeur@stcharles.edu', 'directeur123')">🎓 Directeur</div>
+                <div class="account-item" onclick="fillCredentials('prof.math@stcharles.edu', 'prof123')">👨‍🏫 Enseignant</div>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // === CONFIGURATION FIREBASE ===
+        // Configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDTM4gdOs_Ud3DC49pmammYMlDH3cSSgZs",
             authDomain: "gestion-scolaire-st-charles.firebaseapp.com",
@@ -342,376 +90,119 @@
             appId: "1:1033368821503:web:a4ba1c8d439193c5f336ca"
         };
 
-        // Initialiser Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // === DONNÉES DES UTILISATEURS ===
+        // Données utilisateurs
         const usersData = {
-            'prefet@stcharles.edu': { password: 'prefet123', role: 'prefet' },
-            'directeur@stcharles.edu': { password: 'directeur123', role: 'directeur_etudes' },
-            'discipline@stcharles.edu': { password: 'discipline123', role: 'directeur_discipline' },
-            'econome@stcharles.edu': { password: 'econome123', role: 'econome' },
-            'prof.math@stcharles.edu': { password: 'prof123', role: 'enseignant' },
-            'dev@stcharles.edu': { password: 'dev123', role: 'developpeur' }
+            'prefet@stcharles.edu': {
+                password: 'prefet123',
+                userData: {
+                    id: 'U001', nom: 'Père Michel Lembe', role: 'prefet',
+                    permissions: { dashboard: { read: true, write: true }, eleves: { read: true, write: true } }
+                }
+            }
         };
 
-        // === MATRICE DES PERMISSIONS ===
-        function getRolePermissions(role) {
-            const permissions = {
-                'prefet': {
-                    dashboard: { read: true, write: true },
-                    eleves: { read: true, write: true },
-                    enseignants: { read: true, write: true },
-                    classes: { read: true, write: true },
-                    notes: { read: true, write: true },
-                    finances: { read: true, write: true },
-                    discipline: { read: true, write: true },
-                    emploi_temps: { read: true, write: true },
-                    rapports: { read: true, write: true }
-                },
-                'directeur_etudes': {
-                    dashboard: { read: true, write: true },
-                    eleves: { read: true, write: true },
-                    enseignants: { read: true, write: true },
-                    classes: { read: true, write: true },
-                    notes: { read: true, write: true },
-                    finances: { read: false, write: false },
-                    discipline: { read: true, write: false },
-                    emploi_temps: { read: true, write: true },
-                    rapports: { read: true, write: true }
-                },
-                'directeur_discipline': {
-                    dashboard: { read: true, write: false },
-                    eleves: { read: true, write: false },
-                    enseignants: { read: false, write: false },
-                    classes: { read: true, write: false },
-                    notes: { read: false, write: false },
-                    finances: { read: false, write: false },
-                    discipline: { read: true, write: true },
-                    emploi_temps: { read: true, write: false },
-                    rapports: { read: true, write: false }
-                },
-                'econome': {
-                    dashboard: { read: true, write: false },
-                    eleves: { read: true, write: false },
-                    enseignants: { read: false, write: false },
-                    classes: { read: false, write: false },
-                    notes: { read: false, write: false },
-                    finances: { read: true, write: true },
-                    discipline: { read: false, write: false },
-                    emploi_temps: { read: false, write: false },
-                    rapports: { read: true, write: false }
-                },
-                'enseignant': {
-                    dashboard: { read: true, write: false },
-                    eleves: { read: true, write: false },
-                    enseignants: { read: false, write: false },
-                    classes: { read: true, write: false },
-                    notes: { read: true, write: true },
-                    finances: { read: false, write: false },
-                    discipline: { read: true, write: true },
-                    emploi_temps: { read: true, write: false },
-                    rapports: { read: true, write: false }
-                },
-                'developpeur': {
-                    dashboard: { read: true, write: true },
-                    eleves: { read: true, write: true },
-                    enseignants: { read: true, write: true },
-                    classes: { read: true, write: true },
-                    notes: { read: true, write: true },
-                    finances: { read: true, write: true },
-                    discipline: { read: true, write: true },
-                    emploi_temps: { read: true, write: true },
-                    rapports: { read: true, write: true }
-                }
-            };
-            
-            return permissions[role] || permissions['enseignant'];
+        // FONCTION ULTIME
+        async function ultimateLogin() {
+            const btn = document.getElementById('ultimateBtn');
+            btn.disabled = true;
+            btn.innerHTML = '🔄 Connexion en cours...';
+
+            try {
+                // Étape 1: Authentification Firebase
+                console.log('1. Authentification...');
+                const userCredential = await auth.signInWithEmailAndPassword('prefet@stcharles.edu', 'prefet123');
+                const user = userCredential.user;
+                console.log('✅ Authentifié:', user.uid);
+
+                // Étape 2: Créer les données dans Firestore
+                console.log('2. Création données Firestore...');
+                const userData = usersData['prefet@stcharles.edu'].userData;
+                
+                await db.collection('users').doc(user.uid).set({
+                    ...userData,
+                    email: 'prefet@stcharles.edu',
+                    authUid: user.uid,
+                    dateCreation: new Date().toISOString()
+                });
+                console.log('✅ Données créées dans Firestore');
+
+                // Étape 3: Stocker en localStorage
+                console.log('3. Stockage localStorage...');
+                localStorage.setItem('currentUser', JSON.stringify({
+                    ...userData,
+                    email: 'prefet@stcharles.edu',
+                    authUid: user.uid
+                }));
+                localStorage.setItem('userPermissions', JSON.stringify(userData.permissions));
+                console.log('✅ localStorage mis à jour');
+
+                // Étape 4: Redirection
+                console.log('4. Redirection...');
+                showSuccess('Connexion réussie ! Redirection...');
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+
+            } catch (error) {
+                console.error('❌ Erreur:', error);
+                showError('Erreur: ' + error.message);
+                btn.innerHTML = '❌ Échec - Réessayer';
+                btn.disabled = false;
+            }
         }
 
-        // === FONCTION POUR REMPLIR AUTOMATIQUEMENT ===
+        // Fonctions utilitaires
         function fillCredentials(email, password) {
             document.getElementById('email').value = email;
             document.getElementById('password').value = password;
-            showSuccess(`Identifiants ${email} remplis !`);
         }
 
-        // === FONCTION URGENTE - CRÉATION DES DONNÉES FIRESTORE ===
-        async function createFirestoreData() {
-            const urgentBtn = document.getElementById('urgentBtn');
-            const urgentStatus = document.getElementById('urgentStatus');
-            
-            urgentBtn.disabled = true;
-            urgentBtn.innerHTML = '🔄 Initialisation en cours...';
-            urgentStatus.innerHTML = 'Début de l\'initialisation...<br>';
-
-            try {
-                // 1. Connexion avec le compte préfet
-                urgentStatus.innerHTML += '🔐 Connexion en cours...<br>';
-                const userCredential = await auth.signInWithEmailAndPassword('prefet@stcharles.edu', 'prefet123');
-                urgentStatus.innerHTML += '✅ Connecté en tant que préfet<br>';
-
-                // 2. Données utilisateur complètes
-                const usersFirestoreData = {
-                    'prefet@stcharles.edu': {
-                        id: 'U001',
-                        nom: 'Père Michel Lembe',
-                        role: 'prefet',
-                        telephone: '+243 97 001 0001',
-                        statut: 'Actif',
-                        permissions: getRolePermissions('prefet'),
-                        dateCreation: new Date().toISOString()
-                    },
-                    'directeur@stcharles.edu': {
-                        id: 'U002',
-                        nom: 'Delphin Kagunge',
-                        role: 'directeur_etudes',
-                        telephone: '+243 97 002 0002',
-                        statut: 'Actif',
-                        permissions: getRolePermissions('directeur_etudes'),
-                        dateCreation: new Date().toISOString()
-                    },
-                    'discipline@stcharles.edu': {
-                        id: 'U003',
-                        nom: 'Modeste Makong',
-                        role: 'directeur_discipline',
-                        telephone: '+243 97 003 0003',
-                        statut: 'Actif',
-                        permissions: getRolePermissions('directeur_discipline'),
-                        dateCreation: new Date().toISOString()
-                    },
-                    'econome@stcharles.edu': {
-                        id: 'U004',
-                        nom: 'Père Gabin',
-                        role: 'econome',
-                        telephone: '+243 97 004 0004',
-                        statut: 'Actif',
-                        permissions: getRolePermissions('econome'),
-                        dateCreation: new Date().toISOString()
-                    },
-                    'prof.math@stcharles.edu': {
-                        id: 'U005',
-                        nom: 'Jacques Kabila',
-                        role: 'enseignant',
-                        telephone: '+243 97 005 0005',
-                        statut: 'Actif',
-                        matiere: 'Mathématiques',
-                        permissions: getRolePermissions('enseignant'),
-                        dateCreation: new Date().toISOString()
-                    },
-                    'dev@stcharles.edu': {
-                        id: 'DEV001',
-                        nom: 'Administrateur Système',
-                        role: 'developpeur',
-                        telephone: '+243 97 999 9999',
-                        statut: 'Actif',
-                        permissions: getRolePermissions('developpeur'),
-                        dateCreation: new Date().toISOString()
-                    }
-                };
-
-                // 3. Création des données
-                let successCount = 0;
-                const userEmails = Object.keys(usersFirestoreData);
-
-                for (const email of userEmails) {
-                    try {
-                        urgentStatus.innerHTML += `<br>🔧 Création de ${email}...`;
-                        
-                        // Connexion temporaire pour récupérer l'UID
-                        const tempCredential = await auth.signInWithEmailAndPassword(email, usersData[email].password);
-                        const user = tempCredential.user;
-                        
-                        if (user) {
-                            // Sauvegarde dans Firestore
-                            await db.collection('users').doc(user.uid).set({
-                                ...usersFirestoreData[email],
-                                email: email,
-                                authUid: user.uid
-                            });
-                            
-                            successCount++;
-                            urgentStatus.innerHTML += ` ✅ CRÉÉ`;
-                        }
-                        
-                        // Déconnexion pour le suivant
-                        await auth.signOut();
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                        
-                    } catch (error) {
-                        urgentStatus.innerHTML += ` ❌ ERREUR: ${error.message}`;
-                    }
-                }
-
-                // 4. Reconnexion finale avec préfet
-                await auth.signInWithEmailAndPassword('prefet@stcharles.edu', 'prefet123');
-                
-                urgentStatus.innerHTML += `<br><br>🎉 <strong>INITIALISATION TERMINÉE</strong><br>`;
-                urgentStatus.innerHTML += `✅ ${successCount}/${userEmails.length} comptes configurés<br>`;
-                urgentStatus.innerHTML += `🔑 Connecté en tant que: <strong>Préfet des Études</strong>`;
-                
-                urgentBtn.innerHTML = '✅ BASE DE DONNÉES INITIALISÉE';
-                
-                // Redirection automatique
-                setTimeout(() => {
-                    const userData = usersFirestoreData['prefet@stcharles.edu'];
-                    localStorage.setItem('currentUser', JSON.stringify({
-                        ...userData,
-                        email: 'prefet@stcharles.edu',
-                        authUid: auth.currentUser.uid
-                    }));
-                    localStorage.setItem('userPermissions', JSON.stringify(userData.permissions));
-                    window.location.href = 'dashboard.html';
-                }, 3000);
-
-            } catch (error) {
-                urgentStatus.innerHTML += `<br><br>❌ <strong>ERREUR CRITIQUE:</strong> ${error.message}`;
-                urgentBtn.innerHTML = '❌ ÉCHEC - RÉESSAYER';
-                urgentBtn.disabled = false;
-            }
+        function showSuccess(msg) {
+            document.getElementById('successMessage').textContent = msg;
+            document.getElementById('successMessage').classList.remove('hidden');
         }
 
-        // === FONCTION DE LOGIN PRINCIPALE ===
+        function showError(msg) {
+            document.getElementById('errorMessage').textContent = msg;
+            document.getElementById('errorMessage').classList.remove('hidden');
+        }
+
+        // Login normal
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('loginBtn');
-            const errorDiv = document.getElementById('errorMessage');
-            const successDiv = document.getElementById('successMessage');
-
-            // Afficher loading
-            loginBtn.querySelector('.btn-text').classList.add('hidden');
-            loginBtn.querySelector('.btn-loading').classList.remove('hidden');
-            errorDiv.classList.add('hidden');
-            successDiv.classList.add('hidden');
-
+            
             try {
-                console.log('🔄 Tentative de connexion:', email);
-                
-                // 1. Authentification Firebase
                 const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 const user = userCredential.user;
-                console.log('✅ Auth réussie, UID:', user.uid);
-
-                // 2. Vérifier si les données existent dans Firestore
+                
+                // Vérifier si les données existent
                 const userDoc = await db.collection('users').doc(user.uid).get();
                 
                 if (userDoc.exists) {
-                    // Données existent - connexion normale
                     const userData = userDoc.data();
-                    console.log('✅ Données Firestore trouvées:', userData);
-                    
-                    // Stocker et rediriger
                     localStorage.setItem('currentUser', JSON.stringify(userData));
                     localStorage.setItem('userPermissions', JSON.stringify(userData.permissions));
-                    
-                    showSuccess(`Connexion réussie ! Redirection...`);
-                    
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1000);
-                    
+                    showSuccess('Connexion réussie !');
+                    setTimeout(() => window.location.href = 'dashboard.html', 1000);
                 } else {
-                    // Données n'existent pas
-                    console.log('❌ Données Firestore manquantes pour:', email);
-                    showError(`
-                        <strong>Données utilisateur manquantes</strong><br>
-                        <small>Cliquez sur "INITIALISER LA BASE" ci-dessus pour créer les données manquantes.</small>
-                    `);
+                    showError('Données manquantes. Utilisez le bouton CONNEXION ULTIME');
                 }
-                
             } catch (error) {
-                console.error('❌ Erreur connexion:', error);
-                handleLoginError(error);
-            } finally {
-                // Cacher loading
-                loginBtn.querySelector('.btn-text').classList.remove('hidden');
-                loginBtn.querySelector('.btn-loading').classList.add('hidden');
+                showError('Erreur: ' + error.message);
             }
         });
 
-        // === FONCTIONS UTILITAIRES ===
-        function showSuccess(message) {
-            const successDiv = document.getElementById('successMessage');
-            successDiv.innerHTML = message;
-            successDiv.classList.remove('hidden');
-            
-            setTimeout(() => {
-                successDiv.classList.add('hidden');
-            }, 3000);
+        // Vérifier si déjà connecté
+        if (localStorage.getItem('currentUser')) {
+            window.location.href = 'dashboard.html';
         }
-
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.innerHTML = message;
-            errorDiv.classList.remove('hidden');
-        }
-
-        function handleLoginError(error) {
-            let errorMessage = 'Erreur de connexion';
-            switch (error.code) {
-                case 'auth/invalid-email':
-                    errorMessage = 'Adresse email invalide';
-                    break;
-                case 'auth/user-disabled':
-                    errorMessage = 'Compte désactivé';
-                    break;
-                case 'auth/user-not-found':
-                    errorMessage = 'Aucun compte trouvé avec cet email';
-                    break;
-                case 'auth/wrong-password':
-                    errorMessage = 'Mot de passe incorrect';
-                    break;
-                case 'auth/network-request-failed':
-                    errorMessage = 'Problème de connexion réseau';
-                    break;
-                default:
-                    errorMessage = error.message || 'Erreur inconnue';
-            }
-            
-            showError(errorMessage);
-        }
-
-        // === INITIALISATION ===
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🏫 Système de gestion scolaire - Institut Saint Charles Lwanga');
-            console.log('📍 Kolwezi, RDC');
-            console.log('🔐 Authentification initialisée');
-            
-            // Vérifier si déjà connecté
-            const currentUser = localStorage.getItem('currentUser');
-            if (currentUser) {
-                console.log('🔄 Utilisateur déjà connecté, redirection...');
-                window.location.href = 'dashboard.html';
-                return;
-            }
-
-            // Vérifier Firebase auth state
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    console.log('✅ Utilisateur Firebase connecté:', user.email);
-                    
-                    // Vérifier si les données existent
-                    db.collection('users').doc(user.uid).get().then((doc) => {
-                        if (doc.exists) {
-                            const userData = doc.data();
-                            localStorage.setItem('currentUser', JSON.stringify(userData));
-                            localStorage.setItem('userPermissions', JSON.stringify(userData.permissions));
-                            window.location.href = 'dashboard.html';
-                        }
-                    });
-                }
-            });
-
-            console.log('👥 Comptes disponibles:');
-            Object.keys(usersData).forEach(email => {
-                console.log(`   📧 ${email} - ${usersData[email].role}`);
-            });
-        });
     </script>
 </body>
 </html>
