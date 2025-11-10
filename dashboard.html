@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Institut Saint Charles Lwanga</title>
+    <style>
+        /* === RESET & BASE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --radius: 10px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* === AUTH STYLES === */
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .logo-section {
+            background: linear-gradient(135deg, var(--primary), #34495e);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+        }
+
+        .auth-form {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary), #2980b9);
+            color: white;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .error-message {
+            background: var(--danger);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .auth-footer {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+
+        .role-selector {
+            margin-bottom: 20px;
+        }
+
+        .role-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .role-option {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .role-option:hover {
+            border-color: var(--secondary);
+        }
+
+        .role-option.selected {
+            border-color: var(--secondary);
+            background: #ebf5fb;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="logo-section">
+                <img src="logosaintcharles.JPG" alt="Logo Institut" class="logo">
+                <h1>Institut Saint Charles Lwanga</h1>
+                <p>Kolwezi - RDC</p>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="roleType">Type d'utilisateur</label>
+                    <div class="role-options">
+                        <div class="role-option selected" data-role="admin">👑 Administration</div>
+                        <div class="role-option" data-role="enseignant">👨‍🏫 Enseignant</div>
+                        <div class="role-option" data-role="eleve">🎒 Élève</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email institutionnel</label>
+                    <input type="email" id="email" required placeholder="prefet@stcharles.edu">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <span class="btn-text">Se connecter</span>
+                    <div class="btn-loading hidden">
+                        <div class="spinner"></div>
+                        Connexion...
+                    </div>
+                </button>
+
+                <div id="errorMessage" class="error-message hidden"></div>
+            </form>
+
+            <div class="auth-footer">
+                <p>Plateforme de gestion scolaire - Version 1.0</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+    <script>
+        // === CONFIGURATION FIREBASE ===
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTM4gdOs_Ud3DC49pmammYMlDH3cSSgZs",
+            authDomain: "gestion-scolaire-st-charles.firebaseapp.com",
+            projectId: "gestion-scolaire-st-charles",
+            storageBucket: "gestion-scolaire-st-charles.firebasestorage.app",
+            messagingSenderId: "1033368821503",
+            appId: "1:1033368821503:web:a4ba1c8d439193c5f336ca"
+        };
+
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // === TOUS LES UTILISATEURS PAR DÉFAUT ===
+        const defaultUsers = {
+            // === ADMINISTRATION ===
+            'prefet@stcharles.edu': {
+                password: 'prefet123',
+                role: 'prefet',
+                nom: 'Père Michel Lembe',
+                photo: 'prefetetudes.jpg'
+            },
+            'directeur@stcharles.edu': {
+                password: 'directeur123', 
+                role: 'directeur_etudes',
+                nom: 'Mr Delphin Kagunge',
+                photo: 'directeuretudes.jpg'
+            },
+            'discipline@stcharles.edu': {
+                password: 'discipline123',
+                role: 'directeur_discipline', 
+                nom: 'Mr Modeste Makong',
+                photo: 'directeurdiscipline.jpg'
+            },
+            'econome@stcharles.edu': {
+                password: 'econome123',
+                role: 'econome',
+                nom: 'Père Gabin',
+                photo: 'econome.jpg'
+            },
+            'secretaire@stcharles.edu': {
+                password: 'secretaire123',
+                role: 'secretaire',
+                nom: 'Secrétariat',
+                photo: 'secretariat.jpg'
+            },
+
+            // === ENSEIGNANTS ===
+            'prof.math@stcharles.edu': {
+                password: 'prof123',
+                role: 'enseignant',
+                nom: 'Mr Jacques Kabila',
+                matiere: 'Mathématiques',
+                photo: 'prof_math.jpg'
+            },
+            'prof.francais@stcharles.edu': {
+                password: 'prof123',
+                role: 'enseignant', 
+                nom: 'Mme Sylvie Mbayo',
+                matiere: 'Français',
+                photo: 'prof_francais.jpg'
+            },
+            'prof.science@stcharles.edu': {
+                password: 'prof123',
+                role: 'enseignant',
+                nom: 'Mr Patrick Mutombo',
+                matiere: 'Sciences Physiques',
+                photo: 'prof_science.jpg'
+            },
+            'prof.histoire@stcharles.edu': {
+                password: 'prof123',
+                role: 'enseignant',
+                nom: 'Mme Alice Tshibangu',
+                matiere: 'Histoire-Géographie',
+                photo: 'prof_histoire.jpg'
+            },
+
+            // === ÉLÈVES ===
+            'eleve.001@stcharles.edu': {
+                password: 'eleve123',
+                role: 'eleve',
+                nom: 'Sarah Mbayo Kabasele',
+                matricule: 'SCL2024-001',
+                classe: '4ème Scientifique',
+                photo: 'eleve_sarah.jpg'
+            },
+            'eleve.002@stcharles.edu': {
+                password: 'eleve123',
+                role: 'eleve',
+                nom: 'David Kalonga Mwamba', 
+                matricule: 'SCL2024-002',
+                classe: '3ème Commerciale',
+                photo: 'eleve_david.jpg'
+            },
+            'eleve.003@stcharles.edu': {
+                password: 'eleve123',
+                role: 'eleve',
+                nom: 'Julie Tshibangu Mbuyi',
+                matricule: 'SCL2024-003',
+                classe: '2ème Pédagogie',
+                photo: 'eleve_julie.jpg'
+            },
+            'eleve.004@stcharles.edu': {
+                password: 'eleve123',
+                role: 'eleve',
+                nom: 'Patrick Mwana Ngombo',
+                matricule: 'SCL2024-004', 
+                classe: '1ère Agronomie',
+                photo: 'eleve_patrick.jpg'
+            }
+        };
+
+        // === GESTION DU SELECTEUR DE RÔLE ===
+        let selectedRole = 'admin';
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedRole = this.getAttribute('data-role');
+                updateEmailPlaceholder();
+            });
+        });
+
+        function updateEmailPlaceholder() {
+            const emailInput = document.getElementById('email');
+            switch(selectedRole) {
+                case 'admin':
+                    emailInput.placeholder = 'prefet@stcharles.edu';
+                    break;
+                case 'enseignant':
+                    emailInput.placeholder = 'prof.math@stcharles.edu';
+                    break;
+                case 'eleve':
+                    emailInput.placeholder = 'eleve.001@stcharles.edu';
+                    break;
+            }
+        }
+
+        // === GESTION AUTHENTIFICATION ===
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorDiv = document.getElementById('errorMessage');
+
+            // Afficher loading
+            loginBtn.querySelector('.btn-text').classList.add('hidden');
+            loginBtn.querySelector('.btn-loading').classList.remove('hidden');
+            errorDiv.classList.add('hidden');
+
+            try {
+                // Essayer d'abord l'authentification Firebase
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                console.log('✅ Connexion Firebase réussie:', userCredential.user);
+                
+            } catch (firebaseError) {
+                console.log('Firebase error:', firebaseError);
+                
+                // Fallback: Vérifier les utilisateurs par défaut
+                if (defaultUsers[email] && defaultUsers[email].password === password) {
+                    console.log('✅ Connexion avec utilisateur par défaut');
+                    
+                    // Simuler une connexion réussie
+                    const userData = defaultUsers[email];
+                    localStorage.setItem('currentUser', JSON.stringify({
+                        email: email,
+                        role: userData.role,
+                        nom: userData.nom,
+                        photo: userData.photo,
+                        matiere: userData.matiere,
+                        matricule: userData.matricule,
+                        classe: userData.classe
+                    }));
+                    
+                } else {
+                    throw new Error('Email ou mot de passe incorrect');
+                }
+            }
+
+            // Redirection vers le dashboard
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+
+        });
+
+        // === GESTION DES ERREURS ===
+        .catch((error) => {
+            errorDiv.textContent = error.message;
+            errorDiv.classList.remove('hidden');
+        }).finally(() => {
+            // Cacher loading
+            loginBtn.querySelector('.btn-text').classList.remove('hidden');
+            loginBtn.querySelector('.btn-loading').classList.add('hidden');
+        });
+
+        // === INITIALISATION AU DÉMARRAGE ===
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🏫 Système de gestion scolaire - Institut Saint Charles Lwanga');
+            console.log('📍 Kolwezi, RDC');
+            console.log('🔐 Authentification initialisée');
+            console.log('👥 Utilisateurs disponibles:');
+            console.log('   👑 Administration: 5 comptes');
+            console.log('   👨‍🏫 Enseignants: 4 comptes'); 
+            console.log('   🎒 Élèves: 4 comptes');
+            
+            // Vérifier si déjà connecté
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                window.location.href = 'dashboard.html';
+            }
+
+            // Vérifier Firebase auth
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    console.log('Utilisateur déjà connecté:', user.email);
+                    window.location.href = 'dashboard.html';
+                }
+            });
+
+            updateEmailPlaceholder();
+        });
+    </script>
+</body>
+</html>
