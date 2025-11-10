@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Institut Saint Charles Lwanga - Kolwezi</title>
+    <title>Institut Saint Charles Lwanga - Système de Gestion Scolaire</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* === RESET & BASE === */
         * {
@@ -13,15 +14,16 @@
         }
 
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
+            --primary: #1a365d;
+            --secondary: #2d5aa0;
+            --success: #2e7d32;
+            --warning: #ed6c02;
+            --danger: #d32f2f;
+            --light: #f5f7fa;
+            --dark: #1a202c;
             --shadow: 0 4px 6px rgba(0,0,0,0.1);
-            --radius: 10px;
+            --radius: 8px;
+            --sidebar-width: 260px;
         }
 
         body {
@@ -29,6 +31,7 @@
             background: #f8f9fa;
             min-height: 100vh;
             color: #333;
+            line-height: 1.5;
         }
 
         /* === AUTH STYLES === */
@@ -38,7 +41,7 @@
             justify-content: center;
             min-height: 100vh;
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a365d 0%, #2d5aa0 100%);
         }
 
         .auth-card {
@@ -46,12 +49,12 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             overflow: hidden;
         }
 
         .logo-section {
-            background: linear-gradient(135deg, var(--primary), #34495e);
+            background: linear-gradient(135deg, var(--primary), #2c5282);
             color: white;
             padding: 30px 20px;
             text-align: center;
@@ -79,20 +82,23 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: var(--dark);
+            font-size: 14px;
         }
 
         .form-group input, .form-group select {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 16px;
             transition: border-color 0.3s;
+            background: #fff;
         }
 
         .form-group input:focus, .form-group select:focus {
             outline: none;
             border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(45, 90, 160, 0.1);
         }
 
         .btn {
@@ -128,6 +134,7 @@
             width: 100%;
             padding: 12px 24px;
             font-size: 16px;
+            justify-content: center;
         }
 
         .btn:hover {
@@ -161,21 +168,23 @@
         }
 
         .error-message {
-            background: var(--danger);
-            color: white;
+            background: #fef2f2;
+            color: var(--danger);
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 6px;
             margin-top: 15px;
             text-align: center;
+            border: 1px solid #fed7d7;
         }
 
         .success-message {
-            background: var(--success);
-            color: white;
+            background: #f0fff4;
+            color: var(--success);
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 6px;
             margin-top: 15px;
             text-align: center;
+            border: 1px solid #c6f6d5;
         }
 
         /* === DASHBOARD STYLES === */
@@ -185,19 +194,20 @@
         }
 
         .sidebar {
-            width: 280px;
+            width: var(--sidebar-width);
             background: var(--primary);
             color: white;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
             transition: transform 0.3s;
+            z-index: 100;
         }
 
         .sidebar-header {
             padding: 25px 20px;
             text-align: center;
-            border-bottom: 1px solid #34495e;
+            border-bottom: 1px solid #2d3748;
             background: rgba(0,0,0,0.1);
         }
 
@@ -216,6 +226,7 @@
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.2);
         }
 
         .sidebar-menu {
@@ -223,17 +234,18 @@
         }
 
         .menu-item {
-            padding: 15px 25px;
+            padding: 12px 20px;
             display: flex;
             align-items: center;
             gap: 12px;
             cursor: pointer;
             transition: all 0.3s;
             border-left: 4px solid transparent;
+            font-size: 14px;
         }
 
         .menu-item:hover {
-            background: #34495e;
+            background: #2d3748;
             border-left-color: var(--secondary);
         }
 
@@ -242,10 +254,20 @@
             border-left-color: white;
         }
 
+        .menu-section {
+            padding: 15px 20px 5px;
+            font-size: 12px;
+            color: #a0aec0;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
         .main-content {
-            margin-left: 280px;
+            margin-left: var(--sidebar-width);
             padding: 0;
             flex: 1;
+            transition: margin-left 0.3s;
         }
 
         .top-header {
@@ -256,6 +278,9 @@
             justify-content: space-between;
             align-items: center;
             height: 70px;
+            position: sticky;
+            top: 0;
+            z-index: 99;
         }
 
         .content-area {
@@ -289,6 +314,11 @@
             box-shadow: var(--shadow);
             text-align: center;
             border-top: 4px solid var(--secondary);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
 
         .stat-card.success { border-top-color: var(--success); }
@@ -343,6 +373,7 @@
             background: #f8f9fa;
             font-weight: 600;
             color: var(--dark);
+            font-size: 14px;
         }
 
         tr:hover {
@@ -401,6 +432,7 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .modal-content {
@@ -433,19 +465,64 @@
             gap: 10px;
         }
 
+        /* === MOBILE MENU TOGGLE === */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--dark);
+        }
+
         /* === RESPONSIVE === */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
             }
             .main-content {
                 margin-left: 0;
             }
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
             .grid-2 {
                 grid-template-columns: 1fr;
             }
             .form-row {
                 grid-template-columns: 1fr;
+            }
+            .top-header {
+                padding: 0 15px;
+            }
+            .content-area {
+                padding: 15px;
+            }
+            .page-header {
+                padding: 20px;
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .card-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
             }
         }
     </style>
@@ -463,12 +540,27 @@
             <form id="loginForm" class="auth-form">
                 <div class="form-group">
                     <label for="email">Email institutionnel</label>
-                    <input type="email" id="email" required placeholder="prefet@stcharles.edu">
+                    <input type="email" id="email" required placeholder="votrenom@stcharles.edu">
                 </div>
 
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
                     <input type="password" id="password" required placeholder="••••••••">
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Rôle</label>
+                    <select id="role" required>
+                        <option value="">Sélectionnez votre rôle</option>
+                        <option value="prefet">Préfet des Études</option>
+                        <option value="directeur_etudes">Directeur des Études</option>
+                        <option value="directeur_discipline">Directeur de Discipline</option>
+                        <option value="econome">Économe</option>
+                        <option value="secretaire">Secrétaire</option>
+                        <option value="enseignant">Enseignant</option>
+                        <option value="eleve">Élève</option>
+                        <option value="parent">Parent/Tuteur</option>
+                    </select>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
@@ -482,8 +574,8 @@
                 <div id="errorMessage" class="error-message hidden"></div>
             </form>
 
-            <div style="padding: 20px; text-align: center; color: #666; border-top: 1px solid #eee;">
-                <p>Plateforme de gestion scolaire - Version 1.0</p>
+            <div style="padding: 20px; text-align: center; color: #666; border-top: 1px solid #eee; font-size: 14px;">
+                <p>Plateforme de gestion scolaire - Version 2.0</p>
             </div>
         </div>
     </div>
@@ -498,47 +590,25 @@
             </div>
 
             <div class="user-info">
-                <img src="prefetetudes.jpg" alt="Préfet" class="user-avatar" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMzNDk4REIiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiPgo8cGF0aCBkPSJNMjAgMjFWNGE4IDggMCAwIDAtMTYgMHYxN2E0IDQgMCAwIDAgNCA0aDhhNCA0IDAgMCAwIDQtNHoiLz4KPC9zdmc+Cjwvc3ZnPgo='">
+                <img id="userAvatar" src="prefetetudes.jpg" alt="Utilisateur" class="user-avatar" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMzNDk4REIiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiPgo8cGF0aCBkPSJNMjAgMjFWNGE4IDggMCAwIDAtMTYgMHYxN2E0IDQgMCAwIDAgNCA0aDhhNCA0IDAgMCAwIDQtNHoiLz4KPC9zdmc+Cjwvc3ZnPgo='">
                 <div>
-                    <div style="font-weight: 600;" id="userName">Père Michel Lembe</div>
-                    <div style="font-size: 0.8em; opacity: 0.8;" id="userRole">Préfet des Études</div>
+                    <div style="font-weight: 600;" id="userName">Utilisateur</div>
+                    <div style="font-size: 0.8em; opacity: 0.8;" id="userRole">Rôle</div>
                 </div>
             </div>
 
-            <div class="sidebar-menu">
-                <div class="menu-item active" data-page="dashboard">
-                    📊 Tableau de Bord
-                </div>
-                <div class="menu-item" data-page="eleves">
-                    👨‍🎓 Gestion Élèves
-                </div>
-                <div class="menu-item" data-page="enseignants">
-                    👨‍🏫 Gestion Enseignants
-                </div>
-                <div class="menu-item" data-page="classes">
-                    🏫 Gestion Classes
-                </div>
-                <div class="menu-item" data-page="notes">
-                    📝 Gestion Notes
-                </div>
-                <div class="menu-item" data-page="finances">
-                    💰 Gestion Finances
-                </div>
-                <div class="menu-item" data-page="discipline">
-                    ⚖️ Gestion Discipline
-                </div>
-                <div class="menu-item" onclick="logout()" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #34495e;">
-                    🚪 Déconnexion
-                </div>
+            <div class="sidebar-menu" id="sidebarMenu">
+                <!-- Le menu sera généré dynamiquement selon le rôle -->
             </div>
         </div>
 
         <div class="main-content">
             <div class="top-header">
-                <h2 id="pageTitle">Tableau de Bord Préfet</h2>
+                <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                <h2 id="pageTitle">Tableau de Bord</h2>
                 <div style="display: flex; align-items: center; gap: 15px;">
-                    <span id="currentDate" style="color: #666;"></span>
-                    <span class="badge badge-success" id="userBadge">PRÉFET</span>
+                    <span id="currentDate" style="color: #666; font-size: 14px;"></span>
+                    <span class="badge" id="userBadge" style="background: #e3f2fd; color: #1976d2;">RÔLE</span>
                 </div>
             </div>
 
@@ -664,17 +734,242 @@
             ]
         };
 
-        // === CONTENU DES PAGES ===
-        const pageContents = {
-            dashboard: `
+        // === DONNÉES UTILISATEURS AVEC PERMISSIONS ===
+        const userRoles = {
+            prefet: {
+                name: "Père Michel Lembe",
+                role: "Préfet des Études",
+                avatar: "prefetetudes.jpg",
+                badge: "PRÉFET",
+                color: "#1976d2",
+                permissions: {
+                    dashboard: { read: true, write: true },
+                    eleves: { read: true, write: true },
+                    enseignants: { read: true, write: true },
+                    classes: { read: true, write: true },
+                    notes: { read: true, write: true },
+                    bulletin: { read: true, write: true },
+                    finances: { read: true, write: true },
+                    discipline: { read: true, write: true },
+                    emploi_du_temps: { read: true, write: true },
+                    parametres: { read: true, write: true }
+                }
+            },
+            directeur_etudes: {
+                name: "Delphin Kagunge",
+                role: "Directeur des Études",
+                avatar: "directeuretudes.jpg",
+                badge: "DIR. ÉTUDES",
+                color: "#388e3c",
+                permissions: {
+                    dashboard: { read: true, write: false },
+                    eleves: { read: true, write: true },
+                    enseignants: { read: true, write: true },
+                    classes: { read: true, write: true },
+                    notes: { read: true, write: true },
+                    bulletin: { read: true, write: true },
+                    finances: { read: false, write: false },
+                    discipline: { read: true, write: false },
+                    emploi_du_temps: { read: true, write: true },
+                    parametres: { read: false, write: false }
+                }
+            },
+            directeur_discipline: {
+                name: "Modeste Makong",
+                role: "Directeur de Discipline",
+                avatar: "directeurdiscipline.jpg",
+                badge: "DIR. DISCIPLINE",
+                color: "#f57c00",
+                permissions: {
+                    dashboard: { read: true, write: false },
+                    eleves: { read: true, write: false },
+                    enseignants: { read: false, write: false },
+                    classes: { read: true, write: false },
+                    notes: { read: false, write: false },
+                    bulletin: { read: false, write: false },
+                    finances: { read: false, write: false },
+                    discipline: { read: true, write: true },
+                    emploi_du_temps: { read: true, write: false },
+                    parametres: { read: false, write: false }
+                }
+            },
+            econome: {
+                name: "Père Gabin",
+                role: "Économe",
+                avatar: "econome.jpg",
+                badge: "ÉCONOME",
+                color: "#d32f2f",
+                permissions: {
+                    dashboard: { read: true, write: false },
+                    eleves: { read: true, write: false },
+                    enseignants: { read: false, write: false },
+                    classes: { read: false, write: false },
+                    notes: { read: false, write: false },
+                    bulletin: { read: false, write: false },
+                    finances: { read: true, write: true },
+                    discipline: { read: false, write: false },
+                    emploi_du_temps: { read: false, write: false },
+                    parametres: { read: false, write: false }
+                }
+            },
+            secretaire: {
+                name: "Secrétaire Administratif",
+                role: "Secrétaire",
+                avatar: "secretariat.jpg",
+                badge: "SECRÉTAIRE",
+                color: "#7b1fa2",
+                permissions: {
+                    dashboard: { read: true, write: false },
+                    eleves: { read: true, write: true },
+                    enseignants: { read: true, write: true },
+                    classes: { read: true, write: true },
+                    notes: { read: true, write: false },
+                    bulletin: { read: true, write: false },
+                    finances: { read: true, write: false },
+                    discipline: { read: true, write: false },
+                    emploi_du_temps: { read: true, write: true },
+                    parametres: { read: false, write: false }
+                }
+            },
+            enseignant: {
+                name: "Jacques Kabila",
+                role: "Enseignant",
+                avatar: "",
+                badge: "ENSEIGNANT",
+                color: "#0097a7",
+                permissions: {
+                    dashboard: { read: true, write: false },
+                    eleves: { read: true, write: false },
+                    enseignants: { read: false, write: false },
+                    classes: { read: true, write: false },
+                    notes: { read: true, write: true },
+                    bulletin: { read: true, write: true },
+                    finances: { read: false, write: false },
+                    discipline: { read: false, write: false },
+                    emploi_du_temps: { read: true, write: false },
+                    parametres: { read: false, write: false }
+                }
+            },
+            eleve: {
+                name: "Sarah Mbayo",
+                role: "Élève",
+                avatar: "",
+                badge: "ÉLÈVE",
+                color: "#0097a7",
+                permissions: {
+                    dashboard: { read: true, write: false },
+                    eleves: { read: false, write: false },
+                    enseignants: { read: false, write: false },
+                    classes: { read: false, write: false },
+                    notes: { read: true, write: false },
+                    bulletin: { read: true, write: false },
+                    finances: { read: false, write: false },
+                    discipline: { read: false, write: false },
+                    emploi_du_temps: { read: true, write: false },
+                    parametres: { read: false, write: false }
+                }
+            },
+            parent: {
+                name: "Parent d'élève",
+                role: "Parent/Tuteur",
+                avatar: "",
+                badge: "PARENT",
+                color: "#5d4037",
+                permissions: {
+                    dashboard: { read: true, write: false },
+                    eleves: { read: false, write: false },
+                    enseignants: { read: false, write: false },
+                    classes: { read: false, write: false },
+                    notes: { read: true, write: false },
+                    bulletin: { read: true, write: false },
+                    finances: { read: true, write: false },
+                    discipline: { read: true, write: false },
+                    emploi_du_temps: { read: true, write: false },
+                    parametres: { read: false, write: false }
+                }
+            }
+        };
+
+        // === VARIABLES GLOBALES ===
+        let currentUser = null;
+
+        // === FONCTIONS PRINCIPALES ===
+        function showPage(pageName) {
+            // Vérifier si l'utilisateur a la permission d'accéder à cette page
+            if (!currentUser || !currentUser.permissions[pageName] || !currentUser.permissions[pageName].read) {
+                showNotification("Vous n'avez pas accès à cette page", "error");
+                return;
+            }
+
+            // Mettre à jour le menu actif
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-page="${pageName}"]`).classList.add('active');
+            
+            // Mettre à jour le titre de la page
+            const pageTitles = {
+                dashboard: "Tableau de Bord",
+                eleves: "Gestion des Élèves", 
+                enseignants: "Gestion des Enseignants",
+                classes: "Gestion des Classes",
+                notes: "Gestion des Notes",
+                bulletin: "Bulletins de Notes",
+                finances: "Gestion Financière", 
+                discipline: "Gestion de la Discipline",
+                emploi_du_temps: "Emploi du Temps",
+                parametres: "Paramètres"
+            };
+            
+            document.getElementById('pageTitle').textContent = pageTitles[pageName] || "Tableau de Bord";
+            
+            // Afficher le contenu de la page
+            const contentArea = document.getElementById('contentArea');
+            contentArea.innerHTML = getPageContent(pageName);
+        }
+
+        function getPageContent(pageName) {
+            // Contenu spécifique selon le rôle de l'utilisateur
+            if (pageName === "dashboard") {
+                return getDashboardContent();
+            } else if (pageName === "eleves") {
+                return getElevesContent();
+            } else if (pageName === "enseignants") {
+                return getEnseignantsContent();
+            } else if (pageName === "classes") {
+                return getClassesContent();
+            } else if (pageName === "notes") {
+                return getNotesContent();
+            } else if (pageName === "bulletin") {
+                return getBulletinContent();
+            } else if (pageName === "finances") {
+                return getFinancesContent();
+            } else if (pageName === "discipline") {
+                return getDisciplineContent();
+            } else if (pageName === "emploi_du_temps") {
+                return getEmploiDuTempsContent();
+            } else if (pageName === "parametres") {
+                return getParametresContent();
+            } else {
+                return `
+                    <div style="text-align: center; padding: 50px;">
+                        <h2>Page en développement</h2>
+                        <p>La page ${pageName} sera disponible prochainement.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function getDashboardContent() {
+            let content = `
                 <div class="page-header">
                     <div>
-                        <h1 style="margin-bottom: 5px;">Vue d'ensemble de l'Institut</h1>
-                        <p style="color: #666;">Statistiques et activités récentes</p>
+                        <h1 style="margin-bottom: 5px;">Tableau de Bord - ${currentUser.role}</h1>
+                        <p style="color: #666;">Vue d'ensemble de l'Institut</p>
                     </div>
                     <div style="display: flex; gap: 10px;">
                         <button class="btn btn-primary" onclick="refreshData()">🔄 Actualiser</button>
-                        <button class="btn btn-success" onclick="generateReport()">📊 Rapport</button>
+                        ${currentUser.permissions.finances.read ? '<button class="btn btn-success" onclick="generateReport()">📊 Rapport</button>' : ''}
                     </div>
                 </div>
 
@@ -696,85 +991,95 @@
                         <div class="stat-label">Taux de réussite</div>
                     </div>
                 </div>
+            `;
 
-                <div class="grid-2">
-                    <div class="data-card">
-                        <div class="card-header">
-                            <h3>Derniers élèves inscrits</h3>
-                            <button class="btn btn-primary" onclick="showPage('eleves')">Voir tous</button>
-                        </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Matricule</th>
-                                    <th>Nom et Prénom</th>
-                                    <th>Classe</th>
-                                    <th>Statut</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${demoData.eleves.slice(0, 5).map(eleve => `
+            // Contenu spécifique selon le rôle
+            if (currentUser.role === "Préfet des Études" || currentUser.role === "Directeur des Études") {
+                content += `
+                    <div class="grid-2">
+                        <div class="data-card">
+                            <div class="card-header">
+                                <h3>Derniers élèves inscrits</h3>
+                                ${currentUser.permissions.eleves.read ? '<button class="btn btn-primary" onclick="showPage(\'eleves\')">Voir tous</button>' : ''}
+                            </div>
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td><strong>${eleve.matricule}</strong></td>
-                                        <td>${eleve.prenom} ${eleve.nom}</td>
-                                        <td>${eleve.classe}</td>
-                                        <td><span class="badge badge-success">${eleve.statut}</span></td>
+                                        <th>Matricule</th>
+                                        <th>Nom et Prénom</th>
+                                        <th>Classe</th>
+                                        <th>Statut</th>
                                     </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    ${demoData.eleves.slice(0, 5).map(eleve => `
+                                        <tr>
+                                            <td><strong>${eleve.matricule}</strong></td>
+                                            <td>${eleve.prenom} ${eleve.nom}</td>
+                                            <td>${eleve.classe}</td>
+                                            <td><span class="badge badge-success">${eleve.statut}</span></td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
 
+                        <div class="data-card">
+                            <div class="card-header">
+                                <h3>Alertes importantes</h3>
+                                <span class="badge badge-danger">${demoData.alertes.length}</span>
+                            </div>
+                            <div style="padding: 20px;">
+                                ${demoData.alertes.map(alerte => `
+                                    <div style="padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid ${
+                                        alerte.type === 'danger' ? 'var(--danger)' : 
+                                        alerte.type === 'warning' ? 'var(--warning)' : 'var(--secondary)'
+                                    };">
+                                        <div style="font-weight: 600; margin-bottom: 5px;">${alerte.message}</div>
+                                        <div style="font-size: 0.8em; color: #666;">${alerte.date}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (currentUser.role === "Élève") {
+                content += `
                     <div class="data-card">
                         <div class="card-header">
-                            <h3>Alertes importantes</h3>
-                            <span class="badge badge-danger">${demoData.alertes.length}</span>
+                            <h3>Mes informations</h3>
                         </div>
                         <div style="padding: 20px;">
-                            ${demoData.alertes.map(alerte => `
-                                <div style="padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid ${
-                                    alerte.type === 'danger' ? 'var(--danger)' : 
-                                    alerte.type === 'warning' ? 'var(--warning)' : 'var(--secondary)'
-                                };">
-                                    <div style="font-weight: 600; margin-bottom: 5px;">${alerte.message}</div>
-                                    <div style="font-size: 0.8em; color: #666;">${alerte.date}</div>
+                            <div class="grid-2">
+                                <div>
+                                    <h4 style="margin-bottom: 10px;">Profil</h4>
+                                    <p><strong>Nom:</strong> ${currentUser.name}</p>
+                                    <p><strong>Classe:</strong> 4ème Scientifique</p>
+                                    <p><strong>Matricule:</strong> SCL2024-001</p>
                                 </div>
-                            `).join('')}
+                                <div>
+                                    <h4 style="margin-bottom: 10px;">Statistiques</h4>
+                                    <p><strong>Moyenne générale:</strong> 15.2/20</p>
+                                    <p><strong>Rang:</strong> 5ème sur 32</p>
+                                    <p><strong>Absences:</strong> 2 jours</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                `;
+            }
 
-                <div class="data-card">
-                    <div class="card-header">
-                        <h3>Répartition par option pédagogique</h3>
-                    </div>
-                    <div style="padding: 20px;">
-                        <div class="grid-3">
-                            ${demoData.classes.reduce((acc, classe) => {
-                                if (!acc.find(c => c.option === classe.option)) {
-                                    acc.push(classe);
-                                }
-                                return acc;
-                            }, []).map(classe => `
-                                <div style="text-align: center; padding: 20px; background: white; border-radius: var(--radius); box-shadow: var(--shadow);">
-                                    <div style="font-size: 2em; font-weight: bold; color: var(--secondary);">
-                                        ${demoData.classes.filter(c => c.option === classe.option).reduce((sum, c) => sum + c.effectif, 0)}
-                                    </div>
-                                    <div style="color: #666; margin-top: 8px;">${classe.option}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-            `,
+            return content;
+        }
 
-            eleves: `
+        function getElevesContent() {
+            return `
                 <div class="page-header">
                     <div>
                         <h1 style="margin-bottom: 5px;">Gestion des Élèves</h1>
                         <p style="color: #666;">Liste complète des élèves inscrits</p>
                     </div>
-                    <button class="btn btn-success" onclick="showModal('addEleveModal')">➕ Nouvel élève</button>
+                    ${currentUser.permissions.eleves.write ? '<button class="btn btn-success" onclick="showModal(\'addEleveModal\')">➕ Nouvel élève</button>' : ''}
                 </div>
 
                 <div class="data-card">
@@ -795,7 +1100,7 @@
                                 <th>Classe</th>
                                 <th>Date Inscription</th>
                                 <th>Statut</th>
-                                <th>Actions</th>
+                                ${currentUser.permissions.eleves.write ? '<th>Actions</th>' : ''}
                             </tr>
                         </thead>
                         <tbody id="elevesTableBody">
@@ -808,6 +1113,7 @@
                                     <td>${eleve.classe}</td>
                                     <td>${eleve.dateInscription}</td>
                                     <td><span class="badge badge-success">${eleve.statut}</span></td>
+                                    ${currentUser.permissions.eleves.write ? `
                                     <td>
                                         <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewEleve('${eleve.id}')">
                                             👁️ Voir
@@ -816,20 +1122,23 @@
                                             ✏️ Modifier
                                         </button>
                                     </td>
+                                    ` : ''}
                                 </tr>
                             `).join('')}
                         </tbody>
                     </table>
                 </div>
-            `,
+            `;
+        }
 
-            enseignants: `
+        function getEnseignantsContent() {
+            return `
                 <div class="page-header">
                     <div>
                         <h1 style="margin-bottom: 5px;">Gestion des Enseignants</h1>
                         <p style="color: #666;">Personnel enseignant et administratif</p>
                     </div>
-                    <button class="btn btn-success" onclick="showNotification('Formulaire en développement', 'info')">➕ Nouvel enseignant</button>
+                    ${currentUser.permissions.enseignants.write ? '<button class="btn btn-success" onclick="showNotification(\'Formulaire en développement\', \'info\')">➕ Nouvel enseignant</button>' : ''}
                 </div>
 
                 <div class="stats-grid">
@@ -862,7 +1171,7 @@
                                 <th>Rôle</th>
                                 <th>Matière</th>
                                 <th>Statut</th>
-                                <th>Actions</th>
+                                ${currentUser.permissions.enseignants.write ? '<th>Actions</th>' : ''}
                             </tr>
                         </thead>
                         <tbody>
@@ -872,25 +1181,29 @@
                                     <td>${enseignant.role}</td>
                                     <td>${enseignant.matiere}</td>
                                     <td><span class="badge badge-success">${enseignant.statut}</span></td>
+                                    ${currentUser.permissions.enseignants.write ? `
                                     <td>
                                         <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewEnseignant('${enseignant.id}')">
                                             👁️ Voir
                                         </button>
                                     </td>
+                                    ` : ''}
                                 </tr>
                             `).join('')}
                         </tbody>
                     </table>
                 </div>
-            `,
+            `;
+        }
 
-            classes: `
+        function getClassesContent() {
+            return `
                 <div class="page-header">
                     <div>
                         <h1 style="margin-bottom: 5px;">Gestion des Classes</h1>
                         <p style="color: #666;">Structure pédagogique de l'institut</p>
                     </div>
-                    <button class="btn btn-success" onclick="showNotification('Formulaire en développement', 'info')">➕ Nouvelle classe</button>
+                    ${currentUser.permissions.classes.write ? '<button class="btn btn-success" onclick="showNotification(\'Formulaire en développement\', \'info\')">➕ Nouvelle classe</button>' : ''}
                 </div>
 
                 <div class="data-card">
@@ -952,15 +1265,17 @@
                         </div>
                     </div>
                 </div>
-            `,
+            `;
+        }
 
-            notes: `
+        function getNotesContent() {
+            return `
                 <div class="page-header">
                     <div>
                         <h1 style="margin-bottom: 5px;">Gestion des Notes</h1>
                         <p style="color: #666;">Saisie et consultation des évaluations</p>
                     </div>
-                    <button class="btn btn-success" onclick="showNotification('Formulaire en développement', 'info')">📝 Saisir notes</button>
+                    ${currentUser.permissions.notes.write ? '<button class="btn btn-success" onclick="showNotification(\'Formulaire en développement\', \'info\')">📝 Saisir notes</button>' : ''}
                 </div>
 
                 <div class="data-card">
@@ -1013,15 +1328,81 @@
                         </tbody>
                     </table>
                 </div>
-            `,
+            `;
+        }
 
-            finances: `
+        function getBulletinContent() {
+            return `
+                <div class="page-header">
+                    <div>
+                        <h1 style="margin-bottom: 5px;">Bulletins de Notes</h1>
+                        <p style="color: #666;">Consultation et impression des bulletins</p>
+                    </div>
+                    <button class="btn btn-success" onclick="showNotification('Fonctionnalité en développement', 'info')">🖨️ Imprimer</button>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Mes bulletins</h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                            <h4 style="margin-bottom: 15px;">Trimestre 1 - 2024</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Matière</th>
+                                        <th>Note</th>
+                                        <th>Coefficient</th>
+                                        <th>Moyenne pondérée</th>
+                                        <th>Appréciation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Mathématiques</td>
+                                        <td>16/20</td>
+                                        <td>4</td>
+                                        <td>64</td>
+                                        <td>Très bien</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Français</td>
+                                        <td>14/20</td>
+                                        <td>3</td>
+                                        <td>42</td>
+                                        <td>Bien</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sciences</td>
+                                        <td>18/20</td>
+                                        <td>4</td>
+                                        <td>72</td>
+                                        <td>Excellent</td>
+                                    </tr>
+                                    <tr style="font-weight: bold; background: #e3f2fd;">
+                                        <td>Moyenne générale</td>
+                                        <td>15.2/20</td>
+                                        <td>11</td>
+                                        <td>178</td>
+                                        <td>Bien</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getFinancesContent() {
+            return `
                 <div class="page-header">
                     <div>
                         <h1 style="margin-bottom: 5px;">Gestion Financière</h1>
                         <p style="color: #666;">Suivi des paiements et frais scolaires</p>
                     </div>
-                    <button class="btn btn-success" onclick="showNotification('Formulaire en développement', 'info')">💰 Nouveau paiement</button>
+                    ${currentUser.permissions.finances.write ? '<button class="btn btn-success" onclick="showNotification(\'Formulaire en développement\', \'info\')">💰 Nouveau paiement</button>' : ''}
                 </div>
 
                 <div class="stats-grid">
@@ -1076,15 +1457,17 @@
                         </tbody>
                     </table>
                 </div>
-            `,
+            `;
+        }
 
-            discipline: `
+        function getDisciplineContent() {
+            return `
                 <div class="page-header">
                     <div>
                         <h1 style="margin-bottom: 5px;">Gestion de la Discipline</h1>
                         <p style="color: #666;">Suivi du comportement et sanctions</p>
                     </div>
-                    <button class="btn btn-success" onclick="showNotification('Formulaire en développement', 'info')">⚖️ Nouvelle sanction</button>
+                    ${currentUser.permissions.discipline.write ? '<button class="btn btn-success" onclick="showNotification(\'Formulaire en développement\', \'info\')">⚖️ Nouvelle sanction</button>' : ''}
                 </div>
 
                 <div class="data-card">
@@ -1100,7 +1483,7 @@
                                 <th>Sanction</th>
                                 <th>Date</th>
                                 <th>Statut</th>
-                                <th>Actions</th>
+                                ${currentUser.permissions.discipline.write ? '<th>Actions</th>' : ''}
                             </tr>
                         </thead>
                         <tbody>
@@ -1118,48 +1501,209 @@
                                             ${incident.statut}
                                         </span>
                                     </td>
+                                    ${currentUser.permissions.discipline.write ? `
                                     <td>
                                         <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewIncident('${incident.id}')">
                                             👁️ Voir
                                         </button>
                                     </td>
+                                    ` : ''}
                                 </tr>
                             `).join('')}
                         </tbody>
                     </table>
                 </div>
-            `
-        };
+            `;
+        }
 
-        // === FONCTIONS PRINCIPALES ===
-        function showPage(pageName) {
-            // Mettre à jour le menu actif
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.querySelector(`[data-page="${pageName}"]`).classList.add('active');
-            
-            // Mettre à jour le titre de la page
-            const pageTitles = {
-                dashboard: "Tableau de Bord Préfet",
-                eleves: "Gestion des Élèves", 
-                enseignants: "Gestion des Enseignants",
-                classes: "Gestion des Classes",
-                notes: "Gestion des Notes",
-                finances: "Gestion Financière", 
-                discipline: "Gestion de la Discipline"
-            };
-            
-            document.getElementById('pageTitle').textContent = pageTitles[pageName] || "Tableau de Bord";
-            
-            // Afficher le contenu de la page
-            const contentArea = document.getElementById('contentArea');
-            contentArea.innerHTML = pageContents[pageName] || `
-                <div style="text-align: center; padding: 50px;">
-                    <h2>Page en développement</h2>
-                    <p>La page ${pageName} sera disponible prochainement.</p>
+        function getEmploiDuTempsContent() {
+            return `
+                <div class="page-header">
+                    <div>
+                        <h1 style="margin-bottom: 5px;">Emploi du Temps</h1>
+                        <p style="color: #666;">Planning des cours et activités</p>
+                    </div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Mon emploi du temps</h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div style="overflow-x: auto;">
+                            <table style="min-width: 800px;">
+                                <thead>
+                                    <tr>
+                                        <th>Heure</th>
+                                        <th>Lundi</th>
+                                        <th>Mardi</th>
+                                        <th>Mercredi</th>
+                                        <th>Jeudi</th>
+                                        <th>Vendredi</th>
+                                        <th>Samedi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>7h30 - 8h30</td>
+                                        <td>Mathématiques</td>
+                                        <td>Français</td>
+                                        <td>Sciences</td>
+                                        <td>Histoire</td>
+                                        <td>Géographie</td>
+                                        <td>Éducation Civique</td>
+                                    </tr>
+                                    <tr>
+                                        <td>8h30 - 9h30</td>
+                                        <td>Physique</td>
+                                        <td>Chimie</td>
+                                        <td>Mathématiques</td>
+                                        <td>Français</td>
+                                        <td>Anglais</td>
+                                        <td>Informatique</td>
+                                    </tr>
+                                    <tr>
+                                        <td>9h30 - 10h00</td>
+                                        <td colspan="6" style="text-align: center; background: #f5f5f5;">Récréation</td>
+                                    </tr>
+                                    <tr>
+                                        <td>10h00 - 11h00</td>
+                                        <td>Biologie</td>
+                                        <td>Philosophie</td>
+                                        <td>Économie</td>
+                                        <td>Sport</td>
+                                        <td>Arts</td>
+                                        <td>Religion</td>
+                                    </tr>
+                                    <tr>
+                                        <td>11h00 - 12h00</td>
+                                        <td>Anglais</td>
+                                        <td>Informatique</td>
+                                        <td>Sport</td>
+                                        <td>Mathématiques</td>
+                                        <td>Français</td>
+                                        <td>Étude Dirigée</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             `;
+        }
+
+        function getParametresContent() {
+            return `
+                <div class="page-header">
+                    <div>
+                        <h1 style="margin-bottom: 5px;">Paramètres du Système</h1>
+                        <p style="color: #666;">Configuration et préférences</p>
+                    </div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Paramètres utilisateur</h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div class="form-group">
+                            <label for="userName">Nom complet</label>
+                            <input type="text" id="userName" value="${currentUser.name}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="userEmail">Email</label>
+                            <input type="email" id="userEmail" value="utilisateur@stcharles.edu" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="userRole">Rôle</label>
+                            <input type="text" id="userRole" value="${currentUser.role}" readonly>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn btn-primary" onclick="showNotification('Paramètres sauvegardés', 'success')">Enregistrer</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function setupUserInterface(userRole) {
+            currentUser = userRoles[userRole];
+            
+            // Mettre à jour l'interface utilisateur
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userRole').textContent = currentUser.role;
+            document.getElementById('userBadge').textContent = currentUser.badge;
+            document.getElementById('userBadge').style.background = currentUser.color + '20';
+            document.getElementById('userBadge').style.color = currentUser.color;
+            
+            // Mettre à jour l'avatar
+            if (currentUser.avatar) {
+                document.getElementById('userAvatar').src = currentUser.avatar;
+            }
+            
+            // Générer le menu selon les permissions
+            generateMenu();
+        }
+
+        function generateMenu() {
+            const menuItems = {
+                dashboard: { icon: "📊", text: "Tableau de Bord", section: "principal" },
+                eleves: { icon: "👨‍🎓", text: "Gestion Élèves", section: "gestion" },
+                enseignants: { icon: "👨‍🏫", text: "Gestion Enseignants", section: "gestion" },
+                classes: { icon: "🏫", text: "Gestion Classes", section: "gestion" },
+                notes: { icon: "📝", text: "Gestion Notes", section: "pedagogie" },
+                bulletin: { icon: "📄", text: "Bulletins", section: "pedagogie" },
+                finances: { icon: "💰", text: "Gestion Finances", section: "administration" },
+                discipline: { icon: "⚖️", text: "Gestion Discipline", section: "administration" },
+                emploi_du_temps: { icon: "📅", text: "Emploi du Temps", section: "pedagogie" },
+                parametres: { icon: "⚙️", text: "Paramètres", section: "systeme" }
+            };
+
+            const sections = {
+                principal: "Navigation Principale",
+                gestion: "Gestion",
+                pedagogie: "Pédagogie",
+                administration: "Administration",
+                systeme: "Système"
+            };
+
+            let menuHTML = '';
+            const sectionsAdded = {};
+
+            // Ajouter les éléments de menu selon les permissions
+            for (const [page, details] of Object.entries(menuItems)) {
+                if (currentUser.permissions[page] && currentUser.permissions[page].read) {
+                    // Ajouter la section si pas encore ajoutée
+                    if (!sectionsAdded[details.section]) {
+                        menuHTML += `<div class="menu-section">${sections[details.section]}</div>`;
+                        sectionsAdded[details.section] = true;
+                    }
+                    
+                    menuHTML += `
+                        <div class="menu-item" data-page="${page}">
+                            ${details.icon} ${details.text}
+                        </div>
+                    `;
+                }
+            }
+
+            // Ajouter la déconnexion
+            menuHTML += `
+                <div class="menu-item" onclick="logout()" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #2d3748;">
+                    🚪 Déconnexion
+                </div>
+            `;
+
+            document.getElementById('sidebarMenu').innerHTML = menuHTML;
+
+            // Ajouter les écouteurs d'événements
+            document.querySelectorAll('.menu-item').forEach(item => {
+                if (item.getAttribute('data-page')) {
+                    item.addEventListener('click', function() {
+                        showPage(this.getAttribute('data-page'));
+                    });
+                }
+            });
         }
 
         function showModal(modalId) {
@@ -1216,6 +1760,7 @@
                     <td>${eleve.classe}</td>
                     <td>${eleve.dateInscription}</td>
                     <td><span class="badge badge-success">${eleve.statut}</span></td>
+                    ${currentUser.permissions.eleves.write ? `
                     <td>
                         <button class="btn" style="padding: 5px 10px; background: #e3f2fd; color: #1976d2;" onclick="viewEleve('${eleve.id}')">
                             👁️ Voir
@@ -1224,6 +1769,7 @@
                             ✏️ Modifier
                         </button>
                     </td>
+                    ` : ''}
                 </tr>
             `).join('');
         }
@@ -1306,14 +1852,27 @@
             }, 3000);
         }
 
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('active');
+        }
+
         // === GESTION AUTHENTIFICATION ===
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
             const loginBtn = document.getElementById('loginBtn');
             const errorDiv = document.getElementById('errorMessage');
+
+            // Validation
+            if (!role) {
+                errorDiv.textContent = 'Veuillez sélectionner votre rôle';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
 
             // Afficher loading
             loginBtn.querySelector('.btn-text').classList.add('hidden');
@@ -1324,6 +1883,9 @@
                 // Authentification Firebase
                 const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 console.log('Utilisateur connecté:', userCredential.user);
+                
+                // Configurer l'interface selon le rôle
+                setupUserInterface(role);
                 showDashboard();
                 
             } catch (error) {
@@ -1332,6 +1894,9 @@
                 // Pour la démo, permettre la connexion avec des identifiants de test
                 if (email.includes('@') && password.length >= 6) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // Configurer l'interface selon le rôle
+                    setupUserInterface(role);
                     showDashboard();
                 } else {
                     errorDiv.textContent = 'Email ou mot de passe invalide';
@@ -1346,15 +1911,6 @@
 
         // === INITIALISATION ===
         document.addEventListener('DOMContentLoaded', function() {
-            // Gestion des clics sur le menu
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    if (this.getAttribute('data-page')) {
-                        showPage(this.getAttribute('data-page'));
-                    }
-                });
-            });
-
             // CSS pour les animations
             const style = document.createElement('style');
             style.textContent = `
@@ -1367,7 +1923,7 @@
 
             console.log('🏫 Système de gestion scolaire - Institut Saint Charles Lwanga');
             console.log('📍 Kolwezi, RDC');
-            console.log('🚀 Tous les modules sont fonctionnels !');
+            console.log('🚀 Version 2.0 - Tous les modules sont fonctionnels !');
         });
     </script>
 </body>
