@@ -150,6 +150,15 @@
             text-align: center;
         }
 
+        .success-message {
+            background: var(--success);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
         .auth-footer {
             padding: 20px;
             text-align: center;
@@ -163,7 +172,7 @@
 
         .role-options {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
             margin-top: 10px;
         }
@@ -175,6 +184,7 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 14px;
         }
 
         .role-option:hover {
@@ -185,13 +195,37 @@
             border-color: var(--secondary);
             background: #ebf5fb;
         }
+
+        .test-accounts {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+
+        .test-accounts h4 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .account-list {
+            text-align: left;
+        }
+
+        .account-item {
+            margin-bottom: 5px;
+            padding: 5px;
+            background: white;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
     <div class="auth-container">
         <div class="auth-card">
             <div class="logo-section">
-                <img src="logosaintcharles.JPG" alt="Logo Institut" class="logo">
+                <img src="logosaintcharles.JPG" alt="Logo Institut" class="logo" onerror="this.style.display='none'">
                 <h1>Institut Saint Charles Lwanga</h1>
                 <p>Kolwezi - RDC</p>
             </div>
@@ -225,7 +259,19 @@
                 </button>
 
                 <div id="errorMessage" class="error-message hidden"></div>
+                <div id="successMessage" class="success-message hidden"></div>
             </form>
+
+            <!-- Section des comptes de test -->
+            <div class="test-accounts">
+                <h4>🧪 Comptes de test :</h4>
+                <div class="account-list">
+                    <div class="account-item"><strong>prefet@stcharles.edu</strong> / prefet123</div>
+                    <div class="account-item"><strong>directeur@stcharles.edu</strong> / directeur123</div>
+                    <div class="account-item"><strong>prof.math@stcharles.edu</strong> / prof123</div>
+                    <div class="account-item"><strong>eleve.001@stcharles.edu</strong> / eleve123</div>
+                </div>
+            </div>
 
             <div class="auth-footer">
                 <p>Plateforme de gestion scolaire - Version 1.0</p>
@@ -237,15 +283,14 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
-        // === CONFIGURATION FIREBASE ===
+        // === CONFIGURATION FIREBASE CORRIGÉE ===
         const firebaseConfig = {
             apiKey: "AIzaSyDTM4gdOs_Ud3DC49pmammYMlDH3cSSgZs",
             authDomain: "gestion-scolaire-st-charles.firebaseapp.com",
             projectId: "gestion-scolaire-st-charles",
-            storageBucket: "gestion-scolaire-st-charles.firebasestorage.app",
+            storageBucket: "gestion-scolaire-st-charles.appspot.com",
             messagingSenderId: "1033368821503",
             appId: "1:1033368821503:web:a4ba1c8d439193c5f336ca"
         };
@@ -254,106 +299,6 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const storage = firebase.storage();
-
-        // === TOUS LES UTILISATEURS PAR DÉFAUT ===
-        const defaultUsers = {
-            // === ADMINISTRATION ===
-            'prefet@stcharles.edu': {
-                password: 'prefet123',
-                role: 'prefet',
-                nom: 'Père Michel Lembe',
-                photo: 'prefetetudes.jpg'
-            },
-            'directeur@stcharles.edu': {
-                password: 'directeur123', 
-                role: 'directeur_etudes',
-                nom: 'Mr Delphin Kagunge',
-                photo: 'directeuretudes.jpg'
-            },
-            'discipline@stcharles.edu': {
-                password: 'discipline123',
-                role: 'directeur_discipline', 
-                nom: 'Mr Modeste Makong',
-                photo: 'directeurdiscipline.jpg'
-            },
-            'econome@stcharles.edu': {
-                password: 'econome123',
-                role: 'econome',
-                nom: 'Père Gabin',
-                photo: 'econome.jpg'
-            },
-            'secretaire@stcharles.edu': {
-                password: 'secretaire123',
-                role: 'secretaire',
-                nom: 'Secrétariat',
-                photo: 'secretariat.jpg'
-            },
-
-            // === ENSEIGNANTS ===
-            'prof.math@stcharles.edu': {
-                password: 'prof123',
-                role: 'enseignant',
-                nom: 'Mr Jacques Kabila',
-                matiere: 'Mathématiques',
-                photo: 'prof_math.jpg'
-            },
-            'prof.francais@stcharles.edu': {
-                password: 'prof123',
-                role: 'enseignant', 
-                nom: 'Mme Sylvie Mbayo',
-                matiere: 'Français',
-                photo: 'prof_francais.jpg'
-            },
-            'prof.science@stcharles.edu': {
-                password: 'prof123',
-                role: 'enseignant',
-                nom: 'Mr Patrick Mutombo',
-                matiere: 'Sciences Physiques',
-                photo: 'prof_science.jpg'
-            },
-            'prof.histoire@stcharles.edu': {
-                password: 'prof123',
-                role: 'enseignant',
-                nom: 'Mme Alice Tshibangu',
-                matiere: 'Histoire-Géographie',
-                photo: 'prof_histoire.jpg'
-            },
-
-            // === ÉLÈVES ===
-            'eleve.001@stcharles.edu': {
-                password: 'eleve123',
-                role: 'eleve',
-                nom: 'Sarah Mbayo Kabasele',
-                matricule: 'SCL2024-001',
-                classe: '4ème Scientifique',
-                photo: 'eleve_sarah.jpg'
-            },
-            'eleve.002@stcharles.edu': {
-                password: 'eleve123',
-                role: 'eleve',
-                nom: 'David Kalonga Mwamba', 
-                matricule: 'SCL2024-002',
-                classe: '3ème Commerciale',
-                photo: 'eleve_david.jpg'
-            },
-            'eleve.003@stcharles.edu': {
-                password: 'eleve123',
-                role: 'eleve',
-                nom: 'Julie Tshibangu Mbuyi',
-                matricule: 'SCL2024-003',
-                classe: '2ème Pédagogie',
-                photo: 'eleve_julie.jpg'
-            },
-            'eleve.004@stcharles.edu': {
-                password: 'eleve123',
-                role: 'eleve',
-                nom: 'Patrick Mwana Ngombo',
-                matricule: 'SCL2024-004', 
-                classe: '1ère Agronomie',
-                photo: 'eleve_patrick.jpg'
-            }
-        };
 
         // === GESTION DU SELECTEUR DE RÔLE ===
         let selectedRole = 'admin';
@@ -381,115 +326,229 @@
             }
         }
 
-        // === MATRICE DES PERMISSIONS PAR RÔLE ===
+        // === DONNÉES DES UTILISATEURS PAR DÉFAUT ===
+        const defaultUsers = {
+            // === ADMINISTRATION ===
+            'prefet@stcharles.edu': {
+                password: 'prefet123',
+                role: 'prefet',
+                nom: 'Père Michel Lembe',
+                permissions: getRolePermissions('prefet')
+            },
+            'directeur@stcharles.edu': {
+                password: 'directeur123', 
+                role: 'directeur_etudes',
+                nom: 'Mr Delphin Kagunge',
+                permissions: getRolePermissions('directeur_etudes')
+            },
+            'discipline@stcharles.edu': {
+                password: 'discipline123',
+                role: 'directeur_discipline', 
+                nom: 'Mr Modeste Makong',
+                permissions: getRolePermissions('directeur_discipline')
+            },
+            'econome@stcharles.edu': {
+                password: 'econome123',
+                role: 'econome',
+                nom: 'Père Gabin',
+                permissions: getRolePermissions('econome')
+            },
+            'secretaire@stcharles.edu': {
+                password: 'secretaire123',
+                role: 'secretaire',
+                nom: 'Secrétariat',
+                permissions: getRolePermissions('secretaire')
+            },
+
+            // === ENSEIGNANTS ===
+            'prof.math@stcharles.edu': {
+                password: 'prof123',
+                role: 'enseignant',
+                nom: 'Mr Jacques Kabila',
+                matiere: 'Mathématiques',
+                permissions: getRolePermissions('enseignant')
+            },
+            'prof.francais@stcharles.edu': {
+                password: 'prof123',
+                role: 'enseignant', 
+                nom: 'Mme Sylvie Mbayo',
+                matiere: 'Français',
+                permissions: getRolePermissions('enseignant')
+            },
+
+            // === ÉLÈVES ===
+            'eleve.001@stcharles.edu': {
+                password: 'eleve123',
+                role: 'eleve',
+                nom: 'Sarah Mbayo Kabasele',
+                matricule: 'SCL2024-001',
+                classe: '4ème Scientifique',
+                permissions: getRolePermissions('eleve')
+            },
+            'eleve.002@stcharles.edu': {
+                password: 'eleve123',
+                role: 'eleve',
+                nom: 'David Kalonga Mwamba', 
+                matricule: 'SCL2024-002',
+                classe: '3ème Commerciale',
+                permissions: getRolePermissions('eleve')
+            }
+        };
+
+        // === MATRICE DES PERMISSIONS ===
         function getRolePermissions(role) {
             const permissions = {
-                // 👑 PRÉFET DES ÉTUDES - Accès complet
                 'prefet': {
-                    dashboard: { read: true, write: true, delete: true },
-                    eleves: { read: true, write: true, delete: true },
-                    enseignants: { read: true, write: true, delete: true },
-                    classes: { read: true, write: true, delete: true },
-                    notes: { read: true, write: true, delete: true },
-                    finances: { read: true, write: true, delete: true },
-                    discipline: { read: true, write: true, delete: true },
-                    emploi_temps: { read: true, write: true, delete: true },
-                    rapports: { read: true, write: true, delete: true }
+                    dashboard: { read: true, write: true },
+                    eleves: { read: true, write: true },
+                    enseignants: { read: true, write: true },
+                    classes: { read: true, write: true },
+                    notes: { read: true, write: true },
+                    finances: { read: true, write: true },
+                    discipline: { read: true, write: true },
+                    emploi_temps: { read: true, write: true },
+                    rapports: { read: true, write: true }
                 },
-                
-                // 🎓 DIRECTEUR DES ÉTUDES - Pédagogie complète
                 'directeur_etudes': {
                     dashboard: { read: true, write: true },
-                    eleves: { read: true, write: true, delete: false },
-                    enseignants: { read: true, write: true, delete: false },
-                    classes: { read: true, write: true, delete: true },
-                    notes: { read: true, write: true, delete: true },
-                    finances: { read: false, write: false, delete: false },
-                    discipline: { read: true, write: false, delete: false },
-                    emploi_temps: { read: true, write: true, delete: true },
-                    rapports: { read: true, write: true, delete: false }
+                    eleves: { read: true, write: true },
+                    enseignants: { read: true, write: true },
+                    classes: { read: true, write: true },
+                    notes: { read: true, write: true },
+                    finances: { read: false, write: false },
+                    discipline: { read: true, write: false },
+                    emploi_temps: { read: true, write: true },
+                    rapports: { read: true, write: true }
                 },
-                
-                // ⚖️ DIRECTEUR DE DISCIPLINE - Vie scolaire
                 'directeur_discipline': {
                     dashboard: { read: true, write: false },
-                    eleves: { read: true, write: false, delete: false },
-                    enseignants: { read: false, write: false, delete: false },
-                    classes: { read: true, write: false, delete: false },
-                    notes: { read: false, write: false, delete: false },
-                    finances: { read: false, write: false, delete: false },
-                    discipline: { read: true, write: true, delete: true },
-                    emploi_temps: { read: true, write: false, delete: false },
-                    rapports: { read: true, write: false, delete: false }
+                    eleves: { read: true, write: false },
+                    enseignants: { read: false, write: false },
+                    classes: { read: true, write: false },
+                    notes: { read: false, write: false },
+                    finances: { read: false, write: false },
+                    discipline: { read: true, write: true },
+                    emploi_temps: { read: true, write: false },
+                    rapports: { read: true, write: false }
                 },
-                
-                // 💰 ECONOME - Finances uniquement
                 'econome': {
                     dashboard: { read: true, write: false },
-                    eleves: { read: true, write: false, delete: false },
-                    enseignants: { read: false, write: false, delete: false },
-                    classes: { read: false, write: false, delete: false },
-                    notes: { read: false, write: false, delete: false },
-                    finances: { read: true, write: true, delete: true },
-                    discipline: { read: false, write: false, delete: false },
-                    emploi_temps: { read: false, write: false, delete: false },
-                    rapports: { read: true, write: false, delete: false }
+                    eleves: { read: true, write: false },
+                    enseignants: { read: false, write: false },
+                    classes: { read: false, write: false },
+                    notes: { read: false, write: false },
+                    finances: { read: true, write: true },
+                    discipline: { read: false, write: false },
+                    emploi_temps: { read: false, write: false },
+                    rapports: { read: true, write: false }
                 },
-                
-                // 📋 SECRÉTAIRE - Administration
                 'secretaire': {
                     dashboard: { read: true, write: false },
-                    eleves: { read: true, write: true, delete: false },
-                    enseignants: { read: true, write: true, delete: false },
-                    classes: { read: true, write: false, delete: false },
-                    notes: { read: true, write: false, delete: false },
-                    finances: { read: true, write: false, delete: false },
-                    discipline: { read: true, write: false, delete: false },
-                    emploi_temps: { read: true, write: false, delete: false },
-                    rapports: { read: true, write: false, delete: false }
+                    eleves: { read: true, write: true },
+                    enseignants: { read: true, write: true },
+                    classes: { read: true, write: false },
+                    notes: { read: true, write: false },
+                    finances: { read: true, write: false },
+                    discipline: { read: true, write: false },
+                    emploi_temps: { read: true, write: false },
+                    rapports: { read: true, write: false }
                 },
-                
-                // 👨‍🏫 ENSEIGNANT - Limitée à ses classes
                 'enseignant': {
                     dashboard: { read: true, write: false },
-                    eleves: { read: true, write: false, delete: false },
-                    enseignants: { read: false, write: false, delete: false },
-                    classes: { read: true, write: false, delete: false },
-                    notes: { read: true, write: true, delete: false },
-                    finances: { read: false, write: false, delete: false },
-                    discipline: { read: true, write: true, delete: false },
-                    emploi_temps: { read: true, write: false, delete: false },
-                    rapports: { read: true, write: false, delete: false }
+                    eleves: { read: true, write: false },
+                    enseignants: { read: false, write: false },
+                    classes: { read: true, write: false },
+                    notes: { read: true, write: true },
+                    finances: { read: false, write: false },
+                    discipline: { read: true, write: true },
+                    emploi_temps: { read: true, write: false },
+                    rapports: { read: true, write: false }
                 },
-                
-                // 🎒 ÉLÈVE - Consultation seulement
                 'eleve': {
                     dashboard: { read: true, write: false },
-                    eleves: { read: false, write: false, delete: false },
-                    enseignants: { read: false, write: false, delete: false },
-                    classes: { read: false, write: false, delete: false },
-                    notes: { read: true, write: false, delete: false },
-                    finances: { read: false, write: false, delete: false },
-                    discipline: { read: false, write: false, delete: false },
-                    emploi_temps: { read: true, write: false, delete: false },
-                    rapports: { read: false, write: false, delete: false }
+                    eleves: { read: false, write: false },
+                    enseignants: { read: false, write: false },
+                    classes: { read: false, write: false },
+                    notes: { read: true, write: false },
+                    finances: { read: false, write: false },
+                    discipline: { read: false, write: false },
+                    emploi_temps: { read: true, write: false },
+                    rapports: { read: false, write: false }
                 }
             };
             
             return permissions[role] || permissions['eleve'];
         }
 
-        // === FONCTION DE REDIRECTION PAR RÔLE ===
-        function redirectByRole(userData) {
-            const role = userData.role;
-            const permissions = getRolePermissions(role);
-            
-            // Stocker les permissions dans localStorage
-            localStorage.setItem('userPermissions', JSON.stringify(permissions));
-            localStorage.setItem('currentUser', JSON.stringify(userData));
-            
-            // Redirection vers le dashboard
-            window.location.href = 'dashboard.html';
+        // === FONCTION DE CRÉATION DE COMPTE FIREBASE ===
+        async function createFirebaseUser(email, password, userData) {
+            try {
+                console.log('🔄 Création du compte Firebase:', email);
+                
+                // Créer l'utilisateur dans Firebase Auth
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                console.log('✅ Compte Firebase créé:', user.uid);
+
+                // Ajouter les données dans Firestore
+                await db.collection('users').doc(user.uid).set({
+                    ...userData,
+                    email: email,
+                    authUid: user.uid,
+                    dateCreation: new Date().toISOString()
+                });
+
+                console.log('✅ Données utilisateur sauvegardées dans Firestore');
+                return userCredential;
+                
+            } catch (error) {
+                console.error('❌ Erreur création compte:', error);
+                throw error;
+            }
+        }
+
+        // === FONCTION DE CONNEXION ===
+        async function loginUser(email, password) {
+            try {
+                console.log('🔄 Tentative de connexion avec Firebase:', email);
+                
+                // Essayer d'abord la connexion Firebase
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                console.log('✅ Connexion Firebase réussie');
+                
+                // Récupérer les données utilisateur
+                const userDoc = await db.collection('users').doc(userCredential.user.uid).get();
+                
+                if (userDoc.exists) {
+                    return userDoc.data();
+                } else {
+                    throw new Error('Profil utilisateur non trouvé');
+                }
+                
+            } catch (firebaseError) {
+                console.log('Firebase auth failed, checking default users...');
+                
+                // Vérifier les utilisateurs par défaut
+                if (defaultUsers[email] && defaultUsers[email].password === password) {
+                    console.log('✅ Utilisateur par défaut trouvé');
+                    
+                    // Essayer de créer le compte Firebase s'il n'existe pas
+                    try {
+                        await createFirebaseUser(email, password, defaultUsers[email]);
+                        return defaultUsers[email];
+                    } catch (createError) {
+                        // Si le compte existe déjà, utiliser les données par défaut
+                        if (createError.code === 'auth/email-already-in-use') {
+                            console.log('✅ Compte existe déjà, utilisation données par défaut');
+                            return defaultUsers[email];
+                        }
+                        throw createError;
+                    }
+                } else {
+                    throw new Error('Email ou mot de passe incorrect');
+                }
+            }
         }
 
         // === GESTION AUTHENTIFICATION ===
@@ -500,35 +559,61 @@
             const password = document.getElementById('password').value;
             const loginBtn = document.getElementById('loginBtn');
             const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
 
             // Afficher loading
             loginBtn.querySelector('.btn-text').classList.add('hidden');
             loginBtn.querySelector('.btn-loading').classList.remove('hidden');
             errorDiv.classList.add('hidden');
+            successDiv.classList.add('hidden');
 
             try {
-                // Essayer d'abord l'authentification Firebase
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                console.log('✅ Connexion Firebase réussie:', userCredential.user);
+                console.log('🚀 Début du processus de connexion...');
                 
-                // Récupérer les données utilisateur supplémentaires
-                const userDoc = await db.collection('users').doc(userCredential.user.uid).get();
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    redirectByRole(userData);
+                const userData = await loginUser(email, password);
+                console.log('✅ Données utilisateur récupérées:', userData);
+
+                // Stocker les données dans localStorage
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+                localStorage.setItem('userPermissions', JSON.stringify(userData.permissions));
+                
+                // Afficher succès
+                successDiv.textContent = `Connexion réussie ! Redirection...`;
+                successDiv.classList.remove('hidden');
+                
+                console.log('🔄 Redirection vers dashboard...');
+                
+                // Redirection après court délai
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+                
+            } catch (error) {
+                console.error('❌ Erreur de connexion:', error);
+                
+                let errorMessage = 'Erreur de connexion';
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        errorMessage = 'Adresse email invalide';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessage = 'Compte désactivé';
+                        break;
+                    case 'auth/user-not-found':
+                        errorMessage = 'Aucun compte trouvé avec cet email';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Mot de passe incorrect';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = 'Problème de connexion réseau';
+                        break;
+                    default:
+                        errorMessage = error.message || 'Erreur inconnue';
                 }
                 
-            } catch (firebaseError) {
-                console.log('Firebase error:', firebaseError);
-                
-                // Fallback: Vérifier les utilisateurs par défaut
-                if (defaultUsers[email] && defaultUsers[email].password === password) {
-                    console.log('✅ Connexion avec utilisateur par défaut');
-                    redirectByRole(defaultUsers[email]);
-                } else {
-                    errorDiv.textContent = 'Email ou mot de passe incorrect';
-                    errorDiv.classList.remove('hidden');
-                }
+                errorDiv.textContent = errorMessage;
+                errorDiv.classList.remove('hidden');
             } finally {
                 // Cacher loading
                 loginBtn.querySelector('.btn-text').classList.remove('hidden');
@@ -536,31 +621,35 @@
             }
         });
 
-        // === INITIALISATION AU DÉMARRAGE ===
+        // === INITIALISATION ===
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🏫 Système de gestion scolaire - Institut Saint Charles Lwanga');
             console.log('📍 Kolwezi, RDC');
             console.log('🔐 Authentification initialisée');
-            console.log('👥 Utilisateurs disponibles:');
-            console.log('   👑 Administration: 5 comptes');
-            console.log('   👨‍🏫 Enseignants: 4 comptes'); 
-            console.log('   🎒 Élèves: 4 comptes');
             
             // Vérifier si déjà connecté
             const currentUser = localStorage.getItem('currentUser');
             if (currentUser) {
+                console.log('🔄 Utilisateur déjà connecté, redirection...');
                 window.location.href = 'dashboard.html';
+                return;
             }
 
-            // Vérifier Firebase auth
+            // Vérifier Firebase auth state
             auth.onAuthStateChanged((user) => {
                 if (user) {
-                    console.log('Utilisateur déjà connecté:', user.email);
+                    console.log('✅ Utilisateur Firebase connecté:', user.email);
                     window.location.href = 'dashboard.html';
                 }
             });
 
             updateEmailPlaceholder();
+            
+            // Afficher un message de bienvenue
+            console.log('👥 Comptes disponibles:');
+            Object.keys(defaultUsers).forEach(email => {
+                console.log(`   📧 ${email} - ${defaultUsers[email].role}`);
+            });
         });
     </script>
 </body>
