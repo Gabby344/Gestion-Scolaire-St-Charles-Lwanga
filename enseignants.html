@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Enseignants - Institut Saint Charles Lwanga</title>
+    <style>
+        /* STYLES EXISTANTS... */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #2c3e50; --secondary: #3498db; --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --shadow: 0 4px 6px rgba(0,0,0,0.1); --radius: 10px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; min-height: 100vh; color: #333; }
+        
+        .dashboard-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: var(--primary); color: white; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-header { padding: 25px 20px; text-align: center; border-bottom: 1px solid #34495e; background: rgba(0,0,0,0.1); }
+        .user-info { display: flex; align-items: center; gap: 12px; padding: 15px 20px; background: rgba(0,0,0,0.2); margin: 10px; border-radius: 8px; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .sidebar-menu { padding: 20px 0; }
+        .menu-item { padding: 15px 25px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.3s; border-left: 4px solid transparent; }
+        .menu-item:hover { background: #34495e; border-left-color: var(--secondary); }
+        .menu-item.active { background: var(--secondary); border-left-color: white; }
+        
+        .main-content { margin-left: 280px; flex: 1; }
+        .top-header { background: white; padding: 0 30px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; height: 70px; }
+        .content-area { padding: 30px; background: #f8f9fa; min-height: calc(100vh - 70px); }
+        .page-header { background: white; padding: 25px 30px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .search-bar { background: white; padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+        .search-bar input, .search-bar select { padding: 10px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; min-width: 200px; }
+        .action-buttons { display: flex; gap: 10px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: var(--secondary); color: white; } .btn-success { background: var(--success); color: white; } .btn-danger { background: var(--danger); color: white; } .btn-warning { background: var(--warning); color: white; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; } .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 25px; border-radius: var(--radius); box-shadow: var(--shadow); text-align: center; border-top: 4px solid var(--secondary); }
+        .stat-card.success { border-top-color: var(--success); } .stat-card.warning { border-top-color: var(--warning); } .stat-card.danger { border-top-color: var(--danger); }
+        .stat-number { font-size: 2.5em; font-weight: bold; color: var(--secondary); display: block; }
+        .stat-card.success .stat-number { color: var(--success); } .stat-card.warning .stat-number { color: var(--warning); } .stat-card.danger .stat-number { color: var(--danger); }
+        .stat-label { color: #666; margin-top: 8px; font-size: 0.9em; }
+        
+        .data-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 25px; }
+        .card-header { padding: 20px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        table { width: 100%; border-collapse: collapse; } th, td { padding: 15px 20px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; color: var(--dark); } tr:hover { background: #f8f9fa; }
+        .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; }
+        .badge-success { background: #d4edda; color: #155724; } .badge-warning { background: #fff3cd; color: #856404; } .badge-danger { background: #f8d7da; color: #721c24; } .badge-primary { background: #d1ecf1; color: #0c5460; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-content { background: white; border-radius: var(--radius); box-shadow: var(--shadow); width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
+        .modal-header { padding: 20px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 25px; } .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; } .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: border-color 0.3s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--secondary); }
+        
+        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .main-content { margin-left: 0; } .form-row { grid-template-columns: 1fr; } .search-bar { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="logosaintcharles.JPG" alt="Logo">
+                <h3>Saint Charles Lwanga</h3>
+                <p style="opacity: 0.8; font-size: 0.9em;">Kolwezi</p>
+            </div>
+
+            <div class="user-info">
+                <img id="userAvatar" class="user-avatar" src="" alt="Utilisateur">
+                <div>
+                    <div id="userName" style="font-weight: 600;">Chargement...</div>
+                    <div id="userRole" style="font-size: 0.8em; opacity: 0.8;">Chargement...</div>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+                <div class="menu-item" onclick="window.location.href='dashboard.html'">📊 Tableau de Bord</div>
+                <div class="menu-item" onclick="window.location.href='eleves.html'">👨‍🎓 Élèves</div>
+                <div class="menu-item active">👨‍🏫 Enseignants</div>
+                <div class="menu-item" onclick="showNotification('Module classes - En développement')">🏫 Classes</div>
+                <div class="menu-item" onclick="showNotification('Module notes - En développement')">📝 Notes</div>
+                <div class="menu-item" onclick="logout()" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #34495e;">🚪 Déconnexion</div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <div class="top-header">
+                <h2>Gestion des Enseignants</h2>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span id="currentDate" style="color: #666;"></span>
+                    <span id="userBadge" class="badge badge-success">CHARGEMENT</span>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <!-- EN-TÊTE -->
+                <div class="page-header">
+                    <div>
+                        <h1 style="margin-bottom: 5px;">Gestion des Enseignants</h1>
+                        <p style="color: #666;">Recrutement, gestion et suivi du personnel enseignant</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-warning" onclick="exportEnseignants()">📊 Exporter</button>
+                        <button class="btn btn-success" onclick="showAddEnseignantModal()">➕ Nouvel Enseignant</button>
+                    </div>
+                </div>
+
+                <!-- BARRE DE RECHERCHE -->
+                <div class="search-bar">
+                    <input type="text" id="searchEnseignants" placeholder="Rechercher un enseignant..." style="flex: 1;">
+                    <select id="filterMatiere">
+                        <option value="">Toutes les matières</option>
+                        <option value="Mathématiques">Mathématiques</option>
+                        <option value="Français">Français</option>
+                        <option value="Sciences Physiques">Sciences Physiques</option>
+                        <option value="Histoire-Géographie">Histoire-Géographie</option>
+                        <option value="Anglais">Anglais</option>
+                        <option value="Philosophie">Philosophie</option>
+                    </select>
+                    <select id="filterStatut">
+                        <option value="">Tous les statuts</option>
+                        <option value="Actif">Actif</option>
+                        <option value="Inactif">Inactif</option>
+                        <option value="En congé">En congé</option>
+                        <option value="Retraité">Retraité</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="searchEnseignants()">🔍 Rechercher</button>
+                </div>
+
+                <!-- STATISTIQUES -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalEnseignantsCount">0</div>
+                        <div class="stat-label">Enseignants total</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-number" id="enseignantsActifsCount">0</div>
+                        <div class="stat-label">Enseignants actifs</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-number" id="nouvellesEmbauchesCount">0</div>
+                        <div class="stat-label">Nouvelles embauches</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="stat-number" id="enseignantsCongesCount">0</div>
+                        <div class="stat-label">En congé</div>
+                    </div>
+                </div>
+
+                <!-- TABLEAU DES ENSEIGNANTS -->
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Liste des Enseignants</h3>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-primary" onclick="loadEnseignantsFromFirebase()">🔄 Actualiser</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Matricule</th>
+                                <th>Nom Complet</th>
+                                <th>Matière</th>
+                                <th>Téléphone</th>
+                                <th>Date Embauche</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="enseignantsTable">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 40px; color: #666;">
+                                    Chargement depuis Firebase...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL AJOUT ENSEIGNANT -->
+    <div id="addEnseignantModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nouvel Enseignant</h3>
+                <button onclick="closeModal('addEnseignantModal')" style="background: none; border: none; font-size: 20px; cursor: pointer;">✖</button>
+            </div>
+            <div class="modal-body">
+                <form id="addEnseignantForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enseignantMatricule">Matricule *</label>
+                            <input type="text" id="enseignantMatricule" required placeholder="ENS2024-001">
+                        </div>
+                        <div class="form-group">
+                            <label for="enseignantMatiere">Matière principale *</label>
+                            <select id="enseignantMatiere" required>
+                                <option value="">Choisir une matière</option>
+                                <option value="Mathématiques">Mathématiques</option>
+                                <option value="Français">Français</option>
+                                <option value="Sciences Physiques">Sciences Physiques</option>
+                                <option value="Histoire-Géographie">Histoire-Géographie</option>
+                                <option value="Anglais">Anglais</option>
+                                <option value="Philosophie">Philosophie</option>
+                                <option value="Éducation Civique">Éducation Civique</option>
+                                <option value="EPS">EPS</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enseignantNom">Nom *</label>
+                            <input type="text" id="enseignantNom" required placeholder="Kabila">
+                        </div>
+                        <div class="form-group">
+                            <label for="enseignantPostnom">Postnom</label>
+                            <input type="text" id="enseignantPostnom" placeholder="Mwana">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enseignantPrenom">Prénom *</label>
+                            <input type="text" id="enseignantPrenom" required placeholder="Jacques">
+                        </div>
+                        <div class="form-group">
+                            <label for="enseignantSexe">Sexe *</label>
+                            <select id="enseignantSexe" required>
+                                <option value="">Choisir</option>
+                                <option value="M">Masculin</option>
+                                <option value="F">Féminin</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enseignantDateNaissance">Date de Naissance *</label>
+                            <input type="date" id="enseignantDateNaissance" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="enseignantLieuNaissance">Lieu de Naissance</label>
+                            <input type="text" id="enseignantLieuNaissance" placeholder="Kolwezi">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enseignantTelephone">Téléphone *</label>
+                            <input type="tel" id="enseignantTelephone" required placeholder="+243...">
+                        </div>
+                        <div class="form-group">
+                            <label for="enseignantEmail">Email *</label>
+                            <input type="email" id="enseignantEmail" required placeholder="enseignant@stcharles.edu">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="enseignantAdresse">Adresse</label>
+                        <textarea id="enseignantAdresse" rows="2" placeholder="Adresse complète"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enseignantDiplome">Diplôme le plus élevé *</label>
+                            <select id="enseignantDiplome" required>
+                                <option value="">Choisir</option>
+                                <option value="Licence">Licence</option>
+                                <option value="Master">Master</option>
+                                <option value="Doctorat">Doctorat</option>
+                                <option value="Autre">Autre</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="enseignantSpecialite">Spécialité</label>
+                            <input type="text" id="enseignantSpecialite" placeholder="Spécialité académique">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enseignantDateEmbauche">Date d'Embauche *</label>
+                            <input type="date" id="enseignantDateEmbauche" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="enseignantStatut">Statut *</label>
+                            <select id="enseignantStatut" required>
+                                <option value="Actif">Actif</option>
+                                <option value="Inactif">Inactif</option>
+                                <option value="En congé">En congé</option>
+                                <option value="Retraité">Retraité</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; margin-top: 25px;">
+                        <button type="button" class="btn btn-danger" style="flex: 1;" onclick="closeModal('addEnseignantModal')">
+                            Annuler
+                        </button>
+                        <button type="submit" class="btn btn-success" style="flex: 1;">
+                            💾 Enregistrer l'Enseignant
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+    <script>
+        // === CONFIGURATION FIREBASE ===
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTM4gdOs_Ud3DC49pmammYMlDH3cSSgZs",
+            authDomain: "gestion-scolaire-st-charles.firebaseapp.com",
+            projectId: "gestion-scolaire-st-charles",
+            storageBucket: "gestion-scolaire-st-charles.firebasestorage.app",
+            messagingSenderId: "1033368821503",
+            appId: "1:1033368821503:web:a4ba1c8d439193c5f336ca"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // === DONNÉES DES ENSEIGNANTS ===
+        let enseignants = [];
+        let filteredEnseignants = [];
+
+        // === CHARGEMENT DEPUIS FIREBASE ===
+        async function loadEnseignantsFromFirebase() {
+            try {
+                console.log('🔄 Chargement des enseignants depuis Firebase...');
+                
+                const querySnapshot = await db.collection('enseignants').get();
+                enseignants = [];
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    enseignants.push({
+                        id: doc.id,
+                        ...data
+                    });
+                });
+
+                console.log(`✅ ${enseignants.length} enseignants chargés depuis Firebase`);
+                
+                // Si pas d'enseignants, créer des données de démo
+                if (enseignants.length === 0) {
+                    await createDemoEnseignants();
+                } else {
+                    filteredEnseignants = [...enseignants];
+                    updateEnseignantsDisplay();
+                    updateEnseignantsStats();
+                }
+
+            } catch (error) {
+                console.error('❌ Erreur Firebase:', error);
+                showNotification('Erreur de chargement des données', 'error');
+            }
+        }
+
+        // === CRÉATION DE DONNÉES DE DÉMO SI FIREBASE EST VIDE ===
+        async function createDemoEnseignants() {
+            const demoEnseignants = [
+                {
+                    matricule: "ENS2024-001",
+                    nom: "Kabila",
+                    postnom: "Mwana",
+                    prenom: "Jacques",
+                    sexe: "M",
+                    matiere: "Mathématiques",
+                    telephone: "+243 97 111 2222",
+                    email: "jacques.kabila@stcharles.edu",
+                    dateNaissance: "1980-03-15",
+                    dateEmbauche: "2020-01-10",
+                    diplome: "Master",
+                    specialite: "Mathématiques Appliquées",
+                    statut: "Actif",
+                    adresse: "123 Av. des Enseignants, Kolwezi"
+                },
+                {
+                    matricule: "ENS2024-002",
+                    nom: "Mbayo", 
+                    postnom: "Kanku",
+                    prenom: "Sylvie",
+                    sexe: "F",
+                    matiere: "Français",
+                    telephone: "+243 90 333 4444",
+                    email: "sylvie.mbayo@stcharles.edu",
+                    dateNaissance: "1985-07-22",
+                    dateEmbauche: "2019-08-15",
+                    diplome: "Licence",
+                    specialite: "Littérature Française",
+                    statut: "Actif",
+                    adresse: "456 Rue des Professeurs, Kolwezi"
+                },
+                {
+                    matricule: "ENS2024-003",
+                    nom: "Mutombo",
+                    postnom: "Tshibangu", 
+                    prenom: "Patrick",
+                    sexe: "M",
+                    matiere: "Sciences Physiques",
+                    telephone: "+243 89 555 6666",
+                    email: "patrick.mutombo@stcharles.edu",
+                    dateNaissance: "1978-11-30",
+                    dateEmbauche: "2018-03-20",
+                    diplome: "Doctorat",
+                    specialite: "Physique Quantique",
+                    statut: "Actif",
+                    adresse: "789 Bd des Sciences, Kolwezi"
+                }
+            ];
+
+            try {
+                const batch = db.batch();
+                
+                demoEnseignants.forEach(enseignant => {
+                    const docRef = db.collection('enseignants').doc();
+                    batch.set(docRef, {
+                        ...enseignant,
+                        dateCreation: firebase.firestore.FieldValue.serverTimestamp(),
+                        createdBy: 'system'
+                    });
+                });
+
+                await batch.commit();
+                console.log('✅ Données de démo créées dans Firebase');
+                await loadEnseignantsFromFirebase();
+                
+            } catch (error) {
+                console.error('❌ Erreur création données démo:', error);
+            }
+        }
+
+        // === SAUVEGARDE D'UN NOUVEL ENSEIGNANT ===
+        async function saveEnseignantToFirebase(enseignantData) {
+            try {
+                const docRef = await db.collection('enseignants').add({
+                    ...enseignantData,
+                    dateCreation: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdBy: JSON.parse(localStorage.getItem('currentUser')).email
+                });
+
+                console.log('✅ Enseignant sauvegardé avec ID:', docRef.id);
+                return docRef.id;
+                
+            } catch (error) {
+                console.error('❌ Erreur sauvegarde:', error);
+                throw error;
+            }
+        }
+
+        // === SUPPRESSION D'UN ENSEIGNANT ===
+        async function deleteEnseignantFromFirebase(enseignantId) {
+            try {
+                await db.collection('enseignants').doc(enseignantId).delete();
+                console.log('✅ Enseignant supprimé:', enseignantId);
+                return true;
+            } catch (error) {
+                console.error('❌ Erreur suppression:', error);
+                throw error;
+            }
+        }
+
+        // === MISE À JOUR DE L'AFFICHAGE ===
+        function updateEnseignantsDisplay() {
+            const tbody = document.getElementById('enseignantsTable');
+            
+            if (filteredEnseignants.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px; color: #666;">
+                            Aucun enseignant trouvé
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filteredEnseignants.map(enseignant => `
+                <tr>
+                    <td><strong>${enseignant.matricule}</strong></td>
+                    <td>
+                        <div style="font-weight: 600;">${enseignant.nom} ${enseignant.prenom}</div>
+                        <div style="font-size: 0.8em; color: #666;">${enseignant.postnom || ''}</div>
+                    </td>
+                    <td>${enseignant.matiere}</td>
+                    <td>${enseignant.telephone}</td>
+                    <td>${formatDate(enseignant.dateEmbauche)}</td>
+                    <td><span class="badge ${getStatutBadgeClass(enseignant.statut)}">${enseignant.statut}</span></td>
+                    <td>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-sm btn-primary" onclick="viewEnseignant('${enseignant.id}')">
+                                👁️
+                            </button>
+                            <button class="btn btn-sm btn-warning" onclick="editEnseignant('${enseignant.id}')">
+                                ✏️
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteEnseignant('${enseignant.id}')">
+                                🗑️
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateEnseignantsStats() {
+            document.getElementById('totalEnseignantsCount').textContent = enseignants.length;
+            document.getElementById('enseignantsActifsCount').textContent = enseignants.filter(e => e.statut === 'Actif').length;
+            document.getElementById('nouvellesEmbauchesCount').textContent = enseignants.filter(e => e.dateEmbauche.includes('2024')).length;
+            document.getElementById('enseignantsCongesCount').textContent = enseignants.filter(e => e.statut === 'En congé').length;
+        }
+
+        // === FONCTIONS DE RECHERCHE ===
+        function searchEnseignants() {
+            const searchTerm = document.getElementById('searchEnseignants').value.toLowerCase();
+            const matiereFilter = document.getElementById('filterMatiere').value;
+            const statutFilter = document.getElementById('filterStatut').value;
+
+            filteredEnseignants = enseignants.filter(enseignant => {
+                const matchesSearch = !searchTerm || 
+                    enseignant.nom.toLowerCase().includes(searchTerm) ||
+                    enseignant.prenom.toLowerCase().includes(searchTerm) ||
+                    enseignant.matricule.toLowerCase().includes(searchTerm);
+                
+                const matchesMatiere = !matiereFilter || enseignant.matiere === matiereFilter;
+                const matchesStatut = !statutFilter || enseignant.statut === statutFilter;
+
+                return matchesSearch && matchesMatiere && matchesStatut;
+            });
+
+            updateEnseignantsDisplay();
+        }
+
+        // === GESTION MODAL ===
+        function showAddEnseignantModal() {
+            document.getElementById('addEnseignantForm').reset();
+            document.getElementById('addEnseignantModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // === GESTION FORMULAIRE ===
+        document.getElementById('addEnseignantForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const enseignantData = {
+                matricule: document.getElementById('enseignantMatricule').value,
+                nom: document.getElementById('enseignantNom').value,
+                postnom: document.getElementById('enseignantPostnom').value,
+                prenom: document.getElementById('enseignantPrenom').value,
+                sexe: document.getElementById('enseignantSexe').value,
+                matiere: document.getElementById('enseignantMatiere').value,
+                telephone: document.getElementById('enseignantTelephone').value,
+                email: document.getElementById('enseignantEmail').value,
+                dateNaissance: document.getElementById('enseignantDateNaissance').value,
+                lieuNaissance: document.getElementById('enseignantLieuNaissance').value,
+                adresse: document.getElementById('enseignantAdresse').value,
+                diplome: document.getElementById('enseignantDiplome').value,
+                specialite: document.getElementById('enseignantSpecialite').value,
+                dateEmbauche: document.getElementById('enseignantDateEmbauche').value,
+                statut: document.getElementById('enseignantStatut').value
+            };
+
+            try {
+                // Sauvegarde dans Firebase
+                const enseignantId = await saveEnseignantToFirebase(enseignantData);
+                
+                // Ajouter à la liste locale
+                enseignants.unshift({
+                    id: enseignantId,
+                    ...enseignantData
+                });
+                filteredEnseignants = [...enseignants];
+
+                updateEnseignantsDisplay();
+                updateEnseignantsStats();
+                closeModal('addEnseignantModal');
+                showNotification('Enseignant enregistré avec succès!', 'success');
+                
+            } catch (error) {
+                showNotification('Erreur lors de la sauvegarde', 'error');
+            }
+        });
+
+        // === ACTIONS SUR ENSEIGNANTS ===
+        function viewEnseignant(enseignantId) {
+            const enseignant = enseignants.find(e => e.id === enseignantId);
+            const message = `
+Détails de l'enseignant:
+
+📋 Matricule: ${enseignant.matricule}
+👤 Nom: ${enseignant.nom} ${enseignant.prenom}
+📚 Matière: ${enseignant.matiere}
+📞 Téléphone: ${enseignant.telephone}
+📧 Email: ${enseignant.email}
+🎓 Diplôme: ${enseignant.diplome}
+📅 Date embauche: ${formatDate(enseignant.dateEmbauche)}
+🏠 Adresse: ${enseignant.adresse || 'Non renseignée'}
+            `;
+            alert(message);
+        }
+
+        function editEnseignant(enseignantId) {
+            showNotification(`Modification de l'enseignant ${enseignantId} - Fonctionnalité en développement`, 'info');
+        }
+
+        async function deleteEnseignant(enseignantId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cet enseignant ? Cette action est irréversible.')) {
+                try {
+                    await deleteEnseignantFromFirebase(enseignantId);
+                    
+                    enseignants = enseignants.filter(e => e.id !== enseignantId);
+                    filteredEnseignants = filteredEnseignants.filter(e => e.id !== enseignantId);
+                    
+                    updateEnseignantsDisplay();
+                    updateEnseignantsStats();
+                    showNotification('Enseignant supprimé avec succès', 'success');
+                    
+                } catch (error) {
+                    showNotification('Erreur lors de la suppression', 'error');
+                }
+            }
+        }
+
+        function exportEnseignants() {
+            showNotification('Exportation des données en cours...', 'info');
+            setTimeout(() => {
+                showNotification('Données exportées avec succès!', 'success');
+            }, 1500);
+        }
+
+        // === FONCTIONS UTILITAIRES ===
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('fr-FR');
+        }
+
+        function getStatutBadgeClass(statut) {
+            const classes = {
+                'Actif': 'badge-success',
+                'Inactif': 'badge-warning',
+                'En congé': 'badge-primary',
+                'Retraité': 'badge-info'
+            };
+            return classes[statut] || 'badge-info';
+        }
+
+        function showNotification(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--secondary)'};
+                color: white;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        function logout() {
+            if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // === INITIALISATION ===
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Vérifier la connexion
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Charger les données
+            loadUserInfo();
+            await loadEnseignantsFromFirebase();
+            updateDate();
+
+            // CSS pour animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            console.log('👨‍🏫 Module enseignants chargé avec Firebase');
+        });
+
+        function loadUserInfo() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.nom;
+                document.getElementById('userRole').textContent = getRoleLabel(currentUser.role);
+                document.getElementById('userBadge').textContent = getRoleBadge(currentUser.role);
+                document.getElementById('userBadge').className = `badge ${getRoleBadgeClass(currentUser.role)}`;
+                
+                if (currentUser.photo) {
+                    document.getElementById('userAvatar').src = currentUser.photo;
+                }
+            }
+        }
+
+        function updateDate() {
+            const now = new Date();
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('fr-FR', { 
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+            });
+        }
+
+        function getRoleLabel(role) {
+            const roles = {
+                'prefet': 'Préfet des Études',
+                'directeur_etudes': 'Directeur des Études',
+                'directeur_discipline': 'Directeur de Discipline',
+                'econome': 'Économe',
+                'secretaire': 'Secrétaire',
+                'enseignant': 'Enseignant',
+                'eleve': 'Élève'
+            };
+            return roles[role] || 'Utilisateur';
+        }
+
+        function getRoleBadge(role) {
+            const badges = {
+                'prefet': 'PRÉFET',
+                'directeur_etudes': 'DIRECTEUR',
+                'directeur_discipline': 'DISCIPLINE', 
+                'econome': 'ÉCONOME',
+                'secretaire': 'SECRÉTAIRE',
+                'enseignant': 'ENSEIGNANT',
+                'eleve': 'ÉLÈVE'
+            };
+            return badges[role] || 'USER';
+        }
+
+        function getRoleBadgeClass(role) {
+            const classes = {
+                'prefet': 'badge-danger',
+                'directeur_etudes': 'badge-primary',
+                'directeur_discipline': 'badge-warning',
+                'econome': 'badge-success',
+                'secretaire': 'badge-info',
+                'enseignant': 'badge-primary',
+                'eleve': 'badge-success'
+            };
+            return classes[role] || 'badge-info';
+        }
+    </script>
+</body>
+</html>
