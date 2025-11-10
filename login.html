@@ -12,20 +12,20 @@
         }
 
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
+            --primary: #1a365d;
+            --secondary: #2d5aa0;
+            --success: #2e7d32;
+            --warning: #ed6c02;
+            --danger: #d32f2f;
+            --light: #f5f7fa;
+            --dark: #1a202c;
             --shadow: 0 4px 6px rgba(0,0,0,0.1);
             --radius: 10px;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a365d 0%, #2d5aa0 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -35,7 +35,7 @@
 
         .auth-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
         }
 
         .auth-card {
@@ -46,7 +46,7 @@
         }
 
         .logo-section {
-            background: linear-gradient(135deg, var(--primary), #34495e);
+            background: linear-gradient(135deg, var(--primary), #2c5282);
             color: white;
             padding: 30px 20px;
             text-align: center;
@@ -74,36 +74,44 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: var(--dark);
+            font-size: 14px;
         }
 
         .form-group input {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 16px;
             transition: border-color 0.3s;
+            background: #fff;
         }
 
         .form-group input:focus {
             outline: none;
             border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(45, 90, 160, 0.1);
         }
 
         .btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            width: 100%;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--secondary), #2980b9);
+            background: var(--secondary);
             color: white;
+            width: 100%;
         }
 
         .btn-success {
@@ -152,21 +160,23 @@
         }
 
         .error-message {
-            background: var(--danger);
-            color: white;
+            background: #fef2f2;
+            color: var(--danger);
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 6px;
             margin-top: 15px;
             text-align: center;
+            border: 1px solid #fed7d7;
         }
 
         .success-message {
-            background: var(--success);
-            color: white;
+            background: #f0fff4;
+            color: var(--success);
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 6px;
             margin-top: 15px;
             text-align: center;
+            border: 1px solid #c6f6d5;
         }
 
         .auth-footer {
@@ -174,13 +184,14 @@
             text-align: center;
             color: #666;
             border-top: 1px solid #eee;
+            font-size: 14px;
         }
 
         .test-accounts {
             background: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
-            margin-top: 20px;
+            margin: 20px;
             font-size: 12px;
         }
 
@@ -195,32 +206,45 @@
 
         .account-item {
             margin-bottom: 5px;
-            padding: 5px;
+            padding: 8px;
             background: white;
             border-radius: 4px;
             cursor: pointer;
             transition: background 0.3s;
+            border-left: 3px solid transparent;
         }
 
         .account-item:hover {
             background: #ebf5fb;
-        }
-
-        .setup-section {
-            background: #d4edda;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px;
-            text-align: center;
+            border-left-color: var(--secondary);
         }
 
         .urgent-section {
             background: #fff3cd;
             padding: 15px;
-            border-radius: 8px;
             margin: 15px;
+            border-radius: 8px;
             text-align: center;
             border: 2px solid var(--warning);
+        }
+
+        .setup-section {
+            background: #d4edda;
+            padding: 15px;
+            margin: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .status-box {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 12px;
+            text-align: left;
+            max-height: 150px;
+            overflow-y: auto;
         }
     </style>
 </head>
@@ -235,12 +259,14 @@
 
             <!-- Section URGENTE -->
             <div class="urgent-section">
-                <p><strong>🚨 ACTION URGENTE REQUISE</strong></p>
-                <p style="font-size: 14px; margin-bottom: 10px;">Les comptes existent mais pas les données Firestore</p>
+                <p><strong>🚨 PREMIÈRE UTILISATION</strong></p>
+                <p style="font-size: 14px; margin-bottom: 10px;">Créez les données manquantes dans Firestore</p>
                 <button class="btn btn-warning" onclick="createFirestoreData()" id="urgentBtn">
-                    🔥 CRÉER LES DONNÉES MANQUANTES
+                    🔥 INITIALISER LA BASE DE DONNÉES
                 </button>
-                <div id="urgentStatus" style="margin-top: 10px; font-size: 12px;"></div>
+                <div class="status-box">
+                    <div id="urgentStatus">En attente d'initialisation...</div>
+                </div>
             </div>
 
             <form id="loginForm" class="auth-form">
@@ -268,22 +294,22 @@
 
             <!-- Section des comptes de test -->
             <div class="test-accounts">
-                <h4>🧪 Comptes de test (Cliquez pour remplir) :</h4>
+                <h4>🧪 COMPTES DE TEST (Cliquez pour remplir) :</h4>
                 <div class="account-list">
                     <div class="account-item" onclick="fillCredentials('prefet@stcharles.edu', 'prefet123')">
-                        <strong>👑 Préfet:</strong> prefet@stcharles.edu / prefet123
+                        <strong>👑 Préfet des Études:</strong> prefet@stcharles.edu / prefet123
                     </div>
                     <div class="account-item" onclick="fillCredentials('directeur@stcharles.edu', 'directeur123')">
-                        <strong>🎓 Directeur:</strong> directeur@stcharles.edu / directeur123
+                        <strong>🎓 Directeur des Études:</strong> directeur@stcharles.edu / directeur123
                     </div>
                     <div class="account-item" onclick="fillCredentials('discipline@stcharles.edu', 'discipline123')">
-                        <strong>⚖️ Discipline:</strong> discipline@stcharles.edu / discipline123
+                        <strong>⚖️ Directeur de Discipline:</strong> discipline@stcharles.edu / discipline123
                     </div>
                     <div class="account-item" onclick="fillCredentials('econome@stcharles.edu', 'econome123')">
                         <strong>💰 Économe:</strong> econome@stcharles.edu / econome123
                     </div>
                     <div class="account-item" onclick="fillCredentials('prof.math@stcharles.edu', 'prof123')">
-                        <strong>👨‍🏫 Enseignant:</strong> prof.math@stcharles.edu / prof123
+                        <strong>👨‍🏫 Enseignant Math:</strong> prof.math@stcharles.edu / prof123
                     </div>
                     <div class="account-item" onclick="fillCredentials('dev@stcharles.edu', 'dev123')">
                         <strong>🔧 Développeur:</strong> dev@stcharles.edu / dev123
@@ -292,7 +318,10 @@
             </div>
 
             <div class="auth-footer">
-                <p>Plateforme de gestion scolaire - Version 1.0</p>
+                <p><strong>Plateforme de gestion scolaire - Version 2.0</strong></p>
+                <p style="font-size: 12px; margin-top: 5px; color: #888;">
+                    Institut Saint Charles Lwanga - Kolwezi, RDC
+                </p>
             </div>
         </div>
     </div>
@@ -320,43 +349,12 @@
 
         // === DONNÉES DES UTILISATEURS ===
         const usersData = {
-            'prefet@stcharles.edu': {
-                password: 'prefet123',
-                role: 'prefet',
-                nom: 'Père Michel Lembe',
-                telephone: '+243 97 001 0001'
-            },
-            'directeur@stcharles.edu': {
-                password: 'directeur123', 
-                role: 'directeur_etudes',
-                nom: 'Delphin Kagunge',
-                telephone: '+243 97 002 0002'
-            },
-            'discipline@stcharles.edu': {
-                password: 'discipline123',
-                role: 'directeur_discipline', 
-                nom: 'Modeste Makong',
-                telephone: '+243 97 003 0003'
-            },
-            'econome@stcharles.edu': {
-                password: 'econome123',
-                role: 'econome',
-                nom: 'Père Gabin',
-                telephone: '+243 97 004 0004'
-            },
-            'prof.math@stcharles.edu': {
-                password: 'prof123',
-                role: 'enseignant',
-                nom: 'Jacques Kabila',
-                telephone: '+243 97 005 0005',
-                matiere: 'Mathématiques'
-            },
-            'dev@stcharles.edu': {
-                password: 'dev123',
-                role: 'developpeur',
-                nom: 'Administrateur Système',
-                telephone: '+243 97 999 9999'
-            }
+            'prefet@stcharles.edu': { password: 'prefet123', role: 'prefet' },
+            'directeur@stcharles.edu': { password: 'directeur123', role: 'directeur_etudes' },
+            'discipline@stcharles.edu': { password: 'discipline123', role: 'directeur_discipline' },
+            'econome@stcharles.edu': { password: 'econome123', role: 'econome' },
+            'prof.math@stcharles.edu': { password: 'prof123', role: 'enseignant' },
+            'dev@stcharles.edu': { password: 'dev123', role: 'developpeur' }
         };
 
         // === MATRICE DES PERMISSIONS ===
@@ -437,13 +435,7 @@
         function fillCredentials(email, password) {
             document.getElementById('email').value = email;
             document.getElementById('password').value = password;
-            document.getElementById('successMessage').textContent = `Identifiants ${email} remplis !`;
-            document.getElementById('successMessage').classList.remove('hidden');
-            
-            // Cacher après 3 secondes
-            setTimeout(() => {
-                document.getElementById('successMessage').classList.add('hidden');
-            }, 3000);
+            showSuccess(`Identifiants ${email} remplis !`);
         }
 
         // === FONCTION URGENTE - CRÉATION DES DONNÉES FIRESTORE ===
@@ -452,18 +444,16 @@
             const urgentStatus = document.getElementById('urgentStatus');
             
             urgentBtn.disabled = true;
-            urgentBtn.innerHTML = '🔄 Création des données...';
-            urgentStatus.innerHTML = 'Début de la création des données utilisateur...';
+            urgentBtn.innerHTML = '🔄 Initialisation en cours...';
+            urgentStatus.innerHTML = 'Début de l\'initialisation...<br>';
 
             try {
-                // Se connecter d'abord avec un compte admin
-                urgentStatus.innerHTML = '🔐 Connexion en cours...';
+                // 1. Connexion avec le compte préfet
+                urgentStatus.innerHTML += '🔐 Connexion en cours...<br>';
                 const userCredential = await auth.signInWithEmailAndPassword('prefet@stcharles.edu', 'prefet123');
-                const currentUser = userCredential.user;
-                
-                urgentStatus.innerHTML = '✅ Connecté en tant que préfet. Création des données...';
+                urgentStatus.innerHTML += '✅ Connecté en tant que préfet<br>';
 
-                // Données utilisateur complètes pour Firestore
+                // 2. Données utilisateur complètes
                 const usersFirestoreData = {
                     'prefet@stcharles.edu': {
                         id: 'U001',
@@ -507,6 +497,7 @@
                         role: 'enseignant',
                         telephone: '+243 97 005 0005',
                         statut: 'Actif',
+                        matiere: 'Mathématiques',
                         permissions: getRolePermissions('enseignant'),
                         dateCreation: new Date().toISOString()
                     },
@@ -521,20 +512,20 @@
                     }
                 };
 
-                // Créer les données dans Firestore
+                // 3. Création des données
                 let successCount = 0;
                 const userEmails = Object.keys(usersFirestoreData);
 
                 for (const email of userEmails) {
                     try {
-                        urgentStatus.innerHTML = `Création données pour: ${email}...`;
+                        urgentStatus.innerHTML += `<br>🔧 Création de ${email}...`;
                         
-                        // Se connecter temporairement pour récupérer l'UID
+                        // Connexion temporaire pour récupérer l'UID
                         const tempCredential = await auth.signInWithEmailAndPassword(email, usersData[email].password);
                         const user = tempCredential.user;
                         
                         if (user) {
-                            // Sauvegarder les données dans Firestore avec l'UID comme ID de document
+                            // Sauvegarde dans Firestore
                             await db.collection('users').doc(user.uid).set({
                                 ...usersFirestoreData[email],
                                 email: email,
@@ -542,40 +533,43 @@
                             });
                             
                             successCount++;
-                            urgentStatus.innerHTML += `<br>✅ ${email} - DONNÉES CRÉÉES`;
-                            console.log(`✅ Données créées pour: ${email}`);
-                        } else {
-                            urgentStatus.innerHTML += `<br>❌ ${email} - UTILISATEUR NON TROUVÉ`;
+                            urgentStatus.innerHTML += ` ✅ CRÉÉ`;
                         }
                         
-                        // Se déconnecter pour passer au suivant
+                        // Déconnexion pour le suivant
                         await auth.signOut();
-                        
-                        // Petit délai pour éviter les limites de Firebase
-                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        await new Promise(resolve => setTimeout(resolve, 500));
                         
                     } catch (error) {
-                        urgentStatus.innerHTML += `<br>❌ Erreur pour ${email}: ${error.message}`;
-                        console.error(`Erreur pour ${email}:`, error);
+                        urgentStatus.innerHTML += ` ❌ ERREUR: ${error.message}`;
                     }
                 }
 
-                urgentStatus.innerHTML += `<br><br>🎉 CRÉATION TERMINÉE : ${successCount}/${userEmails.length} comptes configurés`;
-                urgentBtn.innerHTML = '✅ DONNÉES CRÉÉES AVEC SUCCÈS';
-                
-                // Se reconnecter avec le préfet pour la suite
+                // 4. Reconnexion finale avec préfet
                 await auth.signInWithEmailAndPassword('prefet@stcharles.edu', 'prefet123');
                 
-                // Redirection automatique après succès
+                urgentStatus.innerHTML += `<br><br>🎉 <strong>INITIALISATION TERMINÉE</strong><br>`;
+                urgentStatus.innerHTML += `✅ ${successCount}/${userEmails.length} comptes configurés<br>`;
+                urgentStatus.innerHTML += `🔑 Connecté en tant que: <strong>Préfet des Études</strong>`;
+                
+                urgentBtn.innerHTML = '✅ BASE DE DONNÉES INITIALISÉE';
+                
+                // Redirection automatique
                 setTimeout(() => {
+                    const userData = usersFirestoreData['prefet@stcharles.edu'];
+                    localStorage.setItem('currentUser', JSON.stringify({
+                        ...userData,
+                        email: 'prefet@stcharles.edu',
+                        authUid: auth.currentUser.uid
+                    }));
+                    localStorage.setItem('userPermissions', JSON.stringify(userData.permissions));
                     window.location.href = 'dashboard.html';
                 }, 3000);
 
             } catch (error) {
-                urgentStatus.innerHTML = `❌ ERREUR CRITIQUE: ${error.message}`;
+                urgentStatus.innerHTML += `<br><br>❌ <strong>ERREUR CRITIQUE:</strong> ${error.message}`;
                 urgentBtn.innerHTML = '❌ ÉCHEC - RÉESSAYER';
                 urgentBtn.disabled = false;
-                console.error('Erreur création données:', error);
             }
         }
 
@@ -615,53 +609,24 @@
                     localStorage.setItem('currentUser', JSON.stringify(userData));
                     localStorage.setItem('userPermissions', JSON.stringify(userData.permissions));
                     
-                    successDiv.textContent = 'Connexion réussie ! Redirection...';
-                    successDiv.classList.remove('hidden');
+                    showSuccess(`Connexion réussie ! Redirection...`);
                     
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
                     }, 1000);
                     
                 } else {
-                    // Données n'existent pas - proposer de les créer
+                    // Données n'existent pas
                     console.log('❌ Données Firestore manquantes pour:', email);
-                    
-                    errorDiv.innerHTML = `
+                    showError(`
                         <strong>Données utilisateur manquantes</strong><br>
-                        <small>Les données Firestore pour ce compte n'existent pas encore.</small>
-                        <button onclick="createSingleUserData('${email}')" class="btn btn-warning" style="margin-top: 10px; padding: 8px 16px; width: auto;">
-                            🔧 Créer les données manquantes
-                        </button>
-                    `;
-                    errorDiv.classList.remove('hidden');
+                        <small>Cliquez sur "INITIALISER LA BASE" ci-dessus pour créer les données manquantes.</small>
+                    `);
                 }
                 
             } catch (error) {
                 console.error('❌ Erreur connexion:', error);
-                
-                let errorMessage = 'Erreur de connexion';
-                switch (error.code) {
-                    case 'auth/invalid-email':
-                        errorMessage = 'Adresse email invalide';
-                        break;
-                    case 'auth/user-disabled':
-                        errorMessage = 'Compte désactivé';
-                        break;
-                    case 'auth/user-not-found':
-                        errorMessage = 'Aucun compte trouvé avec cet email';
-                        break;
-                    case 'auth/wrong-password':
-                        errorMessage = 'Mot de passe incorrect';
-                        break;
-                    case 'auth/network-request-failed':
-                        errorMessage = 'Problème de connexion réseau';
-                        break;
-                    default:
-                        errorMessage = error.message || 'Erreur inconnue';
-                }
-                
-                errorDiv.textContent = errorMessage;
-                errorDiv.classList.remove('hidden');
+                handleLoginError(error);
             } finally {
                 // Cacher loading
                 loginBtn.querySelector('.btn-text').classList.remove('hidden');
@@ -669,106 +634,46 @@
             }
         });
 
-        // === FONCTION POUR CRÉER LES DONNÉES D'UN UTILISATEUR SPÉCIFIQUE ===
-        async function createSingleUserData(email) {
-            const errorDiv = document.getElementById('errorMessage');
-            const loginBtn = document.getElementById('loginBtn');
+        // === FONCTIONS UTILITAIRES ===
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.innerHTML = message;
+            successDiv.classList.remove('hidden');
             
-            try {
-                errorDiv.innerHTML = '🔄 Création des données...';
-                loginBtn.querySelector('.btn-text').classList.add('hidden');
-                loginBtn.querySelector('.btn-loading').classList.remove('hidden');
+            setTimeout(() => {
+                successDiv.classList.add('hidden');
+            }, 3000);
+        }
 
-                // Données par défaut selon l'email
-                const userDataMap = {
-                    'prefet@stcharles.edu': {
-                        id: 'U001',
-                        nom: 'Père Michel Lembe',
-                        role: 'prefet',
-                        telephone: '+243 97 001 0001',
-                        permissions: getRolePermissions('prefet')
-                    },
-                    'directeur@stcharles.edu': {
-                        id: 'U002', 
-                        nom: 'Delphin Kagunge',
-                        role: 'directeur_etudes',
-                        telephone: '+243 97 002 0002',
-                        permissions: getRolePermissions('directeur_etudes')
-                    },
-                    'discipline@stcharles.edu': {
-                        id: 'U003',
-                        nom: 'Modeste Makong', 
-                        role: 'directeur_discipline',
-                        telephone: '+243 97 003 0003',
-                        permissions: getRolePermissions('directeur_discipline')
-                    },
-                    'econome@stcharles.edu': {
-                        id: 'U004',
-                        nom: 'Père Gabin',
-                        role: 'econome',
-                        telephone: '+243 97 004 0004', 
-                        permissions: getRolePermissions('econome')
-                    },
-                    'prof.math@stcharles.edu': {
-                        id: 'U005',
-                        nom: 'Jacques Kabila',
-                        role: 'enseignant',
-                        telephone: '+243 97 005 0005',
-                        permissions: getRolePermissions('enseignant')
-                    },
-                    'dev@stcharles.edu': {
-                        id: 'DEV001',
-                        nom: 'Administrateur Système',
-                        role: 'developpeur', 
-                        telephone: '+243 97 999 9999',
-                        permissions: getRolePermissions('developpeur')
-                    }
-                };
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.innerHTML = message;
+            errorDiv.classList.remove('hidden');
+        }
 
-                const userData = userDataMap[email] || {
-                    id: 'USER' + Date.now(),
-                    nom: 'Utilisateur ' + email,
-                    role: 'utilisateur',
-                    telephone: '+243 97 000 0000',
-                    permissions: getRolePermissions('enseignant')
-                };
-
-                // Récupérer l'utilisateur courant (déjà connecté)
-                const user = auth.currentUser;
-                
-                if (user) {
-                    // Sauvegarder dans Firestore
-                    await db.collection('users').doc(user.uid).set({
-                        ...userData,
-                        email: email,
-                        authUid: user.uid,
-                        dateCreation: new Date().toISOString()
-                    });
-
-                    errorDiv.innerHTML = '✅ Données créées ! Redirection...';
-                    
-                    // Stocker dans localStorage
-                    localStorage.setItem('currentUser', JSON.stringify({
-                        ...userData,
-                        email: email,
-                        authUid: user.uid
-                    }));
-                    localStorage.setItem('userPermissions', JSON.stringify(userData.permissions));
-                    
-                    // Redirection automatique
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 2000);
-                } else {
-                    errorDiv.textContent = '❌ Utilisateur non connecté';
-                }
-                
-            } catch (error) {
-                errorDiv.textContent = '❌ Erreur création données: ' + error.message;
-            } finally {
-                loginBtn.querySelector('.btn-text').classList.remove('hidden');
-                loginBtn.querySelector('.btn-loading').classList.add('hidden');
+        function handleLoginError(error) {
+            let errorMessage = 'Erreur de connexion';
+            switch (error.code) {
+                case 'auth/invalid-email':
+                    errorMessage = 'Adresse email invalide';
+                    break;
+                case 'auth/user-disabled':
+                    errorMessage = 'Compte désactivé';
+                    break;
+                case 'auth/user-not-found':
+                    errorMessage = 'Aucun compte trouvé avec cet email';
+                    break;
+                case 'auth/wrong-password':
+                    errorMessage = 'Mot de passe incorrect';
+                    break;
+                case 'auth/network-request-failed':
+                    errorMessage = 'Problème de connexion réseau';
+                    break;
+                default:
+                    errorMessage = error.message || 'Erreur inconnue';
             }
+            
+            showError(errorMessage);
         }
 
         // === INITIALISATION ===
