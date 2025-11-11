@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Institut Saint Charles Lwanga</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --primary-dark: #000051;
+            --primary-light: #534bae;
+            --secondary: #ffab00;
+            --secondary-dark: #c67c00;
+            --text: #333333;
+            --text-light: #666666;
+            --background: #f8f9fa;
+            --white: #ffffff;
+            --error: #d32f2f;
+            --success: #388e3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 700px;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .login-left {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+
+        .school-logo {
+            width: 120px;
+            height: 120px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 32px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-top: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .feature-icon {
+            width: 30px;
+            height: 30px;
+            background: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 14px;
+        }
+
+        .login-right {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--white);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .login-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--background);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 45px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .role-option {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--background);
+        }
+
+        .role-option:hover {
+            border-color: var(--primary-light);
+        }
+
+        .role-option.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(26, 35, 126, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .forgot-password a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .demo-accounts {
+            background: var(--background);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .demo-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        .demo-account {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .demo-account:last-child {
+            border-bottom: none;
+        }
+
+        .demo-role {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .demo-credentials {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-error {
+            background: #ffebee;
+            color: var(--error);
+            border: 1px solid #ffcdd2;
+        }
+
+        .alert-success {
+            background: #e8f5e8;
+            color: var(--success);
+            border: 1px solid #c8e6c9;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+                min-height: auto;
+            }
+            
+            .login-left, .login-right {
+                padding: 30px;
+            }
+            
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .role-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Section gauche avec présentation -->
+        <div class="login-left">
+            <div class="school-logo">SCL</div>
+            <h1 class="welcome-title">Institut Saint Charles Lwanga</h1>
+            <p class="welcome-subtitle">Kolwezi - Pères Salvatoriens</p>
+            
+            <ul class="features-list">
+                <li>
+                    <div class="feature-icon">✓</div>
+                    Gestion complète des élèves et enseignants
+                </li>
+                <li>
+                    <div class="feature-icon">✓</div>
+                    Suivi pédagogique et disciplinaire
+                </li>
+                <li>
+                    <div class="feature-icon">✓</div>
+                    Gestion financière et des paiements
+                </li>
+                <li>
+                    <div class="feature-icon">✓</div>
+                    Tableaux de bord personnalisés par rôle
+                </li>
+                <li>
+                    <div class="feature-icon">✓</div>
+                    Système sécurisé et conforme RGPD
+                </li>
+            </ul>
+        </div>
+
+        <!-- Section droite avec formulaire -->
+        <div class="login-right">
+            <div class="login-header">
+                <h2 class="login-title">Connexion au Portail</h2>
+                <p class="login-subtitle">Accédez à votre espace personnel</p>
+            </div>
+
+            <div class="alert alert-error" id="error-alert">
+                Identifiants incorrects. Veuillez réessayer.
+            </div>
+
+            <div class="alert alert-success" id="success-alert">
+                Connexion réussie! Redirection en cours...
+            </div>
+
+            <form class="login-form" id="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="email">Adresse Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="votre@email.edu.cd" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Mot de Passe</label>
+                    <input type="password" id="password" class="form-input" placeholder="Votre mot de passe" required>
+                    <button type="button" class="password-toggle" id="toggle-password">👁️</button>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Rôle</label>
+                    <div class="role-selector" id="role-selector">
+                        <div class="role-option" data-role="prefet">Préfet</div>
+                        <div class="role-option" data-role="directeur-etudes">Directeur Études</div>
+                        <div class="role-option" data-role="directeur-discipline">Directeur Discipline</div>
+                        <div class="role-option" data-role="econome">Économe</div>
+                        <div class="role-option" data-role="secretaire">Secrétaire</div>
+                        <div class="role-option" data-role="enseignant">Enseignant</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn" id="login-btn">
+                    Se Connecter
+                </button>
+
+                <div class="forgot-password">
+                    <a href="#" id="forgot-password">Mot de passe oublié ?</a>
+                </div>
+            </form>
+
+            <div class="demo-accounts">
+                <div class="demo-title">Comptes de Démonstration</div>
+                
+                <div class="demo-account">
+                    <div>
+                        <div class="demo-role">Préfet des Études</div>
+                        <div class="demo-credentials">prefet@stcharles.edu.cd</div>
+                    </div>
+                    <button class="copy-btn" data-email="prefet@stcharles.edu.cd" data-password="PrefetStCharles2023!">Copier</button>
+                </div>
+
+                <div class="demo-account">
+                    <div>
+                        <div class="demo-role">Directeur des Études</div>
+                        <div class="demo-credentials">directeur.etudes@stcharles.edu.cd</div>
+                    </div>
+                    <button class="copy-btn" data-email="directeur.etudes@stcharles.edu.cd" data-password="DirecteurEtudes2023!">Copier</button>
+                </div>
+
+                <div class="demo-account">
+                    <div>
+                        <div class="demo-role">Économe</div>
+                        <div class="demo-credentials">econome@stcharles.edu.cd</div>
+                    </div>
+                    <button class="copy-btn" data-email="econome@stcharles.edu.cd" data-password="EconomeStCharles2023!">Copier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTM4gdOs_Ud3DC49pmammYMlDH3cSSgZs",
+            authDomain: "gestion-scolaire-st-charles.firebaseapp.com",
+            projectId: "gestion-scolaire-st-charles",
+            storageBucket: "gestion-scolaire-st-charles.firebasestorage.app",
+            messagingSenderId: "1033368821503",
+            appId: "1:1033368821503:web:a4ba1c8d439193c5f336ca"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Éléments DOM
+        const loginForm = document.getElementById('login-form');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const togglePasswordBtn = document.getElementById('toggle-password');
+        const roleOptions = document.querySelectorAll('.role-option');
+        const loginBtn = document.getElementById('login-btn');
+        const errorAlert = document.getElementById('error-alert');
+        const successAlert = document.getElementById('success-alert');
+        const copyButtons = document.querySelectorAll('.copy-btn');
+
+        let selectedRole = 'prefet';
+
+        // Sélection du rôle
+        roleOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                roleOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedRole = option.dataset.role;
+            });
+        });
+
+        // Sélection par défaut
+        roleOptions[0].classList.add('selected');
+
+        // Basculer la visibilité du mot de passe
+        togglePasswordBtn.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            togglePasswordBtn.textContent = type === 'password' ? '👁️' : '🔒';
+        });
+
+        // Copier les identifiants de démonstration
+        copyButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const email = button.dataset.email;
+                const password = button.dataset.password;
+                
+                emailInput.value = email;
+                passwordInput.value = password;
+                
+                // Trouver et sélectionner le rôle correspondant
+                roleOptions.forEach(option => {
+                    if (option.dataset.role === 'prefet' && email.includes('prefet')) {
+                        option.click();
+                    } else if (option.dataset.role === 'directeur-etudes' && email.includes('directeur.etudes')) {
+                        option.click();
+                    } else if (option.dataset.role === 'econome' && email.includes('econome')) {
+                        option.click();
+                    }
+                });
+                
+                // Afficher un feedback visuel
+                const originalText = button.textContent;
+                button.textContent = '✓ Copié';
+                button.style.background = 'var(--success)';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = 'var(--primary)';
+                }, 2000);
+            });
+        });
+
+        // Connexion automatique si déjà authentifié
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        redirectToDashboard(userData.role);
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de la récupération des données utilisateur:", error);
+                }
+            }
+        });
+
+        // Soumission du formulaire de connexion
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            
+            // Masquer les alertes précédentes
+            errorAlert.style.display = 'none';
+            successAlert.style.display = 'none';
+            
+            // Désactiver le bouton pendant la tentative de connexion
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Connexion en cours...';
+            
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // Récupérer les données utilisateur depuis Firestore
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    
+                    // Afficher le succès
+                    successAlert.style.display = 'block';
+                    successAlert.textContent = `Connexion réussie! Bienvenue ${userData.fullName}`;
+                    
+                    // Rediriger vers le tableau de bord approprié
+                    setTimeout(() => {
+                        redirectToDashboard(userData.role);
+                    }, 1500);
+                } else {
+                    throw new Error("Données utilisateur non trouvées");
+                }
+                
+            } catch (error) {
+                console.error("Erreur de connexion:", error);
+                
+                // Afficher l'erreur
+                errorAlert.style.display = 'block';
+                
+                // Messages d'erreur spécifiques
+                if (error.code === 'auth/invalid-credential') {
+                    errorAlert.textContent = "Email ou mot de passe incorrect.";
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorAlert.textContent = "Trop de tentatives échouées. Veuillez réessayer plus tard.";
+                } else {
+                    errorAlert.textContent = "Une erreur est survenue. Veuillez réessayer.";
+                }
+                
+                // Réactiver le bouton
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Se Connecter';
+            }
+        });
+
+        // Fonction de redirection vers le tableau de bord approprié
+        function redirectToDashboard(role) {
+            const dashboards = {
+                'Préfet des Études': 'dashboard-prefet.html',
+                'Directeur des Études': 'dashboard-directeur-etudes.html',
+                'Directeur de Discipline': 'dashboard-directeur-discipline.html',
+                'Économe': 'dashboard-econome.html',
+                'Secrétaire': 'dashboard-secretaire.html',
+                'Enseignant': 'dashboard-enseignant.html'
+            };
+            
+            const dashboard = dashboards[role] || 'dashboard-default.html';
+            window.location.href = dashboard;
+        }
+
+        // Mot de passe oublié
+        document.getElementById('forgot-password').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert("Veuillez contacter l'administrateur système pour réinitialiser votre mot de passe.");
+        });
+    </script>
+</body>
+</html>
