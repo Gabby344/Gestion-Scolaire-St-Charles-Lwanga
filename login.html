@@ -5,25 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - Institut Saint Charles Lwanga</title>
     <style>
-        :root {
-            --primary: #1a237e;
-            --primary-dark: #000051;
-            --primary-light: #534bae;
-            --secondary: #ffab00;
-            --secondary-dark: #c67c00;
-            --text: #333333;
-            --text-light: #666666;
-            --background: #f8f9fa;
-            --white: #ffffff;
-            --error: #d32f2f;
-            --success: #388e3c;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1a237e;
+            --primary-dark: #000051;
+            --primary-light: #534bae;
+            --secondary: #d32f2f;
+            --accent: #ffab00;
+            --text: #333333;
+            --text-light: #666666;
+            --background: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
         body {
@@ -43,8 +43,8 @@
             min-height: 700px;
             background: var(--white);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            box-shadow: var(--shadow-lg);
         }
 
         .login-left {
@@ -66,11 +66,18 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
             background-size: cover;
         }
 
-        .school-logo {
+        .school-brand {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
             width: 120px;
             height: 120px;
             background: var(--white);
@@ -78,55 +85,66 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 30px;
+            margin: 0 auto 20px;
             font-weight: bold;
             color: var(--primary);
             font-size: 32px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            position: relative;
-            z-index: 2;
+            box-shadow: var(--shadow);
         }
 
-        .welcome-title {
-            font-size: 2.5rem;
+        .school-name {
+            font-size: 32px;
             font-weight: 700;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 2;
+            margin-bottom: 10px;
         }
 
-        .welcome-subtitle {
-            font-size: 1.2rem;
+        .school-subtitle {
+            font-size: 18px;
             opacity: 0.9;
-            margin-bottom: 30px;
+            margin-bottom: 5px;
+        }
+
+        .school-motto {
+            font-size: 14px;
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .features {
             position: relative;
             z-index: 2;
         }
 
-        .features-list {
-            list-style: none;
-            margin-top: 40px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .features-list li {
+        .feature {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
-            font-size: 1rem;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
         }
 
         .feature-icon {
-            width: 30px;
-            height: 30px;
-            background: var(--secondary);
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .feature-text h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .feature-text p {
             font-size: 14px;
+            opacity: 0.9;
         }
 
         .login-right {
@@ -143,16 +161,15 @@
             margin-bottom: 40px;
         }
 
-        .login-title {
-            font-size: 2rem;
-            font-weight: 700;
+        .login-header h1 {
+            font-size: 32px;
             color: var(--primary);
             margin-bottom: 10px;
         }
 
-        .login-subtitle {
+        .login-header p {
             color: var(--text-light);
-            font-size: 1rem;
+            font-size: 16px;
         }
 
         .login-form {
@@ -163,7 +180,6 @@
 
         .form-group {
             margin-bottom: 25px;
-            position: relative;
         }
 
         .form-label {
@@ -175,30 +191,33 @@
 
         .form-input {
             width: 100%;
-            padding: 15px 20px;
+            padding: 15px;
             border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 1rem;
+            border-radius: 10px;
+            font-size: 16px;
             transition: all 0.3s ease;
-            background: var(--background);
         }
 
         .form-input:focus {
             outline: none;
             border-color: var(--primary);
-            background: var(--white);
             box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
         }
 
-        .password-toggle {
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
             position: absolute;
             right: 15px;
-            top: 45px;
+            top: 50%;
+            transform: translateY(-50%);
             background: none;
             border: none;
             color: var(--text-light);
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 18px;
         }
 
         .role-selector {
@@ -215,7 +234,7 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: var(--background);
+            font-weight: 500;
         }
 
         .role-option:hover {
@@ -224,68 +243,78 @@
 
         .role-option.selected {
             border-color: var(--primary);
-            background: var(--primary);
-            color: var(--white);
+            background: rgba(26, 35, 126, 0.05);
+            color: var(--primary);
         }
 
-        .login-btn {
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+        }
+
+        .forgot-password {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .btn-login {
             width: 100%;
-            padding: 16px;
+            padding: 15px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: var(--white);
             border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            border-radius: 10px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-bottom: 20px;
         }
 
-        .login-btn:hover {
+        .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(26, 35, 126, 0.3);
+            box-shadow: var(--shadow);
         }
 
-        .login-btn:active {
+        .btn-login:active {
             transform: translateY(0);
         }
 
-        .forgot-password {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .forgot-password a {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
         .demo-accounts {
-            background: var(--background);
-            padding: 20px;
-            border-radius: 12px;
             margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
         }
 
-        .demo-title {
-            font-size: 1rem;
-            font-weight: 600;
+        .demo-accounts h3 {
+            color: var(--primary);
             margin-bottom: 15px;
-            color: var(--text);
+            font-size: 16px;
         }
 
         .demo-account {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .demo-account:last-child {
-            border-bottom: none;
+            margin-bottom: 8px;
+            font-size: 14px;
         }
 
         .demo-role {
@@ -294,18 +323,14 @@
         }
 
         .demo-credentials {
-            font-size: 0.85rem;
             color: var(--text-light);
         }
 
-        .copy-btn {
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            padding: 5px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
+        .login-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text-light);
+            font-size: 14px;
         }
 
         .alert {
@@ -317,16 +342,17 @@
 
         .alert-error {
             background: #ffebee;
-            color: var(--error);
-            border: 1px solid #ffcdd2;
+            color: #c62828;
+            border-left: 4px solid #f44336;
         }
 
         .alert-success {
-            background: #e8f5e8;
-            color: var(--success);
-            border: 1px solid #c8e6c9;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #4caf50;
         }
 
+        /* Responsive */
         @media (max-width: 768px) {
             .login-container {
                 flex-direction: column;
@@ -337,10 +363,6 @@
                 padding: 30px;
             }
             
-            .welcome-title {
-                font-size: 2rem;
-            }
-            
             .role-selector {
                 grid-template-columns: 1fr;
             }
@@ -349,41 +371,52 @@
 </head>
 <body>
     <div class="login-container">
-        <!-- Section gauche avec présentation -->
+        <!-- Section gauche avec informations -->
         <div class="login-left">
-            <div class="school-logo">SCL</div>
-            <h1 class="welcome-title">Institut Saint Charles Lwanga</h1>
-            <p class="welcome-subtitle">Kolwezi - Pères Salvatoriens</p>
-            
-            <ul class="features-list">
-                <li>
-                    <div class="feature-icon">✓</div>
-                    Gestion complète des élèves et enseignants
-                </li>
-                <li>
-                    <div class="feature-icon">✓</div>
-                    Suivi pédagogique et disciplinaire
-                </li>
-                <li>
-                    <div class="feature-icon">✓</div>
-                    Gestion financière et des paiements
-                </li>
-                <li>
-                    <div class="feature-icon">✓</div>
-                    Tableaux de bord personnalisés par rôle
-                </li>
-                <li>
-                    <div class="feature-icon">✓</div>
-                    Système sécurisé et conforme RGPD
-                </li>
-            </ul>
+            <div class="school-brand">
+                <div class="logo">SCL</div>
+                <h1 class="school-name">Institut Saint Charles Lwanga</h1>
+                <p class="school-subtitle">Kolwezi - Pères Salvatoriens</p>
+                <p class="school-motto">"Éduquer pour élever, former pour transformer"</p>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-text">
+                        <h3>Gestion Complète</h3>
+                        <p>Gérez élèves, enseignants, notes, finances et discipline</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">👑</div>
+                    <div class="feature-text">
+                        <h3>Rôles Multiples</h3>
+                        <p>Accès différenciés selon votre fonction dans l'établissement</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-text">
+                        <h3>Sécurité Maximale</h3>
+                        <p>Données cryptées et sauvegardées automatiquement</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-text">
+                        <h3>Accessible Partout</h3>
+                        <p>Utilisez le système sur tous vos appareils</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Section droite avec formulaire -->
         <div class="login-right">
             <div class="login-header">
-                <h2 class="login-title">Connexion au Portail</h2>
-                <p class="login-subtitle">Accédez à votre espace personnel</p>
+                <h1>Connexion</h1>
+                <p>Accédez à votre espace personnel</p>
             </div>
 
             <div class="alert alert-error" id="error-alert">
@@ -402,13 +435,15 @@
 
                 <div class="form-group">
                     <label class="form-label" for="password">Mot de Passe</label>
-                    <input type="password" id="password" class="form-input" placeholder="Votre mot de passe" required>
-                    <button type="button" class="password-toggle" id="toggle-password">👁️</button>
+                    <div class="password-container">
+                        <input type="password" id="password" class="form-input" placeholder="Votre mot de passe" required>
+                        <button type="button" class="toggle-password" id="toggle-password">👁️</button>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Rôle</label>
-                    <div class="role-selector" id="role-selector">
+                    <div class="role-selector">
                         <div class="role-option" data-role="prefet">Préfet</div>
                         <div class="role-option" data-role="directeur-etudes">Directeur Études</div>
                         <div class="role-option" data-role="directeur-discipline">Directeur Discipline</div>
@@ -418,41 +453,36 @@
                     </div>
                 </div>
 
-                <button type="submit" class="login-btn" id="login-btn">
-                    Se Connecter
-                </button>
-
-                <div class="forgot-password">
-                    <a href="#" id="forgot-password">Mot de passe oublié ?</a>
+                <div class="remember-forgot">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember-me">
+                        Se souvenir de moi
+                    </label>
+                    <a href="#" class="forgot-password">Mot de passe oublié ?</a>
                 </div>
+
+                <button type="submit" class="btn-login">Se Connecter</button>
             </form>
 
             <div class="demo-accounts">
-                <div class="demo-title">Comptes de Démonstration</div>
-                
+                <h3>Comptes de Démonstration</h3>
                 <div class="demo-account">
-                    <div>
-                        <div class="demo-role">Préfet des Études</div>
-                        <div class="demo-credentials">prefet@stcharles.edu.cd</div>
-                    </div>
-                    <button class="copy-btn" data-email="prefet@stcharles.edu.cd" data-password="PrefetStCharles2023!">Copier</button>
+                    <span class="demo-role">Préfet des Études:</span>
+                    <span class="demo-credentials">prefet@stcharles.edu.cd</span>
                 </div>
+                <div class="demo-account">
+                    <span class="demo-role">Directeur des Études:</span>
+                    <span class="demo-credentials">directeur.etudes@stcharles.edu.cd</span>
+                </div>
+                <div class="demo-account">
+                    <span class="demo-role">Économe:</span>
+                    <span class="demo-credentials">econome@stcharles.edu.cd</span>
+                </div>
+            </div>
 
-                <div class="demo-account">
-                    <div>
-                        <div class="demo-role">Directeur des Études</div>
-                        <div class="demo-credentials">directeur.etudes@stcharles.edu.cd</div>
-                    </div>
-                    <button class="copy-btn" data-email="directeur.etudes@stcharles.edu.cd" data-password="DirecteurEtudes2023!">Copier</button>
-                </div>
-
-                <div class="demo-account">
-                    <div>
-                        <div class="demo-role">Économe</div>
-                        <div class="demo-credentials">econome@stcharles.edu.cd</div>
-                    </div>
-                    <button class="copy-btn" data-email="econome@stcharles.edu.cd" data-password="EconomeStCharles2023!">Copier</button>
-                </div>
+            <div class="login-footer">
+                <p>&copy; 2023 Institut Saint Charles Lwanga - Kolwezi</p>
+                <p>Système développé pour les Pères Salvatoriens</p>
             </div>
         </div>
     </div>
@@ -485,95 +515,85 @@
         const passwordInput = document.getElementById('password');
         const togglePasswordBtn = document.getElementById('toggle-password');
         const roleOptions = document.querySelectorAll('.role-option');
-        const loginBtn = document.getElementById('login-btn');
         const errorAlert = document.getElementById('error-alert');
         const successAlert = document.getElementById('success-alert');
-        const copyButtons = document.querySelectorAll('.copy-btn');
 
-        let selectedRole = 'prefet';
+        let selectedRole = '';
 
-        // Sélection du rôle
-        roleOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                roleOptions.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-                selectedRole = option.dataset.role;
-            });
-        });
-
-        // Sélection par défaut
-        roleOptions[0].classList.add('selected');
-
-        // Basculer la visibilité du mot de passe
-        togglePasswordBtn.addEventListener('click', () => {
+        // Gestionnaire d'événement pour le bouton afficher/masquer le mot de passe
+        togglePasswordBtn.addEventListener('click', function() {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
-            togglePasswordBtn.textContent = type === 'password' ? '👁️' : '🔒';
+            this.textContent = type === 'password' ? '👁️' : '🔒';
         });
 
-        // Copier les identifiants de démonstration
-        copyButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const email = button.dataset.email;
-                const password = button.dataset.password;
-                
-                emailInput.value = email;
-                passwordInput.value = password;
-                
-                // Trouver et sélectionner le rôle correspondant
-                roleOptions.forEach(option => {
-                    if (option.dataset.role === 'prefet' && email.includes('prefet')) {
-                        option.click();
-                    } else if (option.dataset.role === 'directeur-etudes' && email.includes('directeur.etudes')) {
-                        option.click();
-                    } else if (option.dataset.role === 'econome' && email.includes('econome')) {
-                        option.click();
-                    }
-                });
-                
-                // Afficher un feedback visuel
-                const originalText = button.textContent;
-                button.textContent = '✓ Copié';
-                button.style.background = 'var(--success)';
-                
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.style.background = 'var(--primary)';
-                }, 2000);
+        // Gestionnaire d'événement pour la sélection du rôle
+        roleOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Retirer la classe selected de toutes les options
+                roleOptions.forEach(opt => opt.classList.remove('selected'));
+                // Ajouter la classe selected à l'option cliquée
+                this.classList.add('selected');
+                selectedRole = this.getAttribute('data-role');
             });
         });
 
-        // Connexion automatique si déjà authentifié
+        // Vérifier si l'utilisateur est déjà connecté
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                try {
-                    const userDoc = await getDoc(doc(db, "users", user.uid));
-                    if (userDoc.exists()) {
-                        const userData = userDoc.data();
-                        redirectToDashboard(userData.role);
-                    }
-                } catch (error) {
-                    console.error("Erreur lors de la récupération des données utilisateur:", error);
+                // L'utilisateur est connecté, récupérer ses données
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    showSuccessAlert(`Bienvenue ${userData.fullName}!`);
+                    
+                    // Rediriger vers le dashboard après 2 secondes
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
                 }
             }
         });
 
-        // Soumission du formulaire de connexion
+        // Fonction pour afficher l'alerte d'erreur
+        function showErrorAlert(message) {
+            errorAlert.textContent = message;
+            errorAlert.style.display = 'block';
+            successAlert.style.display = 'none';
+            
+            // Masquer l'alerte après 5 secondes
+            setTimeout(() => {
+                errorAlert.style.display = 'none';
+            }, 5000);
+        }
+
+        // Fonction pour afficher l'alerte de succès
+        function showSuccessAlert(message) {
+            successAlert.textContent = message;
+            successAlert.style.display = 'block';
+            errorAlert.style.display = 'none';
+        }
+
+        // Gestionnaire d'événement pour la soumission du formulaire
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const email = emailInput.value;
             const password = passwordInput.value;
             
-            // Masquer les alertes précédentes
-            errorAlert.style.display = 'none';
-            successAlert.style.display = 'none';
+            // Validation basique
+            if (!email || !password) {
+                showErrorAlert('Veuillez remplir tous les champs.');
+                return;
+            }
             
-            // Désactiver le bouton pendant la tentative de connexion
-            loginBtn.disabled = true;
-            loginBtn.textContent = 'Connexion en cours...';
+            if (!selectedRole) {
+                showErrorAlert('Veuillez sélectionner votre rôle.');
+                return;
+            }
             
             try {
+                // Tentative de connexion avec Firebase Auth
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
                 
@@ -583,58 +603,87 @@
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
                     
-                    // Afficher le succès
-                    successAlert.style.display = 'block';
-                    successAlert.textContent = `Connexion réussie! Bienvenue ${userData.fullName}`;
+                    // Vérifier si le rôle correspond
+                    const userRole = userData.role.toLowerCase();
+                    const expectedRole = selectedRole.toLowerCase();
                     
-                    // Rediriger vers le tableau de bord approprié
-                    setTimeout(() => {
-                        redirectToDashboard(userData.role);
-                    }, 1500);
+                    if (userRole.includes(expectedRole) || expectedRole.includes(userRole)) {
+                        showSuccessAlert(`Connexion réussie! Bienvenue ${userData.fullName}`);
+                        
+                        // Sauvegarder dans le localStorage
+                        localStorage.setItem('currentUser', JSON.stringify({
+                            uid: user.uid,
+                            email: user.email,
+                            fullName: userData.fullName,
+                            role: userData.role,
+                            permissions: userData.permissions
+                        }));
+                        
+                        // Rediriger vers le dashboard après 2 secondes
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 2000);
+                    } else {
+                        showErrorAlert('Ce compte ne correspond pas au rôle sélectionné.');
+                        await auth.signOut();
+                    }
                 } else {
-                    throw new Error("Données utilisateur non trouvées");
+                    showErrorAlert('Données utilisateur non trouvées.');
+                    await auth.signOut();
                 }
                 
             } catch (error) {
-                console.error("Erreur de connexion:", error);
+                console.error('Erreur de connexion:', error);
                 
-                // Afficher l'erreur
-                errorAlert.style.display = 'block';
-                
-                // Messages d'erreur spécifiques
-                if (error.code === 'auth/invalid-credential') {
-                    errorAlert.textContent = "Email ou mot de passe incorrect.";
-                } else if (error.code === 'auth/too-many-requests') {
-                    errorAlert.textContent = "Trop de tentatives échouées. Veuillez réessayer plus tard.";
-                } else {
-                    errorAlert.textContent = "Une erreur est survenue. Veuillez réessayer.";
+                // Messages d'erreur personnalisés
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        showErrorAlert('Adresse email invalide.');
+                        break;
+                    case 'auth/user-disabled':
+                        showErrorAlert('Ce compte a été désactivé.');
+                        break;
+                    case 'auth/user-not-found':
+                        showErrorAlert('Aucun compte trouvé avec cette adresse email.');
+                        break;
+                    case 'auth/wrong-password':
+                        showErrorAlert('Mot de passe incorrect.');
+                        break;
+                    case 'auth/too-many-requests':
+                        showErrorAlert('Trop de tentatives de connexion. Veuillez réessayer plus tard.');
+                        break;
+                    default:
+                        showErrorAlert('Erreur de connexion. Veuillez réessayer.');
                 }
-                
-                // Réactiver le bouton
-                loginBtn.disabled = false;
-                loginBtn.textContent = 'Se Connecter';
             }
         });
 
-        // Fonction de redirection vers le tableau de bord approprié
-        function redirectToDashboard(role) {
-            const dashboards = {
-                'Préfet des Études': 'dashboard-prefet.html',
-                'Directeur des Études': 'dashboard-directeur-etudes.html',
-                'Directeur de Discipline': 'dashboard-directeur-discipline.html',
-                'Économe': 'dashboard-econome.html',
-                'Secrétaire': 'dashboard-secretaire.html',
-                'Enseignant': 'dashboard-enseignant.html'
-            };
-            
-            const dashboard = dashboards[role] || 'dashboard-default.html';
-            window.location.href = dashboard;
-        }
-
-        // Mot de passe oublié
-        document.getElementById('forgot-password').addEventListener('click', (e) => {
-            e.preventDefault();
-            alert("Veuillez contacter l'administrateur système pour réinitialiser votre mot de passe.");
+        // Remplissage automatique pour la démonstration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pré-remplir avec un compte de démonstration au clic
+            const demoAccounts = document.querySelectorAll('.demo-account');
+            demoAccounts.forEach(account => {
+                account.style.cursor = 'pointer';
+                account.addEventListener('click', function() {
+                    const role = this.querySelector('.demo-role').textContent;
+                    const email = this.querySelector('.demo-credentials').textContent;
+                    
+                    emailInput.value = email;
+                    passwordInput.value = 'DemoPassword2023!';
+                    
+                    // Sélectionner automatiquement le rôle
+                    let roleKey = '';
+                    if (role.includes('Préfet')) roleKey = 'prefet';
+                    else if (role.includes('Directeur des Études')) roleKey = 'directeur-etudes';
+                    else if (role.includes('Économe')) roleKey = 'econome';
+                    
+                    roleOptions.forEach(opt => {
+                        if (opt.getAttribute('data-role') === roleKey) {
+                            opt.click();
+                        }
+                    });
+                });
+            });
         });
     </script>
 </body>
