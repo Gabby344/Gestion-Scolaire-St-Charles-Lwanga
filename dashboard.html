@@ -3,8 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de Bord - Institut Saint Charles Lwanga</title>
+    <title>Dashboard - Institut Saint Charles Lwanga</title>
     <style>
+        :root {
+            --primary: #1a3a8f;
+            --primary-dark: #152c6e;
+            --primary-light: #2a5298;
+            --secondary: #f8f9fa;
+            --accent: #ff6b35;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --dark: #343a40;
+            --light: #f8f9fa;
+            --text: #333;
+            --text-light: #6c757d;
+            --border: #dee2e6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --sidebar-width: 280px;
+            --header-height: 70px;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,25 +33,14 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        :root {
-            --primary: #1a237e;
-            --primary-dark: #000051;
-            --primary-light: #534bae;
-            --secondary: #d32f2f;
-            --accent: #ffab00;
-            --text: #333333;
-            --text-light: #666666;
-            --background: #f8f9fa;
-            --white: #ffffff;
-            --sidebar-width: 280px;
-            --header-height: 70px;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+        body {
+            background: #f5f7fb;
+            color: var(--text);
+            overflow-x: hidden;
         }
 
-        body {
-            background-color: var(--background);
-            color: var(--text);
+        /* Layout */
+        .app-container {
             display: flex;
             min-height: 100vh;
         }
@@ -38,140 +48,174 @@
         /* Sidebar */
         .sidebar {
             width: var(--sidebar-width);
-            background: linear-gradient(180deg, var(--primary), var(--primary-dark));
-            color: var(--white);
+            background: var(--primary);
+            color: white;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
             z-index: 1000;
         }
 
         .sidebar-header {
             padding: 25px 20px;
+            background: var(--primary-dark);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
         }
 
-        .sidebar-logo {
-            width: 60px;
-            height: 60px;
-            background: var(--white);
+        .school-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
-            font-weight: bold;
             color: var(--primary);
-            font-size: 20px;
+            font-weight: bold;
+            font-size: 10px;
+            text-align: center;
         }
 
-        .sidebar-school {
+        .school-info h2 {
             font-size: 16px;
-            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .school-info p {
+            font-size: 11px;
+            opacity: 0.8;
         }
 
         .user-profile {
             padding: 20px;
             display: flex;
             align-items: center;
+            gap: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .user-avatar {
             width: 50px;
             height: 50px;
-            border-radius: 50%;
             background: var(--accent);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             font-size: 18px;
-            margin-right: 15px;
         }
 
-        .user-info h3 {
+        .user-details h3 {
             font-size: 16px;
             margin-bottom: 5px;
         }
 
-        .user-info p {
+        .user-details .role {
             font-size: 12px;
             opacity: 0.8;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
         }
 
-        .sidebar-menu {
+        .sidebar-nav {
             padding: 20px 0;
         }
 
-        .menu-section {
+        .nav-section {
             margin-bottom: 20px;
         }
 
-        .menu-title {
+        .nav-title {
+            padding: 0 20px 10px;
             font-size: 12px;
             text-transform: uppercase;
+            opacity: 0.6;
             letter-spacing: 1px;
-            padding: 0 20px 10px;
-            opacity: 0.7;
         }
 
-        .menu-items {
+        .nav-links {
             list-style: none;
         }
 
-        .menu-item {
-            padding: 12px 20px;
+        .nav-links li {
+            margin-bottom: 5px;
+        }
+
+        .nav-links a {
             display: flex;
             align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            gap: 12px;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
             border-left: 3px solid transparent;
         }
 
-        .menu-item:hover {
+        .nav-links a:hover {
             background: rgba(255, 255, 255, 0.1);
+            border-left-color: var(--accent);
         }
 
-        .menu-item.active {
+        .nav-links a.active {
             background: rgba(255, 255, 255, 0.15);
             border-left-color: var(--accent);
         }
 
-        .menu-icon {
-            margin-right: 12px;
-            font-size: 18px;
+        .nav-icon {
             width: 20px;
             text-align: center;
+            font-size: 16px;
         }
 
         /* Main Content */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
-            transition: all 0.3s ease;
+            transition: margin-left 0.3s ease;
         }
 
         /* Header */
         .header {
             height: var(--header-height);
-            background: var(--white);
-            box-shadow: var(--shadow);
+            background: white;
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 30px;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 999;
         }
 
-        .header-left h1 {
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--primary);
+            cursor: pointer;
+            display: none;
+        }
+
+        .page-title h1 {
             font-size: 24px;
             color: var(--primary);
-            font-weight: 600;
         }
 
         .header-right {
@@ -180,28 +224,35 @@
             gap: 20px;
         }
 
-        .notification-icon, .logout-btn {
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .icon-btn {
             width: 40px;
             height: 40px;
+            border: none;
+            background: var(--light);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
+            position: relative;
         }
 
-        .notification-icon {
-            background: var(--background);
-            color: var(--text);
-            position: relative;
+        .icon-btn:hover {
+            background: var(--primary);
+            color: white;
         }
 
         .notification-badge {
             position: absolute;
             top: -5px;
             right: -5px;
-            background: var(--secondary);
+            background: var(--danger);
             color: white;
             border-radius: 50%;
             width: 18px;
@@ -212,13 +263,54 @@
             justify-content: center;
         }
 
-        .logout-btn {
-            background: var(--primary);
-            color: white;
+        .user-menu {
+            position: relative;
         }
 
-        .logout-btn:hover {
-            background: var(--primary-dark);
+        .user-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 25px;
+            transition: background 0.3s;
+        }
+
+        .user-menu-btn:hover {
+            background: var(--light);
+        }
+
+        .user-menu-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            min-width: 200px;
+            padding: 10px 0;
+            display: none;
+        }
+
+        .user-menu:hover .user-menu-dropdown {
+            display: block;
+        }
+
+        .user-menu-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .user-menu-dropdown a:hover {
+            background: var(--light);
         }
 
         /* Dashboard Content */
@@ -226,13 +318,27 @@
             padding: 30px;
         }
 
+        /* Welcome Banner */
         .welcome-banner {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
             padding: 30px;
             border-radius: 15px;
             margin-bottom: 30px;
-            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(50px, -50px);
         }
 
         .welcome-banner h2 {
@@ -242,113 +348,132 @@
 
         .welcome-banner p {
             opacity: 0.9;
-            font-size: 16px;
+            max-width: 600px;
         }
 
+        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            gap: 25px;
             margin-bottom: 30px;
         }
 
         .stat-card {
             background: white;
             padding: 25px;
-            border-radius: 12px;
+            border-radius: 15px;
             box-shadow: var(--shadow);
             display: flex;
             align-items: center;
-            transition: transform 0.3s ease;
+            gap: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
         }
 
         .stat-icon {
             width: 60px;
             height: 60px;
-            border-radius: 12px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 20px;
             font-size: 24px;
         }
 
-        .stat-icon.students { background: #e3f2fd; color: #1976d2; }
-        .stat-icon.teachers { background: #f3e5f5; color: #7b1fa2; }
-        .stat-icon.finances { background: #e8f5e8; color: #388e3c; }
-        .stat-icon.classes { background: #fff3e0; color: #f57c00; }
+        .stat-icon.primary { background: rgba(26, 58, 143, 0.1); color: var(--primary); }
+        .stat-icon.success { background: rgba(40, 167, 69, 0.1); color: var(--success); }
+        .stat-icon.warning { background: rgba(255, 193, 7, 0.1); color: var(--warning); }
+        .stat-icon.danger { background: rgba(220, 53, 69, 0.1); color: var(--danger); }
 
         .stat-info h3 {
-            font-size: 14px;
-            color: var(--text-light);
+            font-size: 2rem;
             margin-bottom: 5px;
+            color: var(--dark);
         }
 
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text);
+        .stat-info p {
+            color: var(--text-light);
+            font-size: 14px;
         }
 
+        /* Quick Actions */
         .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
             margin-bottom: 30px;
         }
 
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
         .action-card {
-            background: white;
+            background: var(--light);
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            border-radius: 10px;
             text-align: center;
+            transition: all 0.3s;
             cursor: pointer;
-            transition: all 0.3s ease;
             border: 2px solid transparent;
         }
 
         .action-card:hover {
+            background: white;
             border-color: var(--primary);
             transform: translateY(-3px);
         }
 
         .action-icon {
-            font-size: 32px;
-            margin-bottom: 15px;
-            color: var(--primary);
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 20px;
         }
 
-        .action-title {
+        .action-card h3 {
             font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            color: var(--dark);
         }
 
-        .action-desc {
-            font-size: 14px;
+        .action-card p {
+            font-size: 13px;
             color: var(--text-light);
         }
 
-        .recent-activities {
+        /* Recent Activity */
+        .recent-activity {
             background: white;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            border-radius: 15px;
             padding: 25px;
-        }
-
-        .section-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            box-shadow: var(--shadow);
         }
 
         .activity-list {
@@ -356,10 +481,11 @@
         }
 
         .activity-item {
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
             display: flex;
             align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
         }
 
         .activity-item:last-child {
@@ -370,20 +496,21 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--background);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 15px;
-            color: var(--primary);
+            font-size: 16px;
         }
+
+        .activity-icon.success { background: rgba(40, 167, 69, 0.1); color: var(--success); }
+        .activity-icon.warning { background: rgba(255, 193, 7, 0.1); color: var(--warning); }
+        .activity-icon.info { background: rgba(23, 162, 184, 0.1); color: var(--info); }
 
         .activity-content {
             flex: 1;
         }
 
-        .activity-title {
-            font-weight: 600;
+        .activity-content p {
             margin-bottom: 5px;
         }
 
@@ -392,337 +519,601 @@
             color: var(--text-light);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        /* Role-specific sections */
+        .role-section {
+            display: none;
+        }
+
+        .role-section.active {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
             }
-            
+
             .sidebar.active {
                 transform: translateX(0);
             }
-            
+
             .main-content {
                 margin-left: 0;
             }
-            
+
             .menu-toggle {
                 display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dashboard-content {
+                padding: 20px;
+            }
+
+            .header {
+                padding: 0 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-banner h2 {
+                font-size: 24px;
+            }
+
+            .stat-card {
+                flex-direction: column;
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo">SCL</div>
-            <div class="sidebar-school">Saint Charles Lwanga</div>
-        </div>
-
-        <div class="user-profile">
-            <div class="user-avatar" id="user-avatar">PL</div>
-            <div class="user-info">
-                <h3 id="user-fullname">Père Michel Lembe</h3>
-                <p id="user-role">Préfet des Études</p>
-            </div>
-        </div>
-
-        <div class="sidebar-menu">
-            <div class="menu-section">
-                <div class="menu-title">Principal</div>
-                <ul class="menu-items">
-                    <li class="menu-item active" data-page="dashboard">
-                        <span class="menu-icon">📊</span>
-                        Tableau de Bord
-                    </li>
-                    <li class="menu-item" data-page="students">
-                        <span class="menu-icon">🎒</span>
-                        Élèves
-                    </li>
-                    <li class="menu-item" data-page="teachers">
-                        <span class="menu-icon">👨‍🏫</span>
-                        Enseignants
-                    </li>
-                    <li class="menu-item" data-page="classes">
-                        <span class="menu-icon">🏫</span>
-                        Classes
-                    </li>
-                </ul>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="school-logo">
+                    <div class="logo-icon">ISCL</div>
+                    <div class="school-info">
+                        <h2>Institut Saint Charles</h2>
+                        <p>Lwanga - Kolwezi</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="menu-section">
-                <div class="menu-title">Pédagogie</div>
-                <ul class="menu-items">
-                    <li class="menu-item" data-page="grades">
-                        <span class="menu-icon">📝</span>
-                        Notes & Bulletins
-                    </li>
-                    <li class="menu-item" data-page="courses">
-                        <span class="menu-icon">📚</span>
-                        Cours & Programmes
-                    </li>
-                    <li class="menu-item" data-page="timetable">
-                        <span class="menu-icon">🕒</span>
-                        Emploi du Temps
-                    </li>
-                    <li class="menu-item" data-page="exams">
-                        <span class="menu-icon">📋</span>
-                        Examens
-                    </li>
-                </ul>
+            <div class="user-profile">
+                <div class="user-avatar" id="user-avatar">ML</div>
+                <div class="user-details">
+                    <h3 id="user-name">Père Michel Lembe</h3>
+                    <span class="role" id="user-role">Préfet des Études</span>
+                </div>
             </div>
 
-            <div class="menu-section">
-                <div class="menu-title">Vie Scolaire</div>
-                <ul class="menu-items">
-                    <li class="menu-item" data-page="attendance">
-                        <span class="menu-icon">✅</span>
-                        Absences & Retards
-                    </li>
-                    <li class="menu-item" data-page="discipline">
-                        <span class="menu-icon">⚖️</span>
-                        Discipline
-                    </li>
-                    <li class="menu-item" data-page="events">
-                        <span class="menu-icon">🎉</span>
-                        Événements
-                    </li>
-                    <li class="menu-item" data-page="communications">
-                        <span class="menu-icon">📢</span>
-                        Communications
-                    </li>
-                </ul>
-            </div>
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <h3 class="nav-title">Tableaux de Bord</h3>
+                    <ul class="nav-links">
+                        <li><a href="#" class="active" data-section="dashboard">
+                            <span class="nav-icon">📊</span>
+                            <span>Tableau de Bord</span>
+                        </a></li>
+                        <li><a href="#" data-section="analytics">
+                            <span class="nav-icon">📈</span>
+                            <span>Analytiques</span>
+                        </a></li>
+                    </ul>
+                </div>
 
-            <div class="menu-section">
-                <div class="menu-title">Finances</div>
-                <ul class="menu-items">
-                    <li class="menu-item" data-page="fees">
-                        <span class="menu-icon">💰</span>
-                        Frais de Scolarité
-                    </li>
-                    <li class="menu-item" data-page="payments">
-                        <span class="menu-icon">💳</span>
-                        Paiements
-                    </li>
-                    <li class="menu-item" data-page="expenses">
-                        <span class="menu-icon">📊</span>
-                        Dépenses
-                    </li>
-                    <li class="menu-item" data-page="budget">
-                        <span class="menu-icon">📈</span>
-                        Budget
-                    </li>
-                </ul>
-            </div>
+                <!-- Navigation par rôle -->
+                <div class="nav-section" id="nav-pedagogique">
+                    <h3 class="nav-title">Pédagogie</h3>
+                    <ul class="nav-links">
+                        <li><a href="#" data-section="eleves">
+                            <span class="nav-icon">👨‍🎓</span>
+                            <span>Élèves</span>
+                        </a></li>
+                        <li><a href="#" data-section="enseignants">
+                            <span class="nav-icon">👨‍🏫</span>
+                            <span>Enseignants</span>
+                        </a></li>
+                        <li><a href="#" data-section="classes">
+                            <span class="nav-icon">🏫</span>
+                            <span>Classes</span>
+                        </a></li>
+                        <li><a href="#" data-section="notes">
+                            <span class="nav-icon">📝</span>
+                            <span>Notes & Bulletins</span>
+                        </a></li>
+                        <li><a href="#" data-section="emploi-temps">
+                            <span class="nav-icon">🕒</span>
+                            <span>Emploi du Temps</span>
+                        </a></li>
+                    </ul>
+                </div>
 
-            <div class="menu-section">
-                <div class="menu-title">Administration</div>
-                <ul class="menu-items">
-                    <li class="menu-item" data-page="reports">
-                        <span class="menu-icon">📑</span>
-                        Rapports
-                    </li>
-                    <li class="menu-item" data-page="settings">
-                        <span class="menu-icon">⚙️</span>
-                        Paramètres
-                    </li>
-                    <li class="menu-item" data-page="users">
-                        <span class="menu-icon">👥</span>
-                        Utilisateurs
-                    </li>
-                </ul>
+                <div class="nav-section" id="nav-financier">
+                    <h3 class="nav-title">Finances</h3>
+                    <ul class="nav-links">
+                        <li><a href="#" data-section="paiements">
+                            <span class="nav-icon">💰</span>
+                            <span>Paiements</span>
+                        </a></li>
+                        <li><a href="#" data-section="frais">
+                            <span class="nav-icon">📋</span>
+                            <span>Frais Scolaires</span>
+                        </a></li>
+                        <li><a href="#" data-section="budget">
+                            <span class="nav-icon">📊</span>
+                            <span>Budget</span>
+                        </a></li>
+                        <li><a href="#" data-section="depenses">
+                            <span class="nav-icon">💸</span>
+                            <span>Dépenses</span>
+                        </a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-section" id="nav-discipline">
+                    <h3 class="nav-title">Discipline</h3>
+                    <ul class="nav-links">
+                        <li><a href="#" data-section="absences">
+                            <span class="nav-icon">⏰</span>
+                            <span>Absences & Retards</span>
+                        </a></li>
+                        <li><a href="#" data-section="sanctions">
+                            <span class="nav-icon">⚖️</span>
+                            <span>Sanctions</span>
+                        </a></li>
+                        <li><a href="#" data-section="convocations">
+                            <span class="nav-icon">📨</span>
+                            <span>Convocations</span>
+                        </a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-section" id="nav-administratif">
+                    <h3 class="nav-title">Administration</h3>
+                    <ul class="nav-links">
+                        <li><a href="#" data-section="inscriptions">
+                            <span class="nav-icon">📝</span>
+                            <span>Inscriptions</span>
+                        </a></li>
+                        <li><a href="#" data-section="documents">
+                            <span class="nav-icon">📄</span>
+                            <span>Documents</span>
+                        </a></li>
+                        <li><a href="#" data-section="parametres">
+                            <span class="nav-icon">⚙️</span>
+                            <span>Paramètres</span>
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menu-toggle">☰</button>
+                    <div class="page-title">
+                        <h1 id="page-title">Tableau de Bord Principal</h1>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="icon-btn">
+                            🔔
+                            <span class="notification-badge">3</span>
+                        </button>
+                        <button class="icon-btn">🌙</button>
+                        <button class="icon-btn">🔍</button>
+                    </div>
+
+                    <div class="user-menu">
+                        <button class="user-menu-btn">
+                            <div class="user-avatar" id="header-avatar">ML</div>
+                            <span id="header-name">Père Michel</span>
+                        </button>
+                        <div class="user-menu-dropdown">
+                            <a href="profile.html">
+                                <span class="nav-icon">👤</span>
+                                <span>Mon Profil</span>
+                            </a>
+                            <a href="parametres.html">
+                                <span class="nav-icon">⚙️</span>
+                                <span>Paramètres</span>
+                            </a>
+                            <a href="help.html">
+                                <span class="nav-icon">❓</span>
+                                <span>Aide</span>
+                            </a>
+                            <a href="#" id="logout-btn">
+                                <span class="nav-icon">🚪</span>
+                                <span>Déconnexion</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner">
+                    <h2 id="welcome-message">Bonjour, Père Michel Lembe !</h2>
+                    <p>Bienvenue dans le système de gestion scolaire de l'Institut Saint Charles Lwanga. Vous avez un accès complet à toutes les fonctionnalités.</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">👨‍🎓</div>
+                        <div class="stat-info">
+                            <h3 id="stats-eleves">1,247</h3>
+                            <p>Élèves inscrits</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon success">👨‍🏫</div>
+                        <div class="stat-info">
+                            <h3 id="stats-enseignants">84</h3>
+                            <p>Enseignants</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon warning">🏫</div>
+                        <div class="stat-info">
+                            <h3 id="stats-classes">24</h3>
+                            <p>Classes actives</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon danger">💰</div>
+                        <div class="stat-info">
+                            <h3 id="stats-paiements">78%</h3>
+                            <p>Taux de paiement</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <div class="section-header">
+                        <h2>Actions Rapides</h2>
+                    </div>
+                    <div class="actions-grid" id="quick-actions">
+                        <!-- Actions seront générées dynamiquement selon le rôle -->
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="recent-activity">
+                    <div class="section-header">
+                        <h2>Activité Récente</h2>
+                    </div>
+                    <ul class="activity-list" id="recent-activity">
+                        <!-- Activités seront générées dynamiquement -->
+                    </ul>
+                </div>
+
+                <!-- Role-specific content sections -->
+                <div id="role-sections">
+                    <!-- Le contenu spécifique au rôle sera chargé ici -->
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-left">
-                <h1>Tableau de Bord</h1>
-            </div>
-            <div class="header-right">
-                <div class="notification-icon">
-                    🔔
-                    <span class="notification-badge">3</span>
-                </div>
-                <div class="logout-btn" id="logout-btn">
-                    🚪
-                </div>
-            </div>
-        </div>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        <!-- Dashboard Content -->
-        <div class="dashboard-content">
-            <div class="welcome-banner">
-                <h2 id="welcome-message">Bonjour, Père Michel Lembe!</h2>
-                <p>Bienvenue dans le système de gestion scolaire de l'Institut Saint Charles Lwanga</p>
-            </div>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTM4gdOs_Ud3DC49pmammYMlDH3cSSgZs",
+            authDomain: "gestion-scolaire-st-charles.firebaseapp.com",
+            projectId: "gestion-scolaire-st-charles",
+            storageBucket: "gestion-scolaire-st-charles.firebasestorage.app",
+            messagingSenderId: "1033368821503",
+            appId: "1:1033368821503:web:a4ba1c8d439193c5f336ca"
+        };
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon students">🎒</div>
-                    <div class="stat-info">
-                        <h3>Élèves Inscrits</h3>
-                        <div class="stat-value" id="students-count">1,247</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon teachers">👨‍🏫</div>
-                    <div class="stat-info">
-                        <h3>Enseignants</h3>
-                        <div class="stat-value" id="teachers-count">68</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon finances">💰</div>
-                    <div class="stat-info">
-                        <h3>Recettes du Mois</h3>
-                        <div class="stat-value" id="monthly-income">$24,580</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon classes">🏫</div>
-                    <div class="stat-info">
-                        <h3>Classes Actives</h3>
-                        <div class="stat-value" id="classes-count">24</div>
-                    </div>
-                </div>
-            </div>
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-            <div class="quick-actions">
-                <div class="action-card" data-action="students">
-                    <div class="action-icon">🎒</div>
-                    <div class="action-title">Gérer les Élèves</div>
-                    <div class="action-desc">Inscrire, modifier, consulter</div>
-                </div>
-                <div class="action-card" data-action="grades">
-                    <div class="action-icon">📝</div>
-                    <div class="action-title">Saisir les Notes</div>
-                    <div class="action-desc">Bulletins et évaluations</div>
-                </div>
-                <div class="action-card" data-action="attendance">
-                    <div class="action-icon">✅</div>
-                    <div class="action-title">Présences</div>
-                    <div class="action-desc">Marquer les absences</div>
-                </div>
-                <div class="action-card" data-action="payments">
-                    <div class="action-icon">💳</div>
-                    <div class="action-title">Paiements</div>
-                    <div class="action-desc">Gérer les frais scolaires</div>
-                </div>
-            </div>
-
-            <div class="recent-activities">
-                <div class="section-title">
-                    Activités Récentes
-                    <span style="font-size: 14px; font-weight: normal;">Voir tout</span>
-                </div>
-                <ul class="activity-list" id="activity-list">
-                    <li class="activity-item">
-                        <div class="activity-icon">🎒</div>
-                        <div class="activity-content">
-                            <div class="activity-title">Nouvelle inscription - Jean Kabasele</div>
-                            <div class="activity-time">Il y a 2 heures</div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon">📝</div>
-                        <div class="activity-content">
-                            <div class="activity-title">Notes publiées - Mathématiques 4ème Scientifique</div>
-                            <div class="activity-time">Il y a 5 heures</div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon">💰</div>
-                        <div class="activity-content">
-                            <div class="activity-title">Paiement reçu - Famille Mulumba</div>
-                            <div class="activity-time">Il y a 1 jour</div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon">⚖️</div>
-                        <div class="activity-content">
-                            <div class="activity-title">Sanction appliquée - Retard répété</div>
-                            <div class="activity-time">Il y a 2 jours</div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.signOut = signOut;
+        window.getDoc = getDoc;
+        window.doc = doc;
+        window.collection = collection;
+        window.getDocs = getDocs;
+    </script>
 
     <script>
-        // Récupérer les données utilisateur depuis le localStorage
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements DOM
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const logoutBtn = document.getElementById('logout-btn');
+            const userAvatar = document.getElementById('user-avatar');
+            const userName = document.getElementById('user-name');
+            const userRole = document.getElementById('user-role');
+            const headerAvatar = document.getElementById('header-avatar');
+            const headerName = document.getElementById('header-name');
+            const welcomeMessage = document.getElementById('welcome-message');
+            const quickActions = document.getElementById('quick-actions');
+            const recentActivity = document.getElementById('recent-activity');
 
-        if (!currentUser) {
-            // Rediriger vers la page de connexion si aucun utilisateur n'est connecté
-            window.location.href = 'login.html';
-        } else {
-            // Mettre à jour l'interface avec les données utilisateur
-            document.getElementById('user-avatar').textContent = 
-                currentUser.fullName.split(' ').map(n => n[0]).join('').toUpperCase();
-            document.getElementById('user-fullname').textContent = currentUser.fullName;
-            document.getElementById('user-role').textContent = currentUser.role;
-            document.getElementById('welcome-message').textContent = `Bonjour, ${currentUser.fullName.split(' ')[0]}!`;
-        }
-
-        // Gestionnaire de déconnexion
-        document.getElementById('logout-btn').addEventListener('click', function() {
-            if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-                localStorage.removeItem('currentUser');
-                window.location.href = 'login.html';
-            }
-        });
-
-        // Gestionnaire des actions rapides
-        document.querySelectorAll('.action-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const action = this.getAttribute('data-action');
-                alert(`Redirection vers: ${action}`);
-                // Ici, vous redirigeriez vers la page correspondante
-            });
-        });
-
-        // Gestionnaire du menu
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', function() {
-                // Retirer la classe active de tous les éléments
-                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-                // Ajouter la classe active à l'élément cliqué
-                this.classList.add('active');
-                
-                const page = this.getAttribute('data-page');
-                if (page !== 'dashboard') {
-                    alert(`Navigation vers: ${page}`);
-                    // Ici, vous chargeriez le contenu de la page correspondante
+            // Configuration des rôles
+            const roleConfig = {
+                'superadmin': {
+                    name: 'Préfet des Études',
+                    color: '#dc3545',
+                    sections: ['nav-pedagogique', 'nav-financier', 'nav-discipline', 'nav-administratif'],
+                    quickActions: [
+                        { icon: '📊', title: 'Rapports Complets', description: 'Statistiques globales' },
+                        { icon: '👥', title: 'Gestion Utilisateurs', description: 'Permissions et rôles' },
+                        { icon: '💰', title: 'Tableau Financier', description: 'Budget et dépenses' },
+                        { icon: '📈', title: 'Analytiques', description: 'Performances académiques' }
+                    ]
+                },
+                'admin_pedagogique': {
+                    name: 'Directeur des Études',
+                    color: '#28a745',
+                    sections: ['nav-pedagogique', 'nav-discipline'],
+                    quickActions: [
+                        { icon: '📝', title: 'Saisir Notes', description: 'Enregistrer les notes' },
+                        { icon: '🏫', title: 'Gérer Classes', description: 'Organisation des classes' },
+                        { icon: '👨‍🏫', title: 'Enseignants', description: 'Gestion du personnel' },
+                        { icon: '📊', title: 'Résultats', description: 'Statistiques académiques' }
+                    ]
+                },
+                'admin_financier': {
+                    name: 'Économe',
+                    color: '#ff6b35',
+                    sections: ['nav-financier'],
+                    quickActions: [
+                        { icon: '💰', title: 'Paiements', description: 'Enregistrer paiements' },
+                        { icon: '📋', title: 'Frais Scolaires', description: 'Configurer les frais' },
+                        { icon: '📊', title: 'Budget', description: 'Suivi budgétaire' },
+                        { icon: '💸', title: 'Dépenses', description: 'Gestion des dépenses' }
+                    ]
+                },
+                'admin_discipline': {
+                    name: 'Directeur de Discipline',
+                    color: '#ffc107',
+                    sections: ['nav-discipline'],
+                    quickActions: [
+                        { icon: '⏰', title: 'Absences', description: 'Gérer les absences' },
+                        { icon: '⚖️', title: 'Sanctions', description: 'Appliquer sanctions' },
+                        { icon: '📨', title: 'Convocations', description: 'Envoyer convocations' },
+                        { icon: '📊', title: 'Rapports', description: 'Statistiques discipline' }
+                    ]
+                },
+                'secretaire_admin': {
+                    name: 'Secrétariat',
+                    color: '#17a2b8',
+                    sections: ['nav-administratif'],
+                    quickActions: [
+                        { icon: '📝', title: 'Inscriptions', description: 'Nouveaux élèves' },
+                        { icon: '📄', title: 'Documents', description: 'Gérer documents' },
+                        { icon: '👨‍🎓', title: 'Dossiers', description: 'Dossiers élèves' },
+                        { icon: '📧', title: 'Communication', description: 'Contacter parents' }
+                    ]
                 }
-            });
-        });
-
-        // Simulation de données dynamiques
-        function updateStats() {
-            // Ces données seraient normalement récupérées depuis Firebase
-            const stats = {
-                students: Math.floor(1200 + Math.random() * 100),
-                teachers: Math.floor(60 + Math.random() * 10),
-                income: Math.floor(20000 + Math.random() * 5000),
-                classes: 24
             };
 
-            document.getElementById('students-count').textContent = stats.students.toLocaleString();
-            document.getElementById('teachers-count').textContent = stats.teachers;
-            document.getElementById('monthly-income').textContent = `$${stats.income.toLocaleString()}`;
-            document.getElementById('classes-count').textContent = stats.classes;
-        }
+            // Menu toggle
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
 
-        // Mettre à jour les stats toutes les 30 secondes (simulation)
-        updateStats();
-        setInterval(updateStats, 30000);
+            // Logout
+            logoutBtn.addEventListener('click', async function() {
+                try {
+                    await window.signOut(window.firebaseAuth);
+                    sessionStorage.removeItem('currentUser');
+                    window.location.href = 'login.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+            });
+
+            // Vérifier l'authentification et charger les données utilisateur
+            window.firebaseAuth.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                try {
+                    // Récupérer les données utilisateur depuis Firestore
+                    const userDoc = await window.getDoc(window.doc(window.firebaseDb, 'users', user.uid));
+                    
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        initializeDashboard(userData);
+                    } else {
+                        console.error('User data not found');
+                        window.location.href = 'login.html';
+                    }
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                }
+            });
+
+            function initializeDashboard(userData) {
+                // Mettre à jour l'interface avec les données utilisateur
+                const roleConfig = getRoleConfig(userData.role);
+                
+                // Mettre à jour les informations utilisateur
+                const initials = (userData.prenom.charAt(0) + userData.nom.charAt(0)).toUpperCase();
+                userAvatar.textContent = initials;
+                headerAvatar.textContent = initials;
+                userName.textContent = `${userData.titre || ''} ${userData.prenom} ${userData.nom}`.trim();
+                headerName.textContent = userData.prenom;
+                userRole.textContent = roleConfig.name;
+                welcomeMessage.textContent = `Bonjour, ${userData.titre || ''} ${userData.prenom} ${userData.nom} !`;
+
+                // Appliquer la couleur du rôle
+                userAvatar.style.background = roleConfig.color;
+                headerAvatar.style.background = roleConfig.color;
+
+                // Configurer la navigation selon le rôle
+                configureNavigation(roleConfig);
+                
+                // Charger les actions rapides
+                loadQuickActions(roleConfig.quickActions);
+                
+                // Charger l'activité récente
+                loadRecentActivity(userData.role);
+                
+                // Charger les statistiques
+                loadStatistics();
+            }
+
+            function getRoleConfig(role) {
+                return roleConfig[role] || roleConfig['secretaire_admin'];
+            }
+
+            function configureNavigation(roleConfig) {
+                // Cacher toutes les sections de navigation
+                document.querySelectorAll('.nav-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+
+                // Afficher seulement les sections autorisées
+                roleConfig.sections.forEach(sectionId => {
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        section.style.display = 'block';
+                    }
+                });
+            }
+
+            function loadQuickActions(actions) {
+                quickActions.innerHTML = '';
+                
+                actions.forEach(action => {
+                    const actionCard = document.createElement('div');
+                    actionCard.className = 'action-card';
+                    actionCard.innerHTML = `
+                        <div class="action-icon">${action.icon}</div>
+                        <h3>${action.title}</h3>
+                        <p>${action.description}</p>
+                    `;
+                    quickActions.appendChild(actionCard);
+                });
+            }
+
+            function loadRecentActivity(role) {
+                const activities = {
+                    'superadmin': [
+                        { icon: '📊', type: 'success', message: 'Rapport financier mensuel généré', time: 'Il y a 2 min' },
+                        { icon: '👥', type: 'info', message: 'Nouvel enseignant enregistré', time: 'Il y a 15 min' },
+                        { icon: '💰', type: 'warning', message: 'Budget trimestriel approuvé', time: 'Il y a 1 heure' }
+                    ],
+                    'admin_pedagogique': [
+                        { icon: '📝', type: 'success', message: 'Notes de mathématiques saisies', time: 'Il y a 5 min' },
+                        { icon: '🏫', type: 'info', message: 'Emploi du temps mis à jour', time: 'Il y a 30 min' },
+                        { icon: '👨‍🏫', type: 'warning', message: 'Réunion pédagogique programmée', time: 'Il y a 2 heures' }
+                    ],
+                    'admin_financier': [
+                        { icon: '💰', type: 'success', message: 'Paiement de scolarité reçu', time: 'Il y a 10 min' },
+                        { icon: '📋', type: 'info', message: 'Frais scolaires mis à jour', time: 'Il y a 45 min' },
+                        { icon: '📊', type: 'warning', message: 'Rapport financier préparé', time: 'Il y a 3 heures' }
+                    ],
+                    'admin_discipline': [
+                        { icon: '⏰', type: 'success', message: 'Absences du jour enregistrées', time: 'Il y a 8 min' },
+                        { icon: '⚖️', type: 'info', message: 'Sanction appliquée', time: 'Il y a 1 heure' },
+                        { icon: '📨', type: 'warning', message: 'Convocation envoyée', time: 'Il y a 2 heures' }
+                    ],
+                    'secretaire_admin': [
+                        { icon: '📝', type: 'success', message: 'Nouvelle inscription traitée', time: 'Il y a 12 min' },
+                        { icon: '📄', type: 'info', message: 'Documents administratifs archivés', time: 'Il y a 1 heure' },
+                        { icon: '📧', type: 'warning', message: 'Communication aux parents envoyée', time: 'Il y a 3 heures' }
+                    ]
+                };
+
+                const roleActivities = activities[role] || activities['secretaire_admin'];
+                
+                recentActivity.innerHTML = '';
+                roleActivities.forEach(activity => {
+                    const activityItem = document.createElement('li');
+                    activityItem.className = 'activity-item';
+                    activityItem.innerHTML = `
+                        <div class="activity-icon ${activity.type}">${activity.icon}</div>
+                        <div class="activity-content">
+                            <p>${activity.message}</p>
+                            <div class="activity-time">${activity.time}</div>
+                        </div>
+                    `;
+                    recentActivity.appendChild(activityItem);
+                });
+            }
+
+            async function loadStatistics() {
+                try {
+                    // Simuler le chargement des statistiques depuis Firebase
+                    // Dans une vraie application, vous utiliseriez getDocs pour compter les documents
+                    
+                    // Exemple de statistiques (à remplacer par des appels Firestore réels)
+                    const stats = {
+                        eleves: '1,247',
+                        enseignants: '84',
+                        classes: '24',
+                        paiements: '78%'
+                    };
+
+                    document.getElementById('stats-eleves').textContent = stats.eleves;
+                    document.getElementById('stats-enseignants').textContent = stats.enseignants;
+                    document.getElementById('stats-classes').textContent = stats.classes;
+                    document.getElementById('stats-paiements').textContent = stats.paiements;
+
+                } catch (error) {
+                    console.error('Error loading statistics:', error);
+                }
+            }
+
+            // Navigation entre les sections
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Retirer la classe active de tous les liens
+                    document.querySelectorAll('.nav-links a').forEach(a => {
+                        a.classList.remove('active');
+                    });
+                    
+                    // Ajouter la classe active au lien cliqué
+                    this.classList.add('active');
+                    
+                    // Mettre à jour le titre de la page
+                    const pageTitle = this.querySelector('span:last-child').textContent;
+                    document.getElementById('page-title').textContent = pageTitle;
+                });
+            });
+        });
     </script>
 </body>
 </html>
