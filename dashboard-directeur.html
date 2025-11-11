@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Directeur - Institut Saint Charles Lwanga</title>
+    <style>
+        :root {
+            --primary: #28a745;
+            --primary-dark: #1e7e34;
+            --primary-light: #34ce57;
+            --secondary: #f8f9fa;
+            --accent: #ff6b35;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --dark: #343a40;
+            --light: #f8f9fa;
+            --text: #333;
+            --text-light: #6c757d;
+            --border: #dee2e6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: var(--text);
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: var(--shadow);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--primary);
+            color: white;
+            height: calc(100vh - 70px);
+            position: fixed;
+            overflow-y: auto;
+        }
+
+        .user-profile {
+            padding: 25px 20px;
+            background: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .nav-section {
+            padding: 20px 0;
+        }
+
+        .nav-title {
+            padding: 0 20px 10px;
+            font-size: 12px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: var(--accent);
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(50px, -50px);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.primary { background: rgba(40, 167, 69, 0.1); color: var(--primary); }
+        .stat-icon.success { background: rgba(40, 167, 69, 0.1); color: var(--success); }
+        .stat-icon.warning { background: rgba(255, 193, 7, 0.1); color: var(--warning); }
+        .stat-icon.danger { background: rgba(220, 53, 69, 0.1); color: var(--danger); }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .action-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .action-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 24px;
+        }
+
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .module-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            border-left: 4px solid var(--primary);
+        }
+
+        .module-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .module-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .module-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .table th, .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table th {
+            background: var(--light);
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .table tr:hover {
+            background: var(--light);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">ISCL</div>
+            <div>
+                <h2>Institut Saint Charles Lwanga</h2>
+                <p style="font-size: 12px; color: var(--text-light);">Tableau de Bord - Directeur des Études</p>
+            </div>
+        </div>
+        <div class="user-menu">
+            <div id="current-time" style="font-weight: 500;"></div>
+            <button class="btn btn-outline" onclick="logout()">Déconnexion</button>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="user-profile">
+                <div class="user-avatar" id="user-avatar">DK</div>
+                <div>
+                    <h3 id="user-name">Delphin Kagunge</h3>
+                    <p style="font-size: 12px; opacity: 0.8;">Directeur des Études</p>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-title">Navigation Principale</h3>
+                <ul class="nav-links">
+                    <li><a href="#" class="active" onclick="showSection('dashboard')">
+                        📊 Tableau de Bord
+                    </a></li>
+                    <li><a href="#" onclick="showSection('analytics')">
+                        📈 Analytiques Pédagogiques
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-title">Gestion Pédagogique</h3>
+                <ul class="nav-links">
+                    <li><a href="#" onclick="showSection('eleves')">
+                        👨‍🎓 Gestion des Élèves
+                    </a></li>
+                    <li><a href="#" onclick="showSection('enseignants')">
+                        👨‍🏫 Gestion des Enseignants
+                    </a></li>
+                    <li><a href="#" onclick="showSection('classes')">
+                        🏫 Gestion des Classes
+                    </a></li>
+                    <li><a href="#" onclick="showSection('cours')">
+                        📚 Programmes & Cours
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-title">Évaluations</h3>
+                <ul class="nav-links">
+                    <li><a href="#" onclick="showSection('notes')">
+                        📝 Saisie des Notes
+                    </a></li>
+                    <li><a href="#" onclick="showSection('bulletins')">
+                        📋 Bulletins Scolaires
+                    </a></li>
+                    <li><a href="#" onclick="showSection('resultats')">
+                        🎯 Résultats & Statistiques
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-title">Organisation</h3>
+                <ul class="nav-links">
+                    <li><a href="#" onclick="showSection('emploi-temps')">
+                        🕒 Emploi du Temps
+                    </a></li>
+                    <li><a href="#" onclick="showSection('conseils')">
+                        👥 Conseils de Classe
+                    </a></li>
+                    <li><a href="#" onclick="showSection('passage')">
+                        🔄 Passage de Classe
+                    </a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <h2 id="welcome-message">Bonjour, Monsieur Delphin Kagunge !</h2>
+                <p>Vous supervisez l'ensemble des activités pédagogiques de l'établissement.</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon primary">👨‍🎓</div>
+                    <div>
+                        <h3 id="stats-eleves">1,247</h3>
+                        <p>Élèves inscrits</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon success">👨‍🏫</div>
+                    <div>
+                        <h3 id="stats-enseignants">84</h3>
+                        <p>Enseignants</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning">📊</div>
+                    <div>
+                        <h3 id="stats-moyenne">72.5%</h3>
+                        <p>Moyenne générale</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon danger">⏰</div>
+                    <div>
+                        <h3 id="stats-absences">4.2%</h3>
+                        <p>Taux d'absences</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="action-card" onclick="showNotesModal()">
+                    <div class="action-icon">📝</div>
+                    <h3>Saisir Notes</h3>
+                    <p style="color: var(--text-light); font-size: 14px;">Enregistrer les notes</p>
+                </div>
+                <div class="action-card" onclick="showBulletinsModal()">
+                    <div class="action-icon">📋</div>
+                    <h3>Générer Bulletins</h3>
+                    <p style="color: var(--text-light); font-size: 14px;">Créer les bulletins</p>
+                </div>
+                <div class="action-card" onclick="showEmploiTempsModal()">
+                    <div class="action-icon">🕒</div>
+                    <h3>Emploi du Temps</h3>
+                    <p style="color: var(--text-light); font-size: 14px;">Modifier horaires</p>
+                </div>
+                <div class="action-card" onclick="showConseilModal()">
+                    <div class="action-icon">👥</div>
+                    <h3>Conseil de Classe</h3>
+                    <p style="color: var(--text-light); font-size: 14px;">Programmer réunion</p>
+                </div>
+            </div>
+
+            <!-- Modules Grid -->
+            <div class="modules-grid">
+                <!-- Gestion des Élèves -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">👨‍🎓</div>
+                        <div>
+                            <h3>Gestion des Élèves</h3>
+                            <p style="color: var(--text-light); font-size: 14px;">Dossiers et inscriptions</p>
+                        </div>
+                    </div>
+                    <p>Consulter et gérer les dossiers des élèves, inscriptions et passages de classe.</p>
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="showEleves()">Voir les Élèves</button>
+                        <button class="btn btn-outline" onclick="showInscriptionModal()">Nouvelle Inscription</button>
+                    </div>
+                </div>
+
+                <!-- Gestion des Enseignants -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">👨‍🏫</div>
+                        <div>
+                            <h3>Gestion des Enseignants</h3>
+                            <p style="color: var(--text-light); font-size: 14px;">Personnel enseignant</p>
+                        </div>
+                    </div>
+                    <p>Gérer le corps professoral, attributions de classes et évaluations.</p>
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="showEnseignants()">Voir Enseignants</button>
+                        <button class="btn btn-outline" onclick="showNouvelEnseignantModal()">Nouvel Enseignant</button>
+                    </div>
+                </div>
+
+                <!-- Programmes et Cours -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">📚</div>
+                        <div>
+                            <h3>Programmes & Cours</h3>
+                            <p style="color: var(--text-light); font-size: 14px;">Contenu pédagogique</p>
+                        </div>
+                    </div>
+                    <p>Élaborer les programmes scolaires et gérer le contenu des cours.</p>
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="showProgrammes()">Voir Programmes</button>
+                        <button class="btn btn-outline" onclick="showNouveauCoursModal()">Nouveau Cours</button>
+                    </div>
+                </div>
+
+                <!-- Résultats et Statistiques -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">📈</div>
+                        <div>
+                            <h3>Résultats & Statistiques</h3>
+                            <p style="color: var(--text-light); font-size: 14px;">Analyse des performances</p>
+                        </div>
+                    </div>
+                    <p>Analyser les résultats académiques et générer des statistiques détaillées.</p>
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="showResultats()">Voir Résultats</button>
+                        <button class="btn btn-outline" onclick="showRapportPedagogique()">Générer Rapport</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liste des Classes Récentes -->
+            <div class="table-container">
+                <h3 style="margin-bottom: 20px;">Classes sous votre supervision</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Classe</th>
+                            <th>Effectif</th>
+                            <th>Enseignant Principal</th>
+                            <th>Moyenne Générale</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="classes-table">
+                        <!-- Données chargées dynamiquement -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Élèves en difficulté -->
+            <div class="table-container">
+                <h3 style="margin-bottom: 20px;">Élèves nécessitant une attention</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Élève</th>
+                            <th>Classe</th>
+                            <th>Moyenne</th>
+                            <th>Absences</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="eleves-difficulte-table">
+                        <!-- Données chargées dynamiquement -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Saisie des Notes -->
+    <div id="notesModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px;">Saisie des Notes</h3>
+            <form id="notesForm">
+                <div class="form-group">
+                    <label>Classe</label>
+                    <select class="form-control" id="noteClasse" required>
+                        <option value="">Sélectionner une classe</option>
+                        <option value="4eme_scientifique">4ème Scientifique</option>
+                        <option value="4eme_commerciale">4ème Commerciale</option>
+                        <option value="3eme_pedagogie">3ème Pédagogie</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Matière</label>
+                    <select class="form-control" id="noteMatiere" required>
+                        <option value="">Sélectionner une matière</option>
+                        <option value="mathematiques">Mathématiques</option>
+                        <option value="francais">Français</option>
+                        <option value="anglais">Anglais</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Type d'évaluation</label>
+                    <select class="form-control" id="noteType" required>
+                        <option value="devoir">Devoir</option>
+                        <option value="composition">Composition</option>
+                        <option value="examen">Examen</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Notes (format: élève=note)</label>
+                    <textarea class="form-control" id="notesText" rows="6" placeholder="Ex: Jean Kabasele=16/20&#10;Marie Mbayo=14/20&#10;..."></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 25px;">
+                    <button type="submit" class="btn btn-primary">Enregistrer les Notes</button>
+                    <button type="button" class="btn btn-outline" onclick="closeModal('notesModal')">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, getDocs, addDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTM4gdOs_Ud3DC49pmammYMlDH3cSSgZs",
+            authDomain: "gestion-scolaire-st-charles.firebaseapp.com",
+            projectId: "gestion-scolaire-st-charles",
+            storageBucket: "gestion-scolaire-st-charles.firebasestorage.app",
+            messagingSenderId: "1033368821503",
+            appId: "1:1033368821503:web:a4ba1c8d439193c5f336ca"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.firestore = { doc, getDoc, collection, getDocs, addDoc, setDoc };
+    </script>
+
+    <script>
+        // Gestion de l'authentification et des données utilisateur
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadUserData();
+            loadStatistics();
+            loadClassesData();
+            loadElevesDifficulte();
+            updateTime();
+            setInterval(updateTime, 60000);
+
+            // Gestion des formulaires
+            document.getElementById('notesForm').addEventListener('submit', enregistrerNotes);
+        });
+
+        async function checkAuth() {
+            window.firebaseAuth.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const userDoc = await window.firestore.getDoc(window.firestore.doc(window.firebaseDb, 'users', user.uid));
+                if (!userDoc.exists() || userDoc.data().role !== 'admin_pedagogique') {
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+
+        async function loadUserData() {
+            const user = window.firebaseAuth.currentUser;
+            if (user) {
+                const userDoc = await window.firestore.getDoc(window.firestore.doc(window.firebaseDb, 'users', user.uid));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    document.getElementById('user-avatar').textContent = 
+                        (userData.prenom.charAt(0) + userData.nom.charAt(0)).toUpperCase();
+                    document.getElementById('user-name').textContent = 
+                        `${userData.titre || ''} ${userData.prenom} ${userData.nom}`.trim();
+                    document.getElementById('welcome-message').textContent = 
+                        `Bonjour, ${userData.titre || ''} ${userData.prenom} ${userData.nom} !`;
+                }
+            }
+        }
+
+        async function loadStatistics() {
+            try {
+                const elevesSnapshot = await window.firestore.getDocs(window.firestore.collection(window.firebaseDb, 'eleves'));
+                const enseignantsSnapshot = await window.firestore.getDocs(window.firestore.collection(window.firebaseDb, 'enseignants'));
+                
+                document.getElementById('stats-eleves').textContent = elevesSnapshot.size;
+                document.getElementById('stats-enseignants').textContent = enseignantsSnapshot.size;
+                
+            } catch (error) {
+                console.error('Erreur chargement statistiques:', error);
+            }
+        }
+
+        async function loadClassesData() {
+            const classesTable = document.getElementById('classes-table');
+            classesTable.innerHTML = `
+                <tr>
+                    <td>4ème Scientifique A</td>
+                    <td>42 élèves</td>
+                    <td>Prof. Kabasele</td>
+                    <td>75.2%</td>
+                    <td><button class="btn btn-outline" onclick="voirDetailsClasse('4scia')">Détails</button></td>
+                </tr>
+                <tr>
+                    <td>4ème Commerciale B</td>
+                    <td>38 élèves</td>
+                    <td>Prof. Mbayo</td>
+                    <td>68.7%</td>
+                    <td><button class="btn btn-outline" onclick="voirDetailsClasse('4comB')">Détails</button></td>
+                </tr>
+                <tr>
+                    <td>3ème Pédagogie A</td>
+                    <td>45 élèves</td>
+                    <td>Prof. Lukunku</td>
+                    <td>71.3%</td>
+                    <td><button class="btn btn-outline" onclick="voirDetailsClasse('3pedA')">Détails</button></td>
+                </tr>
+            `;
+        }
+
+        async function loadElevesDifficulte() {
+            const table = document.getElementById('eleves-difficulte-table');
+            table.innerHTML = `
+                <tr>
+                    <td>Jean Kabasele</td>
+                    <td>4ème Scientifique A</td>
+                    <td>52%</td>
+                    <td>12</td>
+                    <td><button class="btn btn-outline" onclick="suivreEleve('jean123')">Suivre</button></td>
+                </tr>
+                <tr>
+                    <td>Marie Lukunku</td>
+                    <td>3ème Pédagogie A</td>
+                    <td>48%</td>
+                    <td>8</td>
+                    <td><button class="btn btn-outline" onclick="suivreEleve('marie456')">Suivre</button></td>
+                </tr>
+            `;
+        }
+
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = 
+                now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR');
+        }
+
+        // Gestion des modales
+        function showNotesModal() {
+            document.getElementById('notesModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Enregistrement des notes
+        async function enregistrerNotes(e) {
+            e.preventDefault();
+            
+            const noteData = {
+                classe: document.getElementById('noteClasse').value,
+                matiere: document.getElementById('noteMatiere').value,
+                type: document.getElementById('noteType').value,
+                notes: document.getElementById('notesText').value,
+                date: new Date(),
+                createdBy: window.firebaseAuth.currentUser.uid
+            };
+
+            try {
+                // Enregistrer dans Firebase
+                await window.firestore.addDoc(window.firestore.collection(window.firebaseDb, 'notes'), noteData);
+                alert('Notes enregistrées avec succès !');
+                closeModal('notesModal');
+                document.getElementById('notesForm').reset();
+            } catch (error) {
+                console.error('Erreur enregistrement notes:', error);
+                alert('Erreur lors de l\'enregistrement des notes');
+            }
+        }
+
+        // Navigation entre sections
+        function showSection(section) {
+            alert(`Navigation vers: ${section} - À implémenter`);
+        }
+
+        function showEleves() {
+            showSection('eleves');
+        }
+
+        function showEnseignants() {
+            showSection('enseignants');
+        }
+
+        function showProgrammes() {
+            showSection('programmes');
+        }
+
+        function showResultats() {
+            showSection('resultats');
+        }
+
+        function voirDetailsClasse(classeId) {
+            alert(`Détails de la classe: ${classeId}`);
+        }
+
+        function suivreEleve(eleveId) {
+            alert(`Suivi de l'élève: ${eleveId}`);
+        }
+
+        // Déconnexion
+        async function logout() {
+            try {
+                await window.firebaseAuth.signOut();
+                sessionStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Erreur déconnexion:', error);
+            }
+        }
+
+        // Gestion des clics en dehors des modales
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let modal of modals) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
