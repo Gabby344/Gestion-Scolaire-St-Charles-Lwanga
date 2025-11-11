@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - Institut Saint Charles Lwanga</title>
     <style>
+        :root {
+            --primary: #1a3a8f;
+            --primary-dark: #152c6e;
+            --primary-light: #2a5298;
+            --secondary: #f8f9fa;
+            --accent: #ff6b35;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --dark: #343a40;
+            --light: #f8f9fa;
+            --text: #333;
+            --text-light: #6c757d;
+            --border: #dee2e6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,27 +31,13 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        :root {
-            --primary: #1a237e;
-            --primary-dark: #000051;
-            --primary-light: #534bae;
-            --secondary: #d32f2f;
-            --accent: #ffab00;
-            --text: #333333;
-            --text-light: #666666;
-            --background: #f8f9fa;
-            --white: #ffffff;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-
         body {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: var(--gradient);
             color: var(--text);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             padding: 20px;
         }
 
@@ -41,16 +46,17 @@
             width: 100%;
             max-width: 1200px;
             min-height: 700px;
-            background: var(--white);
+            background: white;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: var(--shadow-lg);
         }
 
+        /* Left Side - Branding */
         .login-left {
             flex: 1;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: var(--white);
+            background: var(--gradient);
+            color: white;
             padding: 50px;
             display: flex;
             flex-direction: column;
@@ -66,94 +72,77 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
             background-size: cover;
         }
 
-        .school-brand {
-            text-align: center;
-            margin-bottom: 50px;
+        .brand-content {
             position: relative;
             z-index: 2;
         }
 
-        .logo {
+        .school-logo {
             width: 120px;
             height: 120px;
-            background: var(--white);
+            background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            font-weight: bold;
+            margin-bottom: 30px;
             color: var(--primary);
-            font-size: 32px;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            padding: 10px;
             box-shadow: var(--shadow);
         }
 
-        .school-name {
-            font-size: 32px;
+        .welcome-text h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
             font-weight: 700;
-            margin-bottom: 10px;
         }
 
-        .school-subtitle {
-            font-size: 18px;
+        .welcome-text p {
+            font-size: 1.1rem;
             opacity: 0.9;
-            margin-bottom: 5px;
+            margin-bottom: 30px;
+            line-height: 1.6;
         }
 
-        .school-motto {
-            font-size: 14px;
-            opacity: 0.7;
-            font-style: italic;
+        .features-list {
+            list-style: none;
+            margin-top: 40px;
         }
 
-        .features {
-            position: relative;
-            z-index: 2;
-        }
-
-        .feature {
+        .features-list li {
+            padding: 12px 0;
             display: flex;
             align-items: center;
-            margin-bottom: 25px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
+            gap: 15px;
+            font-size: 1rem;
         }
 
-        .feature-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--accent);
+        .features-list .icon {
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 15px;
-            font-size: 20px;
-        }
-
-        .feature-text h3 {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-
-        .feature-text p {
             font-size: 14px;
-            opacity: 0.9;
         }
 
+        /* Right Side - Login Form */
         .login-right {
             flex: 1;
             padding: 50px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background: var(--white);
+            background: white;
         }
 
         .login-header {
@@ -161,93 +150,74 @@
             margin-bottom: 40px;
         }
 
-        .login-header h1 {
-            font-size: 32px;
+        .login-header h2 {
+            font-size: 2rem;
             color: var(--primary);
             margin-bottom: 10px;
         }
 
         .login-header p {
             color: var(--text-light);
-            font-size: 16px;
         }
 
         .login-form {
-            width: 100%;
             max-width: 400px;
             margin: 0 auto;
+            width: 100%;
         }
 
         .form-group {
             margin-bottom: 25px;
+            position: relative;
         }
 
         .form-label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
+            font-weight: 500;
             color: var(--text);
         }
 
-        .form-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
-        }
-
-        .password-container {
+        .input-group {
             position: relative;
         }
 
-        .toggle-password {
+        .form-control {
+            width: 100%;
+            padding: 15px 45px 15px 15px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 58, 143, 0.1);
+        }
+
+        .input-icon {
             position: absolute;
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .password-toggle {
             background: none;
             border: none;
             color: var(--text-light);
             cursor: pointer;
-            font-size: 18px;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
-        .role-selector {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .role-option {
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .role-option:hover {
-            border-color: var(--primary-light);
-        }
-
-        .role-option.selected {
-            border-color: var(--primary);
-            background: rgba(26, 35, 126, 0.05);
-            color: var(--primary);
-        }
-
-        .remember-forgot {
+        .form-options {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -257,16 +227,18 @@
         .remember-me {
             display: flex;
             align-items: center;
+            gap: 8px;
         }
 
         .remember-me input {
-            margin-right: 8px;
+            width: 16px;
+            height: 16px;
         }
 
         .forgot-password {
             color: var(--primary);
             text-decoration: none;
-            font-weight: 500;
+            font-size: 0.9rem;
         }
 
         .forgot-password:hover {
@@ -276,24 +248,86 @@
         .btn-login {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: var(--white);
+            background: var(--primary);
+            color: white;
             border: none;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .btn-login:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: var(--shadow);
         }
 
-        .btn-login:active {
-            transform: translateY(0);
+        .btn-login:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .login-divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .login-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .login-divider span {
+            background: white;
+            padding: 0 15px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .role-selection {
+            margin-bottom: 25px;
+        }
+
+        .role-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .role-btn {
+            padding: 12px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .role-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .role-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
         }
 
         .demo-accounts {
@@ -301,38 +335,44 @@
             padding: 20px;
             background: #f8f9fa;
             border-radius: 10px;
-            border-left: 4px solid var(--accent);
+            border-left: 4px solid var(--primary);
         }
 
-        .demo-accounts h3 {
-            color: var(--primary);
+        .demo-accounts h4 {
             margin-bottom: 15px;
-            font-size: 16px;
+            color: var(--primary);
         }
 
         .demo-account {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 14px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
         }
 
-        .demo-role {
-            font-weight: 600;
+        .demo-account:last-child {
+            border-bottom: none;
+        }
+
+        .demo-account strong {
             color: var(--primary);
-        }
-
-        .demo-credentials {
-            color: var(--text-light);
         }
 
         .login-footer {
             text-align: center;
             margin-top: 30px;
             color: var(--text-light);
-            font-size: 14px;
         }
 
+        .login-footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Alert Messages */
         .alert {
             padding: 15px;
             border-radius: 10px;
@@ -341,160 +381,192 @@
         }
 
         .alert-error {
-            background: #ffebee;
-            color: #c62828;
-            border-left: 4px solid #f44336;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
         .alert-success {
-            background: #e8f5e9;
-            color: #2e7d32;
-            border-left: 4px solid #4caf50;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
             .login-container {
                 flex-direction: column;
                 min-height: auto;
             }
-            
-            .login-left, .login-right {
+
+            .login-left {
                 padding: 30px;
             }
-            
-            .role-selector {
+
+            .login-right {
+                padding: 30px;
+            }
+
+            .welcome-text h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .role-buttons {
                 grid-template-columns: 1fr;
+            }
+
+            .form-options {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
             }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <!-- Section gauche avec informations -->
+        <!-- Left Side - Branding -->
         <div class="login-left">
-            <div class="school-brand">
-                <div class="logo">SCL</div>
-                <h1 class="school-name">Institut Saint Charles Lwanga</h1>
-                <p class="school-subtitle">Kolwezi - Pères Salvatoriens</p>
-                <p class="school-motto">"Éduquer pour élever, former pour transformer"</p>
-            </div>
+            <div class="brand-content">
+                <div class="school-logo">
+                    INSTITUT SAINT CHARLES LWANGA
+                </div>
+                
+                <div class="welcome-text">
+                    <h1>Bienvenue</h1>
+                    <p>Accédez au système de gestion scolaire de l'Institut Saint Charles Lwanga de Kolwezi. Une plateforme complète pour la gestion administrative, pédagogique et financière.</p>
+                </div>
 
-            <div class="features">
-                <div class="feature">
-                    <div class="feature-icon">📊</div>
-                    <div class="feature-text">
-                        <h3>Gestion Complète</h3>
-                        <p>Gérez élèves, enseignants, notes, finances et discipline</p>
-                    </div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">👑</div>
-                    <div class="feature-text">
-                        <h3>Rôles Multiples</h3>
-                        <p>Accès différenciés selon votre fonction dans l'établissement</p>
-                    </div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🔒</div>
-                    <div class="feature-text">
-                        <h3>Sécurité Maximale</h3>
-                        <p>Données cryptées et sauvegardées automatiquement</p>
-                    </div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">📱</div>
-                    <div class="feature-text">
-                        <h3>Accessible Partout</h3>
-                        <p>Utilisez le système sur tous vos appareils</p>
-                    </div>
-                </div>
+                <ul class="features-list">
+                    <li>
+                        <div class="icon">📊</div>
+                        <span>Gestion pédagogique complète</span>
+                    </li>
+                    <li>
+                        <div class="icon">💰</div>
+                        <span>Suivi financier en temps réel</span>
+                    </li>
+                    <li>
+                        <div class="icon">👥</div>
+                        <span>Gestion multi-utilisateurs sécurisée</span>
+                    </li>
+                    <li>
+                        <div class="icon">📱</div>
+                        <span>Interface responsive et moderne</span>
+                    </li>
+                </ul>
             </div>
         </div>
 
-        <!-- Section droite avec formulaire -->
+        <!-- Right Side - Login Form -->
         <div class="login-right">
             <div class="login-header">
-                <h1>Connexion</h1>
-                <p>Accédez à votre espace personnel</p>
+                <h2>Connexion au Système</h2>
+                <p>Authentifiez-vous pour accéder à votre espace</p>
             </div>
 
             <div class="alert alert-error" id="error-alert">
-                Identifiants incorrects. Veuillez réessayer.
+                <strong>Erreur:</strong> <span id="error-message"></span>
             </div>
 
             <div class="alert alert-success" id="success-alert">
-                Connexion réussie! Redirection en cours...
+                <strong>Succès:</strong> Connexion réussie! Redirection...
             </div>
 
             <form class="login-form" id="login-form">
                 <div class="form-group">
                     <label class="form-label" for="email">Adresse Email</label>
-                    <input type="email" id="email" class="form-input" placeholder="votre@email.edu.cd" required>
+                    <div class="input-group">
+                        <input type="email" class="form-control" id="email" placeholder="votre@email.com" required>
+                        <div class="input-icon">✉️</div>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="password">Mot de Passe</label>
-                    <div class="password-container">
-                        <input type="password" id="password" class="form-input" placeholder="Votre mot de passe" required>
-                        <button type="button" class="toggle-password" id="toggle-password">👁️</button>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" placeholder="Votre mot de passe" required>
+                        <button type="button" class="password-toggle" id="toggle-password">👁️</button>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Rôle</label>
-                    <div class="role-selector">
-                        <div class="role-option" data-role="prefet">Préfet</div>
-                        <div class="role-option" data-role="directeur-etudes">Directeur Études</div>
-                        <div class="role-option" data-role="directeur-discipline">Directeur Discipline</div>
-                        <div class="role-option" data-role="econome">Économe</div>
-                        <div class="role-option" data-role="secretaire">Secrétaire</div>
-                        <div class="role-option" data-role="enseignant">Enseignant</div>
-                    </div>
-                </div>
-
-                <div class="remember-forgot">
+                <div class="form-options">
                     <label class="remember-me">
                         <input type="checkbox" id="remember-me">
-                        Se souvenir de moi
+                        <span>Se souvenir de moi</span>
                     </label>
-                    <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+                    <a href="forgot-password.html" class="forgot-password">Mot de passe oublié ?</a>
                 </div>
 
-                <button type="submit" class="btn-login">Se Connecter</button>
+                <button type="submit" class="btn-login" id="login-btn">
+                    <span>Se connecter</span>
+                    <div class="loading-spinner" id="login-spinner"></div>
+                </button>
             </form>
 
+            <div class="login-divider">
+                <span>OU</span>
+            </div>
+
+            <div class="role-selection">
+                <h4 style="margin-bottom: 15px; text-align: center; color: var(--text-light);">Accès Rapide (Démo)</h4>
+                <div class="role-buttons">
+                    <button class="role-btn" data-email="prefet@stcharles.edu" data-password="Password123">Préfet</button>
+                    <button class="role-btn" data-email="directeur@stcharles.edu" data-password="Password123">Directeur</button>
+                    <button class="role-btn" data-email="discipline@stcharles.edu" data-password="Password123">Discipline</button>
+                    <button class="role-btn" data-email="econome@stcharles.edu" data-password="Password123">Économe</button>
+                </div>
+            </div>
+
             <div class="demo-accounts">
-                <h3>Comptes de Démonstration</h3>
+                <h4>Comptes de Démonstration</h4>
                 <div class="demo-account">
-                    <span class="demo-role">Préfet des Études:</span>
-                    <span class="demo-credentials">prefet@stcharles.edu.cd</span>
+                    <strong>Préfet des Études:</strong> prefet@stcharles.edu
                 </div>
                 <div class="demo-account">
-                    <span class="demo-role">Directeur des Études:</span>
-                    <span class="demo-credentials">directeur.etudes@stcharles.edu.cd</span>
+                    <strong>Directeur des Études:</strong> directeur@stcharles.edu
                 </div>
                 <div class="demo-account">
-                    <span class="demo-role">Économe:</span>
-                    <span class="demo-credentials">econome@stcharles.edu.cd</span>
+                    <strong>Directeur de Discipline:</strong> discipline@stcharles.edu
+                </div>
+                <div class="demo-account">
+                    <strong>Économe:</strong> econome@stcharles.edu
+                </div>
+                <div class="demo-account">
+                    <strong>Mot de passe:</strong> Password123
                 </div>
             </div>
 
             <div class="login-footer">
-                <p>&copy; 2023 Institut Saint Charles Lwanga - Kolwezi</p>
-                <p>Système développé pour les Pères Salvatoriens</p>
+                <p>Problèmes de connexion ? <a href="support.html">Contactez le support</a></p>
+                <p>© 2024 Institut Saint Charles Lwanga - Tous droits réservés</p>
             </div>
         </div>
     </div>
 
     <!-- Firebase SDK -->
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDTM4gdOs_Ud3DC49pmammYMlDH3cSSgZs",
             authDomain: "gestion-scolaire-st-charles.firebaseapp.com",
@@ -504,186 +576,178 @@
             appId: "1:1033368821503:web:a4ba1c8d439193c5f336ca"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Éléments DOM
-        const loginForm = document.getElementById('login-form');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const togglePasswordBtn = document.getElementById('toggle-password');
-        const roleOptions = document.querySelectorAll('.role-option');
-        const errorAlert = document.getElementById('error-alert');
-        const successAlert = document.getElementById('success-alert');
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.getDoc = getDoc;
+        window.doc = doc;
+    </script>
 
-        let selectedRole = '';
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const togglePasswordBtn = document.getElementById('toggle-password');
+            const loginBtn = document.getElementById('login-btn');
+            const loginSpinner = document.getElementById('login-spinner');
+            const errorAlert = document.getElementById('error-alert');
+            const successAlert = document.getElementById('success-alert');
+            const errorMessage = document.getElementById('error-message');
+            const roleButtons = document.querySelectorAll('.role-btn');
 
-        // Gestionnaire d'événement pour le bouton afficher/masquer le mot de passe
-        togglePasswordBtn.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.textContent = type === 'password' ? '👁️' : '🔒';
-        });
-
-        // Gestionnaire d'événement pour la sélection du rôle
-        roleOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                // Retirer la classe selected de toutes les options
-                roleOptions.forEach(opt => opt.classList.remove('selected'));
-                // Ajouter la classe selected à l'option cliquée
-                this.classList.add('selected');
-                selectedRole = this.getAttribute('data-role');
+            // Toggle password visibility
+            togglePasswordBtn.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.textContent = type === 'password' ? '👁️' : '🔒';
             });
-        });
 
-        // Vérifier si l'utilisateur est déjà connecté
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // L'utilisateur est connecté, récupérer ses données
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    showSuccessAlert(`Bienvenue ${userData.fullName}!`);
+            // Role buttons for demo accounts
+            roleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    roleButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
                     
-                    // Rediriger vers le dashboard après 2 secondes
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 2000);
+                    emailInput.value = this.dataset.email;
+                    passwordInput.value = this.dataset.password;
+                });
+            });
+
+            // Handle form submission
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+                const rememberMe = document.getElementById('remember-me').checked;
+
+                // Validation
+                if (!email || !password) {
+                    showError('Veuillez remplir tous les champs');
+                    return;
                 }
-            }
-        });
 
-        // Fonction pour afficher l'alerte d'erreur
-        function showErrorAlert(message) {
-            errorAlert.textContent = message;
-            errorAlert.style.display = 'block';
-            successAlert.style.display = 'none';
-            
-            // Masquer l'alerte après 5 secondes
-            setTimeout(() => {
-                errorAlert.style.display = 'none';
-            }, 5000);
-        }
+                if (!isValidEmail(email)) {
+                    showError('Veuillez entrer une adresse email valide');
+                    return;
+                }
 
-        // Fonction pour afficher l'alerte de succès
-        function showSuccessAlert(message) {
-            successAlert.textContent = message;
-            successAlert.style.display = 'block';
-            errorAlert.style.display = 'none';
-        }
+                // Show loading state
+                loginBtn.disabled = true;
+                loginSpinner.style.display = 'block';
+                loginBtn.querySelector('span').textContent = 'Connexion...';
+                hideAlerts();
 
-        // Gestionnaire d'événement pour la soumission du formulaire
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = emailInput.value;
-            const password = passwordInput.value;
-            
-            // Validation basique
-            if (!email || !password) {
-                showErrorAlert('Veuillez remplir tous les champs.');
-                return;
-            }
-            
-            if (!selectedRole) {
-                showErrorAlert('Veuillez sélectionner votre rôle.');
-                return;
-            }
-            
-            try {
-                // Tentative de connexion avec Firebase Auth
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                
-                // Récupérer les données utilisateur depuis Firestore
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
+                try {
+                    // Sign in with Firebase
+                    const userCredential = await window.signInWithEmailAndPassword(
+                        window.firebaseAuth, email, password
+                    );
                     
-                    // Vérifier si le rôle correspond
-                    const userRole = userData.role.toLowerCase();
-                    const expectedRole = selectedRole.toLowerCase();
+                    // Get user data from Firestore
+                    const userDoc = await window.getDoc(window.doc(window.firebaseDb, 'users', userCredential.user.uid));
                     
-                    if (userRole.includes(expectedRole) || expectedRole.includes(userRole)) {
-                        showSuccessAlert(`Connexion réussie! Bienvenue ${userData.fullName}`);
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
                         
-                        // Sauvegarder dans le localStorage
-                        localStorage.setItem('currentUser', JSON.stringify({
-                            uid: user.uid,
-                            email: user.email,
-                            fullName: userData.fullName,
+                        // Store user data in sessionStorage
+                        sessionStorage.setItem('currentUser', JSON.stringify({
+                            uid: userCredential.user.uid,
+                            email: userData.email,
+                            nom: userData.nom,
+                            prenom: userData.prenom,
                             role: userData.role,
-                            permissions: userData.permissions
+                            fonction: userData.fonction
                         }));
+
+                        // Show success message
+                        showSuccess();
                         
-                        // Rediriger vers le dashboard après 2 secondes
+                        // Redirect to dashboard after 2 seconds
                         setTimeout(() => {
                             window.location.href = 'dashboard.html';
                         }, 2000);
                     } else {
-                        showErrorAlert('Ce compte ne correspond pas au rôle sélectionné.');
-                        await auth.signOut();
+                        throw new Error('Données utilisateur non trouvées');
                     }
-                } else {
-                    showErrorAlert('Données utilisateur non trouvées.');
-                    await auth.signOut();
+                    
+                } catch (error) {
+                    console.error('Login error:', error);
+                    handleLoginError(error);
+                } finally {
+                    // Reset loading state
+                    loginBtn.disabled = false;
+                    loginSpinner.style.display = 'none';
+                    loginBtn.querySelector('span').textContent = 'Se connecter';
                 }
+            });
+
+            // Email validation
+            function isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
+            // Error handling
+            function handleLoginError(error) {
+                let message = 'Une erreur est survenue lors de la connexion';
                 
-            } catch (error) {
-                console.error('Erreur de connexion:', error);
-                
-                // Messages d'erreur personnalisés
                 switch (error.code) {
                     case 'auth/invalid-email':
-                        showErrorAlert('Adresse email invalide.');
+                        message = 'Adresse email invalide';
                         break;
                     case 'auth/user-disabled':
-                        showErrorAlert('Ce compte a été désactivé.');
+                        message = 'Ce compte a été désactivé';
                         break;
                     case 'auth/user-not-found':
-                        showErrorAlert('Aucun compte trouvé avec cette adresse email.');
+                        message = 'Aucun compte trouvé avec cette adresse email';
                         break;
                     case 'auth/wrong-password':
-                        showErrorAlert('Mot de passe incorrect.');
+                        message = 'Mot de passe incorrect';
                         break;
                     case 'auth/too-many-requests':
-                        showErrorAlert('Trop de tentatives de connexion. Veuillez réessayer plus tard.');
+                        message = 'Trop de tentatives de connexion. Veuillez réessayer plus tard';
                         break;
-                    default:
-                        showErrorAlert('Erreur de connexion. Veuillez réessayer.');
+                    case 'auth/network-request-failed':
+                        message = 'Erreur de réseau. Vérifiez votre connexion internet';
+                        break;
                 }
+                
+                showError(message);
             }
-        });
 
-        // Remplissage automatique pour la démonstration
-        document.addEventListener('DOMContentLoaded', function() {
-            // Pré-remplir avec un compte de démonstration au clic
-            const demoAccounts = document.querySelectorAll('.demo-account');
-            demoAccounts.forEach(account => {
-                account.style.cursor = 'pointer';
-                account.addEventListener('click', function() {
-                    const role = this.querySelector('.demo-role').textContent;
-                    const email = this.querySelector('.demo-credentials').textContent;
-                    
-                    emailInput.value = email;
-                    passwordInput.value = 'DemoPassword2023!';
-                    
-                    // Sélectionner automatiquement le rôle
-                    let roleKey = '';
-                    if (role.includes('Préfet')) roleKey = 'prefet';
-                    else if (role.includes('Directeur des Études')) roleKey = 'directeur-etudes';
-                    else if (role.includes('Économe')) roleKey = 'econome';
-                    
-                    roleOptions.forEach(opt => {
-                        if (opt.getAttribute('data-role') === roleKey) {
-                            opt.click();
-                        }
-                    });
-                });
+            // Alert functions
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorAlert.style.display = 'block';
+                successAlert.style.display = 'none';
+            }
+
+            function showSuccess() {
+                errorAlert.style.display = 'none';
+                successAlert.style.display = 'block';
+            }
+
+            function hideAlerts() {
+                errorAlert.style.display = 'none';
+                successAlert.style.display = 'none';
+            }
+
+            // Check if user is already logged in
+            window.firebaseAuth.onAuthStateChanged((user) => {
+                if (user) {
+                    // User is signed in, redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                }
             });
+
+            // Auto-focus email field
+            emailInput.focus();
         });
     </script>
 </body>
