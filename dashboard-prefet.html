@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Préfet - Institut Saint Charles Lwanga</title>
+    <style>
+        :root {
+            --primary: #1a3a8f;
+            --primary-dark: #152c6e;
+            --primary-light: #2a5298;
+            --secondary: #f8f9fa;
+            --accent: #dc3545;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --dark: #343a40;
+            --light: #f8f9fa;
+            --text: #333;
+            --text-light: #6c757d;
+            --border: #dee2e6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: var(--text);
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: var(--shadow);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--primary);
+            color: white;
+            height: calc(100vh - 70px);
+            position: fixed;
+            overflow-y: auto;
+        }
+
+        .user-profile {
+            padding: 25px 20px;
+            background: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .nav-section {
+            padding: 20px 0;
+        }
+
+        .nav-title {
+            padding: 0 20px 10px;
+            font-size: 12px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: var(--accent);
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(50px, -50px);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.primary { background: rgba(26, 58, 143, 0.1); color: var(--primary); }
+        .stat-icon.success { background: rgba(40, 167, 69, 0.1); color: var(--success); }
+        .stat-icon.warning { background: rgba(255, 193, 7, 0.1); color: var(--warning); }
+        .stat-icon.danger { background: rgba(220, 53, 69, 0.1); color: var(--danger); }
+
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .module-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            border-left: 4px solid var(--primary);
+        }
+
+        .module-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .module-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .module-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Recent Activity */
+        .recent-activity {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .activity-icon.success { background: rgba(40, 167, 69, 0.1); color: var(--success); }
+        .activity-icon.warning { background: rgba(255, 193, 7, 0.1); color: var(--warning); }
+        .activity-icon.info { background: rgba(23, 162, 184, 0.1); color: var(--info); }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">ISCL</div>
+            <div>
+                <h2>Institut Saint Charles Lwanga</h2>
+                <p style="font-size: 12px; color: var(--text-light);">Tableau de Bord - Préfet des Études</p>
+            </div>
+        </div>
+        <div class="user-menu">
+            <div id="current-time" style="font-weight: 500;"></div>
+            <button class="btn btn-outline" onclick="logout()">Déconnexion</button>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="user-profile">
+                <div class="user-avatar" id="user-avatar">ML</div>
+                <div>
+                    <h3 id="user-name">Père Michel Lembe</h3>
+                    <p style="font-size: 12px; opacity: 0.8;">Préfet des Études</p>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-title">Navigation Principale</h3>
+                <ul class="nav-links">
+                    <li><a href="#" class="active" onclick="showSection('dashboard')">
+                        📊 Tableau de Bord
+                    </a></li>
+                    <li><a href="#" onclick="showSection('analytics')">
+                        📈 Analytiques
+                    </a></li>
+                    <li><a href="#" onclick="showSection('users-management')">
+                        👥 Gestion des Utilisateurs
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-title">Modules d'Administration</h3>
+                <ul class="nav-links">
+                    <li><a href="#" onclick="showSection('eleves')">
+                        👨‍🎓 Gestion des Élèves
+                    </a></li>
+                    <li><a href="#" onclick="showSection('enseignants')">
+                        👨‍🏫 Gestion des Enseignants
+                    </a></li>
+                    <li><a href="#" onclick="showSection('classes')">
+                        🏫 Gestion des Classes
+                    </a></li>
+                    <li><a href="#" onclick="showSection('finances')">
+                        💰 Gestion Financière
+                    </a></li>
+                    <li><a href="#" onclick="showSection('discipline')">
+                        ⚖️ Gestion de la Discipline
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-title">Système</h3>
+                <ul class="nav-links">
+                    <li><a href="#" onclick="showSection('parametres')">
+                        ⚙️ Paramètres
+                    </a></li>
+                    <li><a href="#" onclick="showSection('sauvegarde')">
+                        💾 Sauvegarde
+                    </a></li>
+                    <li><a href="#" onclick="showSection('rapports')">
+                        📋 Rapports
+                    </a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <h2 id="welcome-message">Bonjour, Père Michel Lembe !</h2>
+                <p>Vous avez un accès complet à toutes les fonctionnalités du système de gestion scolaire.</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon primary">👨‍🎓</div>
+                    <div>
+                        <h3 id="stats-eleves">1,247</h3>
+                        <p>Élèves inscrits</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon success">👨‍🏫</div>
+                    <div>
+                        <h3 id="stats-enseignants">84</h3>
+                        <p>Enseignants</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning">🏫</div>
+                    <div>
+                        <h3 id="stats-classes">24</h3>
+                        <p>Classes actives</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon danger">💰</div>
+                    <div>
+                        <h3 id="stats-paiements">78%</h3>
+                        <p>Taux de paiement</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modules Grid -->
+            <div class="modules-grid">
+                <!-- Gestion des Utilisateurs -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">👥</div>
+                        <div>
+                            <h3>Gestion des Utilisateurs</h3>
+                            <p style="color: var(--text-light); font-size: 14px;">Gérer les comptes et permissions</p>
+                        </div>
+                    </div>
+                    <p>Créer, modifier et gérer les comptes de tous les utilisateurs du système.</p>
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="showUserManagement()">Gérer Utilisateurs</button>
+                        <button class="btn btn-outline" onclick="showCreateUserModal()">Nouveau Compte</button>
+                    </div>
+                </div>
+
+                <!-- Gestion Financière -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">💰</div>
+                        <div>
+                            <h3>Supervision Financière</h3>
+                            <p style="color: var(--text-light); font-size: 14px;">Budget et rapports financiers</p>
+                        </div>
+                    </div>
+                    <p>Superviser l'ensemble des opérations financières et approuver le budget.</p>
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="showFinances()">Voir les Finances</button>
+                        <button class="btn btn-outline" onclick="showBudgetModal()">Approuver Budget</button>
+                    </div>
+                </div>
+
+                <!-- Gestion Pédagogique -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">📚</div>
+                        <div>
+                            <h3>Supervision Pédagogique</h3>
+                            <p style="color: var(--text-light); font-size: 14px;">Notes et résultats</p>
+                        </div>
+                    </div>
+                    <p>Consulter les résultats académiques et les statistiques pédagogiques.</p>
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="showPedagogie()">Voir Pédagogie</button>
+                        <button class="btn btn-outline" onclick="showRapportsModal()">Générer Rapports</button>
+                    </div>
+                </div>
+
+                <!-- Gestion de la Discipline -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">⚖️</div>
+                        <div>
+                            <h3>Gestion de la Discipline</h3>
+                            <p style="color: var(--text-light); font-size: 14px;">Absences et sanctions</p>
+                        </div>
+                    </div>
+                    <p>Approuver les décisions disciplinaires importantes et consulter les statistiques.</p>
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="showDiscipline()">Voir Discipline</button>
+                        <button class="btn btn-outline" onclick="showSanctionsModal()">Sanctions Majeures</button>
+                    </div>
+                </div>
+
+                <!-- Paramètres Système -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">⚙️</div>
+                        <div>
+                            <h3>Paramètres Système</h3>
+                            <p style="color: var(--text-light); font-size: 14px;">Configuration globale</p>
+                        </div>
+                    </div>
+                    <p>Configurer les paramètres généraux de l'établissement et du système.</p>
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="showParametres()">Paramètres</button>
+                        <button class="btn btn-outline" onclick="showSauvegardeModal()">Sauvegarde</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="recent-activity">
+                <h3 style="margin-bottom: 20px;">Activité Récente du Système</h3>
+                <ul class="activity-list" id="recent-activity">
+                    <!-- Activités chargées dynamiquement -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Création Utilisateur -->
+    <div id="createUserModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px;">Créer un Nouvel Utilisateur</h3>
+            <form id="createUserForm">
+                <div class="form-group">
+                    <label>Rôle</label>
+                    <select class="form-control" id="userRole" required>
+                        <option value="">Sélectionner un rôle</option>
+                        <option value="admin_pedagogique">Directeur des Études</option>
+                        <option value="admin_discipline">Directeur de Discipline</option>
+                        <option value="admin_financier">Économe</option>
+                        <option value="secretaire_admin">Secrétariat</option>
+                        <option value="enseignant">Enseignant</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe temporaire</label>
+                    <input type="password" class="form-control" id="userPassword" value="Password123" required>
+                </div>
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" class="form-control" id="userNom" required>
+                </div>
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" class="form-control" id="userPrenom" required>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 25px;">
+                    <button type="submit" class="btn btn-primary">Créer l'utilisateur</button>
+                    <button type="button" class="btn btn-outline" onclick="closeModal('createUserModal')">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, getDocs, addDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTM4gdOs_Ud3DC49pmammYMlDH3cSSgZs",
+            authDomain: "gestion-scolaire-st-charles.firebaseapp.com",
+            projectId: "gestion-scolaire-st-charles",
+            storageBucket: "gestion-scolaire-st-charles.firebasestorage.app",
+            messagingSenderId: "1033368821503",
+            appId: "1:1033368821503:web:a4ba1c8d439193c5f336ca"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.firestore = { doc, getDoc, collection, getDocs, addDoc, setDoc };
+    </script>
+
+    <script>
+        // Gestion de l'authentification et des données utilisateur
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadUserData();
+            loadStatistics();
+            loadRecentActivity();
+            updateTime();
+            setInterval(updateTime, 60000);
+
+            // Gestion du formulaire de création d'utilisateur
+            document.getElementById('createUserForm').addEventListener('submit', createUser);
+        });
+
+        async function checkAuth() {
+            window.firebaseAuth.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const userDoc = await window.firestore.getDoc(window.firestore.doc(window.firebaseDb, 'users', user.uid));
+                if (!userDoc.exists() || userDoc.data().role !== 'superadmin') {
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+
+        async function loadUserData() {
+            const user = window.firebaseAuth.currentUser;
+            if (user) {
+                const userDoc = await window.firestore.getDoc(window.firestore.doc(window.firebaseDb, 'users', user.uid));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    document.getElementById('user-avatar').textContent = 
+                        (userData.prenom.charAt(0) + userData.nom.charAt(0)).toUpperCase();
+                    document.getElementById('user-name').textContent = 
+                        `${userData.titre || ''} ${userData.prenom} ${userData.nom}`.trim();
+                    document.getElementById('welcome-message').textContent = 
+                        `Bonjour, ${userData.titre || ''} ${userData.prenom} ${userData.nom} !`;
+                }
+            }
+        }
+
+        async function loadStatistics() {
+            try {
+                // Charger les statistiques depuis Firebase
+                const elevesSnapshot = await window.firestore.getDocs(window.firestore.collection(window.firebaseDb, 'eleves'));
+                const enseignantsSnapshot = await window.firestore.getDocs(window.firestore.collection(window.firebaseDb, 'enseignants'));
+                const classesSnapshot = await window.firestore.getDocs(window.firestore.collection(window.firebaseDb, 'classes'));
+                
+                document.getElementById('stats-eleves').textContent = elevesSnapshot.size;
+                document.getElementById('stats-enseignants').textContent = enseignantsSnapshot.size;
+                document.getElementById('stats-classes').textContent = classesSnapshot.size;
+                
+            } catch (error) {
+                console.error('Erreur chargement statistiques:', error);
+            }
+        }
+
+        async function loadRecentActivity() {
+            const activities = [
+                { icon: '📊', type: 'success', message: 'Rapport financier mensuel généré', time: 'Il y a 2 min' },
+                { icon: '👥', type: 'info', message: 'Nouvel enseignant enregistré', time: 'Il y a 15 min' },
+                { icon: '💰', type: 'warning', message: 'Budget trimestriel approuvé', time: 'Il y a 1 heure' },
+                { icon: '⚖️', type: 'info', message: 'Conseil de discipline programmé', time: 'Il y a 2 heures' }
+            ];
+
+            const activityList = document.getElementById('recent-activity');
+            activityList.innerHTML = '';
+
+            activities.forEach(activity => {
+                const activityItem = document.createElement('li');
+                activityItem.className = 'activity-item';
+                activityItem.innerHTML = `
+                    <div class="activity-icon ${activity.type}">${activity.icon}</div>
+                    <div>
+                        <p>${activity.message}</p>
+                        <div style="font-size: 12px; color: var(--text-light);">${activity.time}</div>
+                    </div>
+                `;
+                activityList.appendChild(activityItem);
+            });
+        }
+
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = 
+                now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR');
+        }
+
+        // Gestion des modales
+        function showCreateUserModal() {
+            document.getElementById('createUserModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Création d'utilisateur
+        async function createUser(e) {
+            e.preventDefault();
+            
+            const userData = {
+                email: document.getElementById('userEmail').value,
+                password: document.getElementById('userPassword').value,
+                nom: document.getElementById('userNom').value,
+                prenom: document.getElementById('userPrenom').value,
+                role: document.getElementById('userRole').value,
+                date_creation: new Date(),
+                actif: true
+            };
+
+            try {
+                // Ici, vous devriez utiliser Firebase Admin SDK côté serveur
+                // pour créer l'utilisateur avec les custom claims
+                alert('Fonctionnalité à implémenter avec Firebase Admin SDK');
+                closeModal('createUserModal');
+            } catch (error) {
+                console.error('Erreur création utilisateur:', error);
+                alert('Erreur lors de la création de l\'utilisateur');
+            }
+        }
+
+        // Navigation entre sections
+        function showSection(section) {
+            alert(`Navigation vers: ${section} - À implémenter`);
+        }
+
+        function showUserManagement() {
+            showSection('users-management');
+        }
+
+        function showFinances() {
+            showSection('finances');
+        }
+
+        function showPedagogie() {
+            showSection('pedagogie');
+        }
+
+        function showDiscipline() {
+            showSection('discipline');
+        }
+
+        function showParametres() {
+            showSection('parametres');
+        }
+
+        // Déconnexion
+        async function logout() {
+            try {
+                await window.firebaseAuth.signOut();
+                sessionStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Erreur déconnexion:', error);
+            }
+        }
+
+        // Gestion des clics en dehors des modales
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let modal of modals) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
