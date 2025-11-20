@@ -697,16 +697,16 @@
                     <i class="fas fa-rocket"></i> Accès Rapide (Démo)
                 </h4>
                 <div class="role-buttons">
-                    <button class="role-btn" data-email="prefet@stcharles.edu" data-password="Password123">
+                    <button type="button" class="role-btn" data-email="prefet@stcharles.edu" data-password="Password123">
                         <i class="fas fa-crown"></i> Préfet
                     </button>
-                    <button class="role-btn" data-email="directeur@stcharles.edu" data-password="Password123">
+                    <button type="button" class="role-btn" data-email="directeur@stcharles.edu" data-password="Password123">
                         <i class="fas fa-user-tie"></i> Directeur
                     </button>
-                    <button class="role-btn" data-email="discipline@stcharles.edu" data-password="Password123">
+                    <button type="button" class="role-btn" data-email="discipline@stcharles.edu" data-password="Password123">
                         <i class="fas fa-gavel"></i> Discipline
                     </button>
-                    <button class="role-btn" data-email="econome@stcharles.edu" data-password="Password123">
+                    <button type="button" class="role-btn" data-email="econome@stcharles.edu" data-password="Password123">
                         <i class="fas fa-coins"></i> Économe
                     </button>
                 </div>
@@ -748,7 +748,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -763,6 +763,15 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // Configurer la persistance de session
+        setPersistence(auth, browserSessionPersistence)
+            .then(() => {
+                console.log("Persistence d'authentification configurée");
+            })
+            .catch((error) => {
+                console.error("Erreur de configuration de persistance:", error);
+            });
 
         window.firebaseAuth = auth;
         window.firebaseDb = db;
@@ -784,6 +793,11 @@
             const errorMessage = document.getElementById('error-message');
             const successMessage = document.getElementById('success-message');
             const roleButtons = document.querySelectorAll('.role-btn');
+            const rememberMe = document.getElementById('remember-me');
+
+            // Variables pour contrôler la redirection automatique
+            let isManualLogin = false;
+            let isRedirecting = false;
 
             // Toggle password visibility
             togglePasswordBtn.addEventListener('click', function() {
@@ -809,7 +823,9 @@
                 
                 const email = emailInput.value.trim();
                 const password = passwordInput.value;
-                const rememberMe = document.getElementById('remember-me').checked;
+
+                // Marquer comme connexion manuelle
+                isManualLogin = true;
 
                 // Validation
                 if (!email || !password) {
@@ -823,9 +839,7 @@
                 }
 
                 // Show loading state
-                loginBtn.disabled = true;
-                loginSpinner.style.display = 'block';
-                loginBtn.querySelector('span').textContent = 'Connexion...';
+                setLoadingState(true);
                 hideAlerts();
 
                 try {
@@ -850,28 +864,21 @@
                             fonction: userData.fonction
                         }));
 
-                        // Determine the correct dashboard based on role
-                        let dashboardUrl = 'dashboard-prefet.html'; // Default
-                        switch(userData.role) {
-                            case 'superadmin':
-                                dashboardUrl = 'dashboard-prefet.html';
-                                break;
-                            case 'admin_pedagogique':
-                                dashboardUrl = 'dashboard-directeur.html';
-                                break;
-                            case 'admin_discipline':
-                                dashboardUrl = 'dashboard-discipline.html';
-                                break;
-                            case 'admin_financier':
-                                dashboardUrl = 'dashboard-econome.html';
-                                break;
-                            case 'secretaire_admin':
-                                dashboardUrl = 'dashboard-secretaire.html';
-                                break;
+                        // Store in localStorage if "remember me" is checked
+                        if (rememberMe.checked) {
+                            localStorage.setItem('userEmail', email);
+                        } else {
+                            localStorage.removeItem('userEmail');
                         }
+
+                        // Determine the correct dashboard based on role
+                        let dashboardUrl = getDashboardUrl(userData.role);
 
                         successMessage.textContent = `Connexion réussie! Redirection vers ${userData.fonction}...`;
                         showSuccess();
+                        
+                        // Marquer comme en cours de redirection
+                        isRedirecting = true;
                         
                         // Redirect to the correct dashboard after 2 seconds
                         setTimeout(() => {
@@ -885,10 +892,7 @@
                     console.error('Login error:', error);
                     handleLoginError(error);
                 } finally {
-                    // Reset loading state
-                    loginBtn.disabled = false;
-                    loginSpinner.style.display = 'none';
-                    loginBtn.querySelector('span').textContent = 'Se connecter';
+                    setLoadingState(false);
                 }
             });
 
@@ -896,6 +900,24 @@
             function isValidEmail(email) {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 return emailRegex.test(email);
+            }
+
+            // Get dashboard URL based on role
+            function getDashboardUrl(role) {
+                switch(role) {
+                    case 'superadmin':
+                        return 'dashboard-prefet.html';
+                    case 'admin_pedagogique':
+                        return 'dashboard-directeur.html';
+                    case 'admin_discipline':
+                        return 'dashboard-discipline.html';
+                    case 'admin_financier':
+                        return 'dashboard-econome.html';
+                    case 'secretaire_admin':
+                        return 'dashboard-secretaire.html';
+                    default:
+                        return 'dashboard-prefet.html';
+                }
             }
 
             // Error handling
@@ -926,6 +948,13 @@
                 showError(message);
             }
 
+            // Set loading state
+            function setLoadingState(isLoading) {
+                loginBtn.disabled = isLoading;
+                loginSpinner.style.display = isLoading ? 'block' : 'none';
+                loginBtn.querySelector('span').textContent = isLoading ? 'Connexion...' : 'Se connecter';
+            }
+
             // Alert functions
             function showError(message) {
                 errorMessage.textContent = message;
@@ -943,25 +972,28 @@
                 successAlert.style.display = 'none';
             }
 
-            // Check if user is already logged in and redirect to appropriate dashboard
+            // Vérifier si l'utilisateur est déjà connecté MAIS seulement si ce n'est pas une connexion manuelle
             window.firebaseAuth.onAuthStateChanged(async (user) => {
+                // Ne pas rediriger si:
+                // 1. L'utilisateur vient de se connecter manuellement
+                // 2. Une redirection est déjà en cours
+                // 3. Nous sommes sur la page de login
+                if (isManualLogin || isRedirecting) {
+                    return;
+                }
+
                 if (user) {
                     try {
                         const userDoc = await window.getDoc(window.doc(window.firebaseDb, 'users', user.uid));
                         if (userDoc.exists()) {
                             const userData = userDoc.data();
-                            let dashboardUrl = 'dashboard-prefet.html';
+                            let dashboardUrl = getDashboardUrl(userData.role);
                             
-                            switch(userData.role) {
-                                case 'superadmin': dashboardUrl = 'dashboard-prefet.html'; break;
-                                case 'admin_pedagogique': dashboardUrl = 'dashboard-directeur.html'; break;
-                                case 'admin_discipline': dashboardUrl = 'dashboard-discipline.html'; break;
-                                case 'admin_financier': dashboardUrl = 'dashboard-econome.html'; break;
-                                case 'secretaire_admin': dashboardUrl = 'dashboard-secretaire.html'; break;
-                            }
-                            
-                            // Only redirect if not already on the correct dashboard
-                            if (!window.location.pathname.includes(dashboardUrl)) {
+                            // Vérifier si nous ne sommes pas déjà sur le bon dashboard
+                            const currentPage = window.location.pathname.split('/').pop();
+                            if (currentPage !== dashboardUrl) {
+                                console.log('Utilisateur déjà connecté, redirection vers:', dashboardUrl);
+                                isRedirecting = true;
                                 window.location.href = dashboardUrl;
                             }
                         }
@@ -971,8 +1003,24 @@
                 }
             });
 
-            // Auto-focus email field
-            emailInput.focus();
+            // Remplir l'email depuis localStorage si "remember me" était coché
+            const savedEmail = localStorage.getItem('userEmail');
+            if (savedEmail) {
+                emailInput.value = savedEmail;
+                rememberMe.checked = true;
+            }
+
+            // Auto-focus password field if email is already filled
+            if (emailInput.value) {
+                passwordInput.focus();
+            } else {
+                emailInput.focus();
+            }
+
+            // Empêcher le rechargement de la page avec F5 de déclencher une redirection
+            window.addEventListener('beforeunload', function() {
+                isManualLogin = false;
+            });
         });
     </script>
 </body>
